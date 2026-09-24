@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0878ed">
+  <meta name="background-color" content="#f3f7fc">
+  <meta name="description" content="Portaria - Controle de Encomendas">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Portaria">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>Portaria</title>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f3f7fc}
+    body{font-family:Arial,Helvetica,sans-serif}
+    #appFrame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f3f7fc}
+    #loading{
+      position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;
+      background:#f3f7fc;color:#17345f;transition:opacity .2s ease
+    }
+    .loading-box{text-align:center;padding:24px}
+    .loading-icon{width:82px;height:82px;margin:0 auto 18px;border-radius:20px;box-shadow:0 5px 18px rgba(34,73,120,.15)}
+    .loading-title{font-size:28px;font-weight:900}
+    .loading-subtitle{margin-top:7px;font-size:15px;color:#55708f}
+    .spinner{width:30px;height:30px;margin:18px auto 0;border:4px solid #cfe0f4;border-top-color:#0878ed;border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #error{
+      display:none;position:fixed;inset:0;z-index:20;background:#f3f7fc;
+      align-items:center;justify-content:center;padding:24px
+    }
+    .error-box{max-width:520px;background:white;border:1px solid #e1eaf4;border-radius:18px;padding:24px;box-shadow:0 8px 24px rgba(34,73,120,.12);text-align:center;color:#17345f}
+    .error-box h2{margin:0 0 10px;font-size:24px}
+    .error-box p{line-height:1.5;margin:8px 0}
+    .error-box button{border:0;border-radius:12px;background:#0878ed;color:#fff;font-weight:800;padding:12px 18px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="loading-box">
+      <img class="loading-icon" src="./icon-192.png" alt="Portaria">
+      <div class="loading-title">Portaria</div>
+      <div class="loading-subtitle">Abrindo Controle de Encomendas...</div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <iframe
+    id="appFrame"
+    title="Portaria - Controle de Encomendas"
+    allow="camera; microphone"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen>
+  </iframe>
+
+  <div id="error">
+    <div class="error-box">
+      <h2>Não foi possível abrir a Portaria</h2>
+      <p>Verifique a conexão com a internet e confirme se o endereço do seu Apps Script foi configurado corretamente.</p>
+      <button onclick="location.reload()">Tentar novamente</button>
+    </div>
+  </div>
+
+  <script>
+    /*
+      CONFIGURAÇÃO:
+      Cole abaixo o endereço /exec da sua implantação atual do Apps Script.
+      Exemplo:
+      const APP_URL = "https://script.google.com/macros/s/SEU_ID/exec";
+    */
+    const APP_URL = "https://script.google.com/macros/s/AKfycbz5dR_ifO75RncvON-T97EtOq2oBf8N_gwaK2jsBB8b6c-J5Rjz_XS1ipLuOWQPK6l2/exec";
+
+    const frame = document.getElementById('appFrame');
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+
+    function mostrarErro(){
+      loading.style.display = 'none';
+      error.style.display = 'flex';
+    }
+
+    if (!APP_URL || APP_URL.indexOf('/exec') === -1 || APP_URL.indexOf('COLE_AQUI') !== -1) {
+      mostrarErro();
+    } else {
+      frame.src = APP_URL;
+      frame.addEventListener('load', function(){
+        loading.style.opacity = '0';
+        setTimeout(function(){ loading.style.display = 'none'; }, 220);
+      }, {once:true});
+    }
+
+    window.addEventListener('error', function(e){
+      if (e && e.message && e.message.toLowerCase().includes('frame')) {
+        // Mantém a tela do aplicativo; o erro de carregamento também pode ser transitório.
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function(){
+        navigator.serviceWorker.register('./sw.js').catch(function(err){
+          console.warn('Service worker não registrado:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

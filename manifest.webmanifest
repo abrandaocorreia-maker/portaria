@@ -1,0 +1,27 @@
+{
+  "name": "Portaria - Controle de Encomendas",
+  "short_name": "Portaria",
+  "description": "Controle de entrada, pendências e retirada de encomendas da portaria.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f7fc",
+  "theme_color": "#0878ed",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
