@@ -426,7 +426,8 @@ body{
         </div>
         <div class="field">
           <div class="field-label"><span class="field-icon">📦</span>Remetente</div>
-          <select id="remetente"><option value="">Selecione o remetente</option></select>
+          <input type="text" id="remetente" placeholder="Digite ou escolha um remetente" list="sugestoesRemetentes" autocomplete="off">
+          <datalist id="sugestoesRemetentes"></datalist>
         </div>
         <div class="field">
           <div class="field-label"><span class="field-icon">📦</span>Quantidade de volumes</div>
@@ -997,27 +998,23 @@ function salvarPorteiroLocal(){
   if(nome) localStorage.setItem('porteiro', nome);
 }
 
+function atualizarSugestoesRemetentes(lista){
+  const datalist = document.getElementById('sugestoesRemetentes');
+  if(!datalist) return;
+  datalist.innerHTML = '';
+  lista.forEach(function(nome){
+    const option = document.createElement('option');
+    option.value = nome;
+    datalist.appendChild(option);
+  });
+}
 function carregarRemetentes(){
   google.script.run
     .withSuccessHandler(function(lista){
-      const select = document.getElementById('remetente');
-      select.innerHTML = '<option value="">Selecione o remetente</option>';
-      lista = lista || [];
-      lista.forEach(function(nome){
-        const option = document.createElement('option');
-        option.value = nome;
-        option.textContent = nome;
-        select.appendChild(option);
-      });
-      if(!lista.length){
-        const option = document.createElement('option');
-        option.value = 'Outros';
-        option.textContent = 'Outros';
-        select.appendChild(option);
-      }
+      atualizarSugestoesRemetentes(lista || []);
     })
     .withFailureHandler(function(){
-      document.getElementById('remetente').innerHTML = '<option value="">Selecione o remetente</option><option value="Outros">Outros</option>';
+      atualizarSugestoesRemetentes(['Outros']);
     })
     .listarRemetentes();
 }
@@ -1233,20 +1230,7 @@ function atualizarPagina(){
   }).listarEncomendasDoDia();
 
   google.script.run.withSuccessHandler(function(lista){
-    const select = document.getElementById('remetente');
-    select.innerHTML = '<option value="">Selecione o remetente</option>';
-    (lista || []).forEach(function(nome){
-      const option=document.createElement('option');
-      option.value=nome;
-      option.textContent=nome;
-      select.appendChild(option);
-    });
-    if(!(lista || []).length){
-      const option=document.createElement('option');
-      option.value='Outros';
-      option.textContent='Outros';
-      select.appendChild(option);
-    }
+    atualizarSugestoesRemetentes(lista || []);
     remetentesOk = true;
     finalizarBase();
   }).withFailureHandler(function(erro){
@@ -1323,4 +1307,7 @@ function limparFormulario(){
   document.getElementById('destinatario').value = '';
   document.getElementById('remetente').value = '';
 }
+
+
+
 
