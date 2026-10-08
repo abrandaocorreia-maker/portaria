@@ -937,7 +937,18 @@ body{padding-bottom:100px;}
   </div>
 </div>
 
-<div id="leitorCodigoBarras" style="display:none;width:1px;height:1px;overflow:hidden;"></div>
+<!-- MODAL PERSONALIZADO - CONFIRMAR FOTO DO PACOTE -->
+<div class="modal-overlay" id="modalFotoPacote">
+  <div class="modal" style="width:min(100%,440px);text-align:center;">
+    <div style="width:66px;height:66px;border-radius:18px;background:#e7f7ee;color:#07934f;display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;">📷</div>
+    <div class="modal-title" style="text-align:center;margin-bottom:8px;">Tirar foto do pacote?</div>
+    <div style="color:#58708f;font-size:15px;line-height:1.4;margin-bottom:18px;">Deseja adicionar uma foto do pacote agora? Isso ajuda na comprovação.</div>
+    <div class="modal-buttons" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="cancel-button" type="button" onclick="escolherFotoNao()" style="padding:14px;">Não</button>
+      <button class="confirm-button" type="button" onclick="escolherFotoSim()" style="padding:14px;background:linear-gradient(135deg,#08a45b,#07934f);">📷 Sim</button>
+    </div>
+  </div>
+</div>
 <div id="toast" class="toast"></div>
 
 <script>
@@ -1605,56 +1616,27 @@ function salvar(){
     codigoBarras: codigoBarras.indexOf('Foto') === -1 ? codigoBarras : ''
   };
 
-  // Pergunta se deseja tirar a foto do pacote
-  if(confirm('Gostaria de tirar uma foto do pacote?')){
-    document.getElementById('fotoPacoteSalvar').click();
-  } else {
-    fotoPacoteBase64 = '';
-    enviarDadosComFotoFinal();
-  }
+    // Abre modal personalizado no padrão do app
+  mostrarModalFotoPacote();
+}
+
+function mostrarModalFotoPacote(){
+  document.getElementById('modalFotoPacote').classList.add('show');
+}
+function fecharModalFotoPacote(){
+  document.getElementById('modalFotoPacote').classList.remove('show');
+}
+function escolherFotoSim(){
+  fecharModalFotoPacote();
+  document.getElementById('fotoPacoteSalvar').click();
+}
+function escolherFotoNao(){
+  fecharModalFotoPacote();
+  fotoPacoteBase64 = '';
+  enviarDadosComFotoFinal();
 }
 
 function enviarDadosComFotoFinal(){
-  if(!dadosEncomendaTemporaria) return;
-  const dados = dadosEncomendaTemporaria;
-  dados.imagem = fotoPacoteBase64 || '';
-  dados.imagens = fotoPacoteBase64 ? [fotoPacoteBase64] : [];
-  dados.codigosBarras = dados.codigoBarras ? [dados.codigoBarras] : [];
-
-  const btn = document.getElementById('btnSalvar');
-  btn.disabled = true;
-  btn.textContent = '⏳ SALVANDO...';
-
-  google.script.run.withSuccessHandler(function(){
-    btn.disabled = false;
-    btn.textContent = '💾 SALVAR ENCOMENDA';
-    mostrarToast('Encomenda registrada com sucesso!');
-    limparFormulario();
-    const ativa=document.querySelector('.tab-content.active');
-    if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
-    if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-    if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
-  }).withFailureHandler(function(erro){
-    console.error(erro);
-    setTimeout(function(){
-      confirmarCadastroNoServidor(dados.id, function(existe){
-        btn.disabled = false;
-        btn.textContent = '💾 SALVAR ENCOMENDA';
-        if(existe){
-          mostrarToast('Encomenda registrada com sucesso!');
-          limparFormulario();
-          const ativa=document.querySelector('.tab-content.active');
-          if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
-          if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-          if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
-        } else {
-          mostrarToast('Não foi possível confirmar o salvamento. Verifique os registros.');
-        }
-      });
-    }, 800);
-  }).salvarEncomenda(dados);
-  dadosEncomendaTemporaria = null;
-}
 
 function confirmarCadastroNoServidor(id, callback){
   google.script.run
