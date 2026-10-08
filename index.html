@@ -911,7 +911,50 @@ body{padding-bottom:100px;}
     </div>
   </div>
 </div>
+<!-- MODAL DE FOTO DA ENCOMENDA -->
+<div class="modal-overlay" id="modalFotoPacote">
+  <div class="modal" style="width:min(100%,420px); text-align:center;">
 
+    <div style="
+      font-size:46px;
+      line-height:1;
+      margin-bottom:10px;
+    ">📷</div>
+
+    <div class="modal-title">
+      Foto da encomenda
+    </div>
+
+    <div style="
+      color:#70849f;
+      font-size:15px;
+      line-height:1.5;
+      margin:10px 0 22px;
+    ">
+      Deseja tirar uma foto da encomenda para arquivar?
+    </div>
+
+    <div class="modal-buttons">
+
+      <button
+        class="cancel-button"
+        type="button"
+        onclick="naoTirarFotoPacote()">
+        Agora não
+      </button>
+
+      <button
+        class="confirm-button"
+        type="button"
+        onclick="tirarFotoPacote()">
+        📷 Tirar foto
+      </button>
+
+    </div>
+
+  </div>
+</div>
+    
 <!-- MODAL DE EDIÇÃO DE REGISTRO -->
 <div class="modal-overlay" id="modalEdicao">
   <div class="modal">
@@ -1137,6 +1180,51 @@ function inicializarCanvas() {
     canvas.height = 140;
     limparAssinatura();
   }
+}
+    /************************************************
+ * MODAL DE FOTO DA ENCOMENDA
+ ************************************************/
+
+function abrirModalFotoPacote() {
+  const modal = document.getElementById('modalFotoPacote');
+
+  if (modal) {
+    modal.classList.add('show');
+  }
+}
+
+function fecharModalFotoPacote() {
+  const modal = document.getElementById('modalFotoPacote');
+
+  if (modal) {
+    modal.classList.remove('show');
+  }
+}
+
+function naoTirarFotoPacote() {
+
+  fecharModalFotoPacote();
+
+  fotoPacoteBase64 = '';
+
+  enviarDadosComFotoFinal();
+}
+
+function tirarFotoPacote() {
+
+  fecharModalFotoPacote();
+
+  // Pequeno atraso para garantir que o modal
+  // seja fechado antes de abrir a câmera
+  setTimeout(function() {
+
+    const input = document.getElementById('fotoPacoteSalvar');
+
+    if (input) {
+      input.click();
+    }
+
+  }, 150);
 }
 
 function obterPosicaoMouse(e) {
@@ -1605,13 +1693,8 @@ function salvar(){
     codigoBarras: codigoBarras.indexOf('Foto') === -1 ? codigoBarras : ''
   };
 
-  // Pergunta se deseja tirar a foto do pacote
-  if(confirm('Gostaria de tirar uma foto do pacote?')){
-    document.getElementById('fotoPacoteSalvar').click();
-  } else {
-    fotoPacoteBase64 = '';
-    enviarDadosComFotoFinal();
-  }
+  // Abre o modal personalizado perguntando sobre a foto
+abrirModalFotoPacote();
 }
 
 function enviarDadosComFotoFinal(){
