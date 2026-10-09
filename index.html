@@ -1949,13 +1949,16 @@ function avisarGrupo(linhas){
   });
 
   const fotoItem = naoAvisados.find(item => item.fotoUrl);
-  const linkFotoTexto = fotoItem && fotoItem.fotoUrl ? '\n\n📷 Foto do pacote: ' + fotoItem.fotoUrl : '';
+  const linkFotoTexto = fotoItem && fotoItem.fotoUrl 
+    ? '\n\n━━━━━━━━━━━━━━━━━━━━\n📷 *Foto da encomenda:*\n' + fotoItem.fotoUrl + '\n━━━━━━━━━━━━━━━━━━━━' 
+    : '';
 
   let mensagem = 'Olá!👋\nUma encomenda chegou para *' + nome + '*\n\n🏠 Apartamento *' + apartamento + '*\n📦 Remetente *' + remetentes.join(', ') + '*\n📦 Quantidade de volumes *' + totalVolumes + '*' + linkFotoTexto;
 
   window.open('https://wa.me/?text=' + encodeURIComponent(mensagem), '_blank');
   marcarLinhasComoAvisadas(naoAvisados);
 }
+
 
 function marcarLinhasComoAvisadas(itens){
   if(!itens.length) return;
