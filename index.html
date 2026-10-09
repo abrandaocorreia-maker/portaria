@@ -91,42 +91,43 @@ button,input,select{font-family:inherit;}
 .pending-number strong{display:block;font-size:58px;line-height:1;font-weight:900;}
 .pending-number span{display:block;font-size:20px;font-weight:800;margin-top:3px;}
 
-/* GRID DE PENDENTES (3 CARDS POR LINHA) */
+/* GRID DE PENDENTES (4 CARDS POR LINHA) */
 .pendentes-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 10px;
 }
 @media (max-width: 900px) {
-    .pendentes-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .pendentes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 500px) {
-    .pendentes-grid {
-        grid-template-columns: 1fr;
-    }
+  .pendentes-grid {
+    grid-template-columns: 1fr;
+  }
 }
+
 
 .pendente-card {
     background: #fff;
     border: 2px solid #d5e5de;
     border-radius: 14px;
-    padding: 12px;
+    padding: 8px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 4px 14px rgba(36,72,55,.07);
-    min-height: 145px;
+    min-height: 110px;
 }
 .pendente-data {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 800;
     color: #58708f;
     border-bottom: 1px solid #edf2f7;
     padding-bottom: 6px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 .pendente-info-linha {
     display: flex;
@@ -134,21 +135,21 @@ button,input,select{font-family:inherit;}
     align-items: center;
     font-weight: 900;
     color: #0b7750;
-    font-size: 18px;
-    margin-bottom: 6px;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 .pendente-qtd {
     background: #0b9655;
     color: white;
-    padding: 2px 10px;
+    padding: 1px 6px;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 12px;
 }
 .pendente-nome {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 900;
     color: #17345f;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
