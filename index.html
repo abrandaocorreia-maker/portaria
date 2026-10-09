@@ -91,9 +91,9 @@ button,input,select{font-family:inherit;}
 .pending-number strong{display:block;font-size:58px;line-height:1;font-weight:900;}
 .pending-number span{display:block;font-size:20px;font-weight:800;margin-top:3px;}
 
-/* CARTÕES DE RESUMO */
+/* CARTÕES DE RESUMO / 4 POR LINHA */
 .summary-highlight{background:linear-gradient(135deg,#0878ed,#1769dc);color:white;border-radius:19px;padding:18px;margin-bottom:15px;text-align:center;box-shadow:0 5px 16px rgba(0,105,220,.22);}
-.summary-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:15px;}
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px;}
 .summary-card{background:#fff;border-radius:17px;padding:16px;border:1px solid #e9f0f8;box-shadow:0 4px 14px rgba(34,73,120,.08);}
 .summary-card-title{font-size:15px;font-weight:800;color:#58708f;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
 .summary-card-value{font-size:28px;font-weight:900;color:#10458d;}
@@ -112,20 +112,23 @@ button,input,select{font-family:inherit;}
 .apartment-header{min-height:47px;background:#e6f2ff;display:flex;align-items:center;justify-content:space-between;padding:7px 14px;color:#10458d;font-weight:900;}
 .apartment-name{display:flex;align-items:center;gap:9px;font-size:20px;}
 .apartment-date{display:flex;align-items:center;gap:7px;font-size:15px;color:#31547f;font-weight:700;}
-.recipient-row{position:relative;padding:11px 13px 10px;min-height:106px;border-bottom:1px solid #dce8f5;}
+.recipient-row{position:relative;padding:11px 13px 10px;min-height:86px;border-bottom:1px solid #dce8f5;}
 .recipient-row:last-child{border-bottom:0;}
-.recipient-main{padding-right:125px;}
-.recipient-name{display:flex;align-items:center;gap:9px;color:#10458d;font-size:20px;font-weight:900;margin-bottom:6px;}
-.recipient-icon{font-size:24px;}
-.senders{display:flex;align-items:flex-start;gap:8px;color:#496486;font-size:16px;line-height:1.35;padding-right:5px;}
-.senders-icon{flex-shrink:0;font-size:19px;}
+.recipient-main{padding-right:110px;}
+.recipient-name{display:flex;align-items:center;gap:9px;color:#10458d;font-size:18px;font-weight:900;margin-bottom:3px;}
+.recipient-icon{font-size:20px;}
+.senders{display:flex;align-items:flex-start;gap:8px;color:#496486;font-size:15px;line-height:1.35;padding-right:5px;}
+.senders-icon{display:none;}
 .senders strong{color:#31527d;}
-.volume-badge{position:absolute;right:12px;top:10px;min-width:57px;height:43px;padding:2px 9px;border-radius:10px;background:#0878ed;color:white;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900;box-shadow:0 3px 7px rgba(0,100,220,.17);}
-.actions{position:absolute;right:10px;bottom:8px;display:flex;gap:5px;}
-.whatsapp-button{border:0;border-radius:9px;background:#08a66a;color:white;font-size:15px;font-weight:900;padding:9px 15px;min-width:130px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 7px rgba(0,130,80,.16);}
-.retire-button{border:0;border-radius:8px;background:#dc3545;color:#fff;font-size:12px;font-weight:800;padding:8px 9px;cursor:pointer;}
+.volume-badge{position:absolute;right:12px;top:10px;min-width:45px;height:38px;padding:2px 7px;border-radius:10px;background:#0878ed;color:white;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;box-shadow:0 3px 7px rgba(0,100,220,.17);}
+.actions{position:absolute;right:12px;bottom:10px;display:flex;gap:6px;}
+
+/* BOTÕES DE AÇÃO COM APENAS ÍCONES */
+.whatsapp-button{border:0;border-radius:8px;background:#08a66a;color:white;font-size:16px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 7px rgba(0,130,80,.16);}
+.retire-button{border:0;border-radius:8px;background:#dc3545;color:#fff;font-size:16px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-button{border:2px solid #ff9700;border-radius:8px;background:#fff8ed;color:#e66a00;font-size:16px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
 .retire-all-btn{border:0;border-radius:8px;background:#dc3545;color:#fff;font-size:12px;font-weight:800;padding:6px 10px;cursor:pointer;}
-.photo-button{border:2px solid #ff9700;border-radius:8px;background:#fff8ed;color:#e66a00;font-size:13px;font-weight:900;padding:8px 9px;cursor:pointer;}
 .report-card{background:#fff;border-radius:19px;padding:16px 18px;box-shadow:0 5px 18px rgba(34,73,120,.10);display:flex;align-items:center;gap:15px;margin-top:15px;}
 .report-icon{font-size:49px;color:#0878ed;flex-shrink:0;}
 .report-content{flex:1;}
@@ -148,113 +151,6 @@ button,input,select{font-family:inherit;}
 .confirm-button:disabled{opacity:.55;cursor:not-allowed;}
 .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#17345f;color:#fff;border-radius:10px;padding:13px 18px;font-size:15px;font-weight:800;z-index:3000;transition:.25s;max-width:calc(100% - 30px);text-align:center;}
 .toast.show{opacity:1;transform:translate(-50%,0);}
-/* LAYOUT RESPONSIVO PARA TELAS GRANDES
-   Mantém o layout atual no celular e apenas aproveita a largura
-   disponível em tablets e computadores. */
-
-/* Resultados dos cards da página Resumo: tamanho mais compacto. */
-.summary-home-grid .home-summary-value{font-size:26px;}
-.summary-home-grid .summary-provider-value{font-size:21px;line-height:1.08;}
-@media (max-width:600px){
-  .summary-home-grid .home-summary-value{font-size:24px;}
-  .summary-home-grid .summary-provider-value{font-size:19px;}
-}
-
-@media (min-width:901px){
-  .header{padding:18px 28px 17px;}
-  .header-inner{max-width:1400px;}
-  .header-title{font-size:32px;}
-  .header-subtitle{font-size:18px;}
-
-  .container{width:calc(100% - 40px);max-width:1400px;margin:14px auto 28px;}
-
-  .nav-tabs{gap:8px;margin-bottom:14px;overflow:visible;}
-  .tab-btn{flex:1 1 0;min-width:0;padding:12px 14px;font-size:15px;}
-
-  .registration{padding:18px;margin-bottom:14px;}
-  .section-title{font-size:27px;margin-bottom:13px;}
-  .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;}
-  .field{min-height:76px;padding:9px 14px;}
-  .field-label{font-size:16px;margin-bottom:5px;}
-  .field input,.field select{font-size:18px;}
-  .photo-input-wrapper{min-height:40px;}
-
-  .photo-code-field{min-height:76px;}
-  .photo-code-row{display:flex;align-items:center;gap:10px;min-width:0;}
-  .photo-code-row > input{flex:1;min-width:0;}
-  .photo-code-button{
-    width:56px;height:56px;flex:0 0 56px;border:0;border-radius:12px;
-    background:linear-gradient(135deg,#08a45b,#07934f);color:#fff;
-    display:flex;align-items:center;justify-content:center;font-size:27px;
-    cursor:pointer;box-shadow:0 3px 8px rgba(5,137,75,.16);
-    position:relative;overflow:hidden;
-  }
-  .photo-code-status{margin-top:5px;font-size:12px;color:#718394;line-height:1.2;}
-  .save-button{margin-top:11px;padding:13px 12px;font-size:20px;}
-
-  .pending-summary{padding:14px 18px 15px;margin-bottom:14px;}
-  .pending-title{font-size:22px;margin-bottom:8px;}
-  .pending-number{padding:5px 20px 8px;}
-  .pending-number strong{font-size:52px;}
-
-  /* Pendentes */
-  .filter-card{padding:13px 16px;margin-bottom:13px;}
-  .filter-title{font-size:23px;margin-bottom:9px;}
-  .filter-box{min-height:49px;font-size:19px;}
-  .list-card{padding:12px;margin-bottom:13px;}
-  .list-title{font-size:23px;margin:2px 5px 10px;}
-  .recipient-row{min-height:88px;padding:9px 13px;}
-  .recipient-main{padding-right:145px;}
-  .recipient-name{font-size:18px;margin-bottom:4px;}
-  .senders{font-size:15px;}
-
-  /* Pesquisa */
-  #aba-pesquisa .filter-card > div:nth-child(2){
-    display:grid !important;
-    grid-template-columns:minmax(0,2fr) minmax(190px,1fr) auto;
-    align-items:center;
-  }
-  #aba-pesquisa .filter-box{min-width:0;}
-  #aba-pesquisa .filter-box input{font-size:17px;}
-  #aba-pesquisa .filter-card button{height:49px;white-space:nowrap;}
-
-  /* Entregadores */
-  #aba-entregadores .form-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
-
-  /* Resumo */
-  .summary-highlight{padding:15px 18px;margin-bottom:13px;}
-  .summary-highlight #resumoTotalDia{font-size:52px !important;}
-  .summary-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:13px;}
-  .summary-card{padding:13px;}
-  .summary-card-title{font-size:14px;}
-  .summary-card-value{font-size:26px;}
-
-  #aba-resumo > section.card{padding:15px !important;margin-bottom:13px !important;}
-  #aba-resumo .section-title{font-size:20px !important;margin-bottom:8px !important;}
-  .summary-table th,.summary-table td{padding:8px 10px;font-size:14px;}
-}
-
-@media (min-width:1200px){
-  .header{padding-left:30px;padding-right:30px;}
-  .header-inner{gap:17px;}
-  .header-icon{width:62px;height:62px;}
-  .container{width:calc(100% - 56px);}
-  .form-grid{gap:11px 14px;}
-  .field{min-height:78px;}
-  .field-label{font-size:16px;}
-  .field input,.field select{font-size:19px;}
-  .pending-summary{display:flex;align-items:center;justify-content:center;gap:24px;text-align:left;padding:12px 22px;}
-  .pending-title{margin-bottom:0;}
-  .pending-number{margin:0;width:260px;max-width:none;text-align:center;}
-}
-
-@media (max-width:600px){
-  .header-inner{gap:10px;}
-  .header-icon{width:50px;height:50px;border-radius:12px;}
-  .header-title{font-size:23px;}
-  .header-subtitle{font-size:14px;}
-  .header-refresh{padding:9px 10px;font-size:13px;}
-}
 
 /* ===== NOVO VISUAL — APENAS APARÊNCIA ===== */
 html,body{
@@ -286,49 +182,49 @@ body{
   width:min(calc(100% - 20px),1400px);
   margin:14px auto 22px;
 }
-/* Menu inferior fixo com as 5 abas originais */
+
+/* BARRA DE NAVEGAÇÃO INFERIOR VERDE COM TEXTOS E ÍCONES BRANCOS */
 .nav-tabs{
-  position:fixed;
-  left:0;right:0;bottom:0;
-  z-index:900;
-  width:100%;height:78px;
-  margin:0;
-  padding:7px 4px calc(7px + env(safe-area-inset-bottom));
-  display:flex;align-items:stretch;justify-content:space-around;
-  gap:2px;overflow:visible;
-  background:rgba(255,255,255,.98);
-  border-top:1px solid #dfe8e3;
-  box-shadow:0 -4px 16px rgba(31,65,51,.10);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+    position:fixed;
+    left:0;right:0;bottom:0;
+    z-index:900;
+    width:100%;height:78px;
+    margin:0;
+    padding:7px 4px calc(7px + env(safe-area-inset-bottom));
+    display:flex;align-items:stretch;justify-content:space-around;
+    gap:2px;overflow:visible;
+    background:#07934f;
+    border-top:1px solid #067840;
+    box-shadow:0 -4px 16px rgba(31,65,51,.15);
 }
 .nav-tabs::-webkit-scrollbar{display:none;}
 .tab-btn{
-  flex:1 1 0;
-  min-width:0;
-  height:64px;
-  padding:5px 2px 4px;
-  background:transparent;
-  border:0;
-  border-radius:10px;
-  box-shadow:none;
-  color:#68788b;
-  font-size:11px;
-  font-weight:800;
-  white-space:normal;
-  line-height:1.15;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
+    flex:1 1 0;
+    min-width:0;
+    height:64px;
+    padding:5px 2px 4px;
+    background:transparent;
+    border:0;
+    border-radius:10px;
+    box-shadow:none;
+    color:rgba(255,255,255,0.7);
+    font-size:11px;
+    font-weight:800;
+    white-space:normal;
+    line-height:1.15;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
 }
 .tab-btn.active{
-  background:transparent;
-  color:#079653;
-  box-shadow:none;
+    background:rgba(255,255,255,0.15);
+    color:#ffffff;
+    box-shadow:none;
 }
 .tab-btn:active{transform:scale(.96);}
+
 .card,
 .registration,
 .filter-card,
@@ -378,45 +274,15 @@ body{
 .toast{background:#174c3a;}
 .empty,.loading{color:#718394;}
 
-@media (min-width:901px){
-  body{padding-bottom:96px;}
-  .header{padding:18px 28px 17px;}
-  .header-title{font-size:30px;}
-  .header-subtitle{font-size:17px;}
-  .container{width:calc(100% - 40px);max-width:1400px;margin:14px auto 26px;}
-  .nav-tabs{height:82px;padding:8px 12px 9px;}
-  .tab-btn{height:64px;font-size:12px;}
-}
-@media (max-width:600px){
-  .header{padding:15px 13px 14px;}
-  .header-inner{gap:9px;}
-  .header-icon{width:52px;height:52px;border-radius:14px;}
-  .header-title{font-size:22px;line-height:1.05;}
-  .header-subtitle{font-size:13px;margin-top:4px;}
-  .header-refresh{padding:8px 9px;font-size:12px;border-radius:10px;}
-  .container{width:calc(100% - 14px);margin:10px auto 18px;}
-  .section-title{font-size:22px;}
-  .filter-title{font-size:21px;}
-  .list-title{font-size:21px;}
-  .field{min-height:72px;}
-  .field input,.field select{font-size:17px;}
-  .photo-code-button{width:50px;height:50px;flex-basis:50px;font-size:25px;}
-  .photo-code-status{font-size:11px;}
-  .save-button{font-size:18px;padding:14px 10px;}
-  .nav-tabs{height:76px;padding-left:2px;padding-right:2px;}
-  .tab-btn{height:62px;font-size:10.5px;gap:3px;}
-}
-
-
-/* ===== AJUSTES DO NOVO MODELO - HOME / NAVEGAÇÃO ===== */
+/* AJUSTES DO NOVO MODELO - HOME / NAVEGAÇÃO */
 .home-summary-grid{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
   margin:0 0 14px;
 }
 .summary-home-grid{
-  grid-template-columns:repeat(5,minmax(0,1fr));
+  grid-template-columns:repeat(4,minmax(0,1fr));
 }
 .summary-home-grid .home-summary-card{
   min-height:148px;
@@ -509,61 +375,31 @@ body{
 .home-photo-list{width:100%;}
 .home-photo-list > div{font-size:12px !important;}
 
-/* Barra inferior com as 5 páginas: ícones e textos maiores */
+/* Barra inferior */
 .nav-tabs{
-  height:94px;
-  padding:8px 5px calc(8px + env(safe-area-inset-bottom));
+  height:76px;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
 }
 .tab-btn{
-  height:78px;
-  border-radius:13px;
-  font-size:15px;
+  height:62px;
+  border-radius:10px;
+  font-size:13px;
   font-weight:900;
   line-height:1.05;
-  gap:5px;
+  gap:3px;
 }
-.tab-btn::first-letter{font-size:27px;}
 .tab-btn.active{
-  color:#079653;
+  color:#ffffff;
 }
-.tab-btn.active::after{
-  content:'';
-  width:34px;
-  height:4px;
-  border-radius:99px;
-  background:#079653;
-  margin-top:1px;
-}
-body{padding-bottom:100px;}
+body{padding-bottom:90px;}
 
 @media (max-width:600px){
-  .home-summary-grid{gap:8px;margin-bottom:12px;}
-  .summary-home-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
-  .summary-home-grid .home-summary-card{min-height:132px;}
-  .home-summary-card{min-height:124px;padding:10px 8px;border-radius:15px;}
-  .home-summary-card.photo{padding:7px;}
-  .home-summary-icon{width:30px;height:30px;border-radius:9px;font-size:19px;}
-  .home-summary-title{font-size:12px;}
-  .home-summary-value{font-size:31px;}
-  .photo-card-button{min-height:108px;border-radius:13px;font-size:13px;}
-  .photo-card-button .camera-icon{font-size:29px;}
-  .nav-tabs{height:88px;padding-left:1px;padding-right:1px;}
-  .tab-btn{height:78px;font-size:14px;gap:4px;padding-left:1px;padding-right:1px;}
-  .tab-btn::first-letter{font-size:26px;}
-  body{padding-bottom:106px;}
-}
-
-
-@media (min-width:901px){
-  .summary-home-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;}
-  .summary-home-grid .home-summary-card{min-height:152px;padding:13px 12px;}
-  .summary-provider-value{font-size:20px;}
-}
-@media (max-width:430px){
-  .summary-home-grid .home-summary-card{min-height:126px;}
-  .summary-provider-value{font-size:18px;}
-  .home-summary-title{font-size:12px;}
-  .home-summary-value{font-size:30px;}
+  .home-summary-grid, .summary-home-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .summary-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
 </style>
 </head>
@@ -776,7 +612,6 @@ body{padding-bottom:100px;}
 
   <!-- ABA 5: RESUMO E ESTATÍSTICAS -->
   <div id="aba-resumo" class="tab-content">
-    <!-- 5 indicadores principais, no mesmo padrão visual da tela Registrar -->
     <section class="home-summary-grid summary-home-grid" aria-label="Resumo e estatísticas">
       <div class="home-summary-card pending">
         <div class="home-summary-icon">📦</div>
@@ -800,12 +635,6 @@ body{padding-bottom:100px;}
         <div class="home-summary-icon">📅</div>
         <div class="home-summary-title">Total do mês</div>
         <div class="home-summary-value" id="resumoTotalMes">0</div>
-      </div>
-
-      <div class="home-summary-card day">
-        <div class="home-summary-icon">⏳</div>
-        <div class="home-summary-title">Encomendas pendentes</div>
-        <div class="home-summary-value" id="resumoPendentes">0</div>
       </div>
     </section>
 
@@ -911,47 +740,17 @@ body{padding-bottom:100px;}
     </div>
   </div>
 </div>
+
 <!-- MODAL DE FOTO DA ENCOMENDA -->
 <div class="modal-overlay" id="modalFotoPacote">
   <div class="modal" style="width:min(100%,420px); text-align:center;">
-
-    <div style="
-      font-size:46px;
-      line-height:1;
-      margin-bottom:10px;
-    ">📷</div>
-
-    <div class="modal-title">
-      Foto da encomenda
-    </div>
-
-    <div style="
-      color:#70849f;
-      font-size:15px;
-      line-height:1.5;
-      margin:10px 0 22px;
-    ">
-      Deseja tirar uma foto da encomenda para arquivar?
-    </div>
-
+    <div style="font-size:46px;line-height:1;margin-bottom:10px;">📷</div>
+    <div class="modal-title">Foto da encomenda</div>
+    <div style="color:#70849f;font-size:15px;line-height:1.5;margin:10px 0 22px;">Deseja tirar uma foto da encomenda para arquivar?</div>
     <div class="modal-buttons">
-
-      <button
-        class="cancel-button"
-        type="button"
-        onclick="naoTirarFotoPacote()">
-        Agora não
-      </button>
-
-      <button
-        class="confirm-button"
-        type="button"
-        onclick="tirarFotoPacote()">
-        📷 Tirar foto
-      </button>
-
+      <button class="cancel-button" type="button" onclick="naoTirarFotoPacote()">Agora não</button>
+      <button class="confirm-button" type="button" onclick="tirarFotoPacote()">📷 Tirar foto</button>
     </div>
-
   </div>
 </div>
     
@@ -986,8 +785,6 @@ body{padding-bottom:100px;}
 <script>
 /* ================================================================
    PONTE PARA O APPS SCRIPT
-   - Dentro do Apps Script: usa o google.script.run original.
-   - No GitHub Pages: simula google.script.run via POST.
    ================================================================ */
 (function(){
   if (window.google && window.google.script && window.google.script.run) return;
@@ -1060,7 +857,6 @@ let remetentesCadastrados = [];
 let pesquisaCarregada = false;
 let pesquisaEntregadoresCarregada = false;
 let pesquisaTimer = null;
-let pesquisaEmAndamento = false;
 let resumoCarregado = false;
 let canvas, ctx;
 let desenhando = false;
@@ -1094,7 +890,6 @@ document.addEventListener('DOMContentLoaded', function(){
     canvas.addEventListener('touchend', e => { e.preventDefault(); pararDesenho(); }, { passive: false });
   }
 
-  // Leitura exclusiva para extrair o código de barras da etiqueta
   document.getElementById('fotoLeitura').addEventListener('change', e => {
     if (!e.target.files.length) return;
     const arquivo = e.target.files[0];
@@ -1121,7 +916,6 @@ document.addEventListener('DOMContentLoaded', function(){
     e.target.value = '';
   });
 
-  // Captura da foto opcional do pacote ao salvar
   document.getElementById('fotoPacoteSalvar').addEventListener('change', e => {
     if (!e.target.files.length) return;
     const arquivo = e.target.files[0];
@@ -1139,7 +933,6 @@ document.addEventListener('DOMContentLoaded', function(){
     e.target.value = '';
   });
 });
-
 
 function comprimirImagemParaUpload(arquivo){
   return new Promise(function(resolve, reject){
@@ -1181,49 +974,28 @@ function inicializarCanvas() {
     limparAssinatura();
   }
 }
-    /************************************************
- * MODAL DE FOTO DA ENCOMENDA
- ************************************************/
 
 function abrirModalFotoPacote() {
   const modal = document.getElementById('modalFotoPacote');
-
-  if (modal) {
-    modal.classList.add('show');
-  }
+  if (modal) modal.classList.add('show');
 }
 
 function fecharModalFotoPacote() {
   const modal = document.getElementById('modalFotoPacote');
-
-  if (modal) {
-    modal.classList.remove('show');
-  }
+  if (modal) modal.classList.remove('show');
 }
 
 function naoTirarFotoPacote() {
-
   fecharModalFotoPacote();
-
   fotoPacoteBase64 = '';
-
   enviarDadosComFotoFinal();
 }
 
 function tirarFotoPacote() {
-
   fecharModalFotoPacote();
-
-  // Pequeno atraso para garantir que o modal
-  // seja fechado antes de abrir a câmera
   setTimeout(function() {
-
     const input = document.getElementById('fotoPacoteSalvar');
-
-    if (input) {
-      input.click();
-    }
-
+    if (input) input.click();
   }, 150);
 }
 
@@ -1295,7 +1067,7 @@ function mudarAba(abaId, elementoBtn) {
   elementoBtn.classList.add('active');
 }
 
-function carregarResumo(forcar){
+function carregarResumo(){
   resumoCarregado = false;
   google.script.run
     .withSuccessHandler(function(res){
@@ -1306,10 +1078,8 @@ function carregarResumo(forcar){
       const totalDiaCadastro = document.getElementById('resumoTotalDiaCadastro');
       if(totalDiaCadastro) totalDiaCadastro.textContent = totalDia;
       const entregadoresDia = res.totalEntregadoresDia || 0;
-      document.getElementById('resumoEntregadoresDia').textContent = entregadoresDia;
       const entregadoresDiaCadastro = document.getElementById('resumoEntregadoresDiaCadastro');
       if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDia;
-      document.getElementById('resumoPendentes').textContent = res.totalPendentes || 0;
       document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
       document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
 
@@ -1612,8 +1382,7 @@ function atualizarPagina(){
       if(ativa && ativa.id === 'aba-pesquisa'){
         pesquisaCarregada = false;
         pesquisaEntregadoresCarregada = false;
-        carregarTodasEncomendasParaPesquisa();
-        carregarTodosEntregadoresParaPesquisa();
+        executarPesquisa();
       } else if(ativa && ativa.id === 'aba-entregadores'){
         carregarEntregadores();
         carregarRemetentesEntregador();
@@ -1693,8 +1462,7 @@ function salvar(){
     codigoBarras: codigoBarras.indexOf('Foto') === -1 ? codigoBarras : ''
   };
 
-  // Abre o modal personalizado perguntando sobre a foto
-abrirModalFotoPacote();
+  abrirModalFotoPacote();
 }
 
 function enviarDadosComFotoFinal(){
@@ -1716,7 +1484,7 @@ function enviarDadosComFotoFinal(){
     const ativa=document.querySelector('.tab-content.active');
     if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
     if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-    if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
+    if(ativa && ativa.id==='aba-resumo') carregarResumo();
   }).withFailureHandler(function(erro){
     console.error(erro);
     setTimeout(function(){
@@ -1729,7 +1497,7 @@ function enviarDadosComFotoFinal(){
           const ativa=document.querySelector('.tab-content.active');
           if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
           if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-          if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
+          if(ativa && ativa.id==='aba-resumo') carregarResumo();
         } else {
           mostrarToast('Não foi possível confirmar o salvamento. Verifique os registros.');
         }
@@ -1775,10 +1543,6 @@ function carregarEncomendas(){
     })
     .listarEncomendasDoDia();
 }
-
-function carregarTodasEncomendasParaPesquisa(){ executarPesquisa(); }
-
-function carregarTodosEntregadoresParaPesquisa(){ executarPesquisa(); }
 
 function executarPesquisa(){
   clearTimeout(pesquisaTimer);
@@ -1872,48 +1636,33 @@ function executarPesquisaLocal(){
       const statusCor = normalizar(item.status) === 'retirado' ? '#08a66a' : '#ff9700';
       const nomeLimpo = obterNomeDestinatario(item.destinatario);
 
-      html += '<div class="recipient-row" style="min-height: 120px;">';
-      html += '<div class="recipient-main" style="padding-right: 90px;">';
-      html += '<div class="recipient-name"><span class="recipient-icon">👤</span><span>' + escapeHtml(nomeLimpo) + '</span></div>';
-      html += '<div class="senders"><span class="senders-icon">🏠</span><span>Apartamento: <strong>' + escapeHtml(item.apartamento) + '</strong></span></div>';
-      html += '<div class="senders"><span class="senders-icon">📦</span><span>Remetente: <strong>' + escapeHtml(item.remetente || 'Outros') + '</strong> | Recebido em: ' + escapeHtml(item.dataRecebimento) + '</span></div>';
-
-      if(item.codigoBarras) {
-        html += '<div class="senders"><span class="senders-icon">🏷️</span><span>Código de Barras: <strong>' + escapeHtml(item.codigoBarras) + '</strong></span></div>';
-      }
-
-      if(normalizar(item.status) === 'retirado') {
-        html += '<div class="senders" style="color: #08a66a;"><span class="senders-icon">✓</span><span>Retirado por: <strong>' + escapeHtml(item.retiradoPor) + '</strong> em ' + escapeHtml(item.dataRetirada) + '</span></div>';
-        if(item.assinaturaUrl && String(item.assinaturaUrl).trim() !== '') {
-          html += '<div class="senders" style="margin-top: 4px;"><a href="' + escapeAttr(item.assinaturaUrl) + '" target="_blank" style="color: #08a66a; font-weight: bold; text-decoration: underline;">✍️ Ver assinatura digital cadastrada</a></div>';
-        }
-      } else {
-        html += '<div class="senders" style="color: #ff9700;"><span class="senders-icon">⏳</span><span>Status: <strong>Pendente</strong></span></div>';
-      }
-
-      if(item.fotoUrl) {
-        html += '<div class="senders" style="margin-top: 4px;"><a href="' + escapeAttr(item.fotoUrl) + '" target="_blank" style="color: #0878ed; font-weight: bold; text-decoration: underline;">📷 Ver foto do pacote</a></div>';
-      } else {
-        html += '<div class="senders" style="color: #888; margin-top: 4px;">Sem foto do pacote cadastrada</div>';
-      }
-
+      html += '<div class="recipient-row">';
+      html += '<div class="recipient-main">';
+      html += '<div class="recipient-name"><span>' + escapeHtml(nomeLimpo) + '</span></div>';
+      html += '<div class="senders"><span>Apto: <strong>' + escapeHtml(item.apartamento) + '</strong></span></div>';
+      html += '<div class="senders"><span><strong>' + (item.quantidade || 1) + (Number(item.quantidade||1) === 1 ? ' volume' : ' volumes') + '</strong></span></div>';
       html += '</div>';
       html += '<div class="volume-badge" style="background:' + statusCor + ';">' + (item.quantidade || 1) + '</div>';
+      
+      html += '<div class="actions">';
+      if(item.fotoUrl) {
+        html += '<button class="photo-button" onclick="abrirFoto(\'' + escapeAttr(item.fotoUrl) + '\')" title="Ver Foto">📷</button>';
+      }
       if(registroEhHojeNoApp(item.dataRecebimento)){
-        html += '<button type="button" onclick="abrirEdicaoEncomenda(' + Number(item.linha) + ')" style="position:absolute;right:10px;bottom:9px;border:0;border-radius:8px;background:#0878ed;color:#fff;font-size:12px;font-weight:900;padding:8px 10px;cursor:pointer;">✏️ Editar</button>';
+        html += '<button type="button" class="retire-button" onclick="abrirEdicaoEncomenda(' + Number(item.linha) + ')" title="Editar">✏️</button>';
       }
       html += '</div>';
+      html += '</div>';
     } else {
-      html += '<div class="recipient-row" style="min-height: 120px; border-left: 5px solid #ed6800;">';
-      html += '<div class="recipient-main" style="padding-right: 90px;">';
-      html += '<div class="recipient-name" style="color:#ed6800;"><span class="recipient-icon">🚚</span><span>Entregador: ' + escapeHtml(item.entregador) + '</span></div>';
-      html += '<div class="senders"><span class="senders-icon">📞</span><span>Telefone: <strong>' + escapeHtml(item.telefone) + '</strong></span></div>';
-      html += '<div class="senders"><span class="senders-icon">📦</span><span>Remetente: <strong>' + escapeHtml(item.remetente) + '</strong> | Data: ' + escapeHtml(item.data) + '</span></div>';
-      html += '<div class="senders"><span class="senders-icon">🏠</span><span>Destinatários: <strong>' + escapeHtml(item.destinatarios || 'Não informado') + '</strong></span></div>';
+      html += '<div class="recipient-row" style="border-left: 5px solid #ed6800;">';
+      html += '<div class="recipient-main">';
+      html += '<div class="recipient-name" style="color:#ed6800;"><span>Entregador: ' + escapeHtml(item.entregador) + '</span></div>';
+      html += '<div class="senders"><span>Tel: <strong>' + escapeHtml(item.telefone) + '</strong></span></div>';
+      html += '<div class="senders"><span><strong>' + (item.quantidade || 1) + ' vol</strong> · ' + escapeHtml(item.remetente) + '</span></div>';
       html += '</div>';
       html += '<div class="volume-badge" style="background:#ed6800;">' + (item.quantidade || 1) + '</div>';
       if(registroEhHojeNoApp(item.data)){
-        html += '<button type="button" onclick="abrirEdicaoEntregadorPorIndice(' + Number(item._indicePesquisa || 0) + ')" style="position:absolute;right:10px;bottom:9px;border:0;border-radius:8px;background:#ed6800;color:#fff;font-size:12px;font-weight:900;padding:8px 10px;cursor:pointer;">✏️ Editar</button>';
+        html += '<div class="actions"><button type="button" class="retire-button" onclick="abrirEdicaoEntregadorPorIndice(' + Number(item._indicePesquisa || 0) + ')" title="Editar">✏️</button></div>';
       }
       html += '</div>';
     }
@@ -1936,6 +1685,7 @@ function obterDataPesquisa(dataTexto){
   const parsed=Date.parse(texto);
   return Number.isNaN(parsed) ? 0 : parsed;
 }
+
 function registroEhHojeNoApp(dataTexto){
   if(!dataTexto) return false;
   const texto=String(dataTexto).trim();
@@ -1947,6 +1697,7 @@ function registroEhHojeNoApp(dataTexto){
   const hoje=new Date();
   return dia===hoje.getDate() && mes===hoje.getMonth()+1 && ano===hoje.getFullYear();
 }
+
 function abrirEdicaoEncomenda(linha){
   const item=todasEncomendasPesquisa.find(x=>Number(x.linha)===Number(linha));
   if(!item){mostrarToast('Registro de encomenda não encontrado.');return;}
@@ -1964,6 +1715,7 @@ function abrirEdicaoEncomenda(linha){
   nomes.forEach(nome=>{const o=document.createElement('option');o.value=nome;o.textContent=nome;if(normalizar(nome)===normalizar(item.remetente||'Outros'))o.selected=true;select.appendChild(o);});
   document.getElementById('modalEdicao').classList.add('show');
 }
+
 function abrirEdicaoEntregadorPorIndice(indice){
   const pos=Number(indice);
   const item=todosEntregadoresPesquisa[pos];
@@ -1986,6 +1738,7 @@ function abrirEdicaoEntregadorPorIndice(indice){
 }
 
 function fecharModalEdicao(){document.getElementById('modalEdicao').classList.remove('show');tipoEdicaoAtual='';linhaEdicaoAtual=null;}
+
 function salvarEdicao(){
   if(!tipoEdicaoAtual || linhaEdicaoAtual === null || !Number.isFinite(Number(linhaEdicaoAtual)) || Number(linhaEdicaoAtual) < 2){
     mostrarToast('Registro de edição inválido.');
@@ -2005,7 +1758,7 @@ function salvarEdicao(){
     if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
     if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
     if(ativa && ativa.id==='aba-entregadores') carregarEntregadores();
-    if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
+    if(ativa && ativa.id==='aba-resumo') carregarResumo();
   };
 
   const falha=function(erro){
@@ -2140,7 +1893,6 @@ function renderizarLista(lista){
     html += '</div>';
   });
   container.innerHTML = html;
-  atualizarBotaoBaixaSelecionadas();
 }
 
 function renderizarDestinatario(nome, itens){
@@ -2155,24 +1907,24 @@ function renderizarDestinatario(nome, itens){
 
   let html = '<div class="recipient-row">';
   html += '<div class="recipient-main">';
-  html += '<div class="recipient-name"><span class="recipient-icon">👤</span><span>' + escapeHtml(nome) + '</span></div>';
-  html += '<div class="senders"><span class="senders-icon">📦</span><span><strong>' + totalVolumes + (totalVolumes === 1 ? ' volume pendente' : ' volumes pendentes') + '</strong></span></div>';
+  html += '<div class="recipient-name"><span>' + escapeHtml(nome) + '</span></div>';
+  html += '<div class="senders"><span><strong>' + totalVolumes + (totalVolumes === 1 ? ' volume pendente' : ' volumes pendentes') + '</strong></span></div>';
   html += '</div>';
   html += '<div class="volume-badge">' + totalVolumes + '</div>';
   html += '<div class="actions">';
 
   if(foto){
-    html += '<button class="photo-button" onclick="abrirFoto(\'' + escapeAttr(foto.fotoUrl) + '\')">📷 FOTO</button>';
+    html += '<button class="photo-button" onclick="abrirFoto(\'' + escapeAttr(foto.fotoUrl) + '\')" title="Ver Foto">📷</button>';
   }
   if(naoAvisados.length){
-    html += '<button class="whatsapp-button" onclick=\'avisarGrupo(' + JSON.stringify(linhas) + ')\'>💬 AVISAR</button>';
+    html += '<button class="whatsapp-button" onclick=\'avisarGrupo(' + JSON.stringify(linhas) + ')\' title="Avisar WhatsApp">💬</button>';
   } else {
-    html += '<button class="whatsapp-button sent" disabled>✓ AVISADO</button>';
+    html += '<button class="whatsapp-button" disabled style="opacity:0.6" title="Avisado">✓</button>';
   }
   if(itens.length > 1){
-    html += '<button class="retire-button" onclick=\"abrirSelecaoPendentes(' + JSON.stringify(linhas) + ')\">📦 Retirar</button>';
+    html += '<button class="retire-button" onclick=\"abrirSelecaoPendentes(' + JSON.stringify(linhas) + ')\" title="Retirar">📦</button>';
   } else {
-    html += '<button class="retire-button" onclick="abrirBaixa(' + itens[0].linha + ')">📦 Retirar</button>';
+    html += '<button class="retire-button" onclick="abrirBaixa(' + itens[0].linha + ')" title="Retirar">📦</button>';
   }
   html += '</div></div>';
   return html;
@@ -2225,6 +1977,7 @@ function abrirSelecaoPendentes(linhasPermitidas){
   atualizarResumoSelecaoPendentes();
   document.getElementById('modalSelecaoPendentes').classList.add('show');
 }
+
 function fecharSelecaoPendentes(){
   document.getElementById('modalSelecaoPendentes').classList.remove('show');
   linhasPermitidasSelecaoPendentes = null;
@@ -2271,10 +2024,6 @@ function confirmarSelecaoPendentes(){
   setTimeout(inicializarCanvas, 50);
 }
 
-function atualizarBotaoBaixaSelecionadas(){
-  atualizarResumoSelecaoPendentes();
-}
-
 function avisarGrupo(linhas){
   const grupo = encomendas.filter(item=>linhas.indexOf(item.linha)!==-1);
   if(!grupo.length) return;
@@ -2296,12 +2045,11 @@ function avisarGrupo(linhas){
     totalVolumes += Number(item.quantidade)||1;
   });
 
-  // Inclui o link da foto do pacote na mensagem de aviso, caso exista
   const fotoItem = naoAvisados.find(item => item.fotoUrl);
   const linkFotoTexto = fotoItem && fotoItem.fotoUrl ? '\n\n📷 Foto do pacote: ' + fotoItem.fotoUrl : '';
 
-  let mensagem = (naoAvisados.length === 1 ? '*Olá! Uma encomenda chegou!*' : '*Olá! Chegaram várias encomendas!*');
-  mensagem += '\n\n👤 Destinatário: ' + nome + '\n🏠 Apartamento: ' + apartamento + '\n\n📦 Remetente: ' + remetentes.join(', ') + '\n📦 Quantidade de volumes: ' + totalVolumes + linkFotoTexto;
+  // MENSAGEM AJUSTADA CONFORME SOLICITADO
+  let mensagem = 'Olá!👋\nUma encomenda chegou para *' + nome + '*\n\n🏠 Apartamento *' + apartamento + '*\n📦 Remetente *' + remetentes.join(', ') + '*\n📦 Quantidade de volumes *' + totalVolumes + '*' + linkFotoTexto;
 
   window.open('https://wa.me/?text=' + encodeURIComponent(mensagem), '_blank');
   marcarLinhasComoAvisadas(naoAvisados);
@@ -2382,7 +2130,7 @@ function confirmarBaixa(){
         const ativa=document.querySelector('.tab-content.active');
         if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
         if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-        if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
+        if(ativa && ativa.id==='aba-resumo') carregarResumo();
       })
       .withFailureHandler(()=>{
         btnConfirmar.disabled = false;
@@ -2405,7 +2153,7 @@ function confirmarBaixa(){
             const ativa=document.querySelector('.tab-content.active');
             if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
             if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-            if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
+            if(ativa && ativa.id==='aba-resumo') carregarResumo();
           }
         })
         .withFailureHandler(()=>{
@@ -2418,7 +2166,7 @@ function confirmarBaixa(){
             const ativa=document.querySelector('.tab-content.active');
             if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
             if(ativa && ativa.id==='aba-pesquisa') executarPesquisa();
-            if(ativa && ativa.id==='aba-resumo') carregarResumo(true);
+            if(ativa && ativa.id==='aba-resumo') carregarResumo();
           }
         })
         .darBaixaEncomenda(linha, nome, dadosAssinatura);
@@ -2493,7 +2241,6 @@ function mostrarToast(mensagem){
 }
 </script>
 <script>
-/* PWA: registra o Service Worker da casca para permitir a instalação como aplicativo. */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('./sw.js', {scope:'./'})
