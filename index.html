@@ -1136,32 +1136,80 @@ document.addEventListener('DOMContentLoaded', function(){
     canvas.addEventListener('touchend', e => { e.preventDefault(); pararDesenho(); }, { passive: false });
   }
 
-  document.getElementById('fotoLeitura').addEventListener('change', e => {
-    if (!e.target.files.length) return;
+document.getElementById('fotoLeitura').addEventListener('change', e => {
+    if (!e.target.files || !e.target.files.length) return;
+
     const arquivo = e.target.files[0];
     const texto = document.getElementById('fotoTexto');
+    const codigoVisual = document.getElementById('codigoBarrasVisual');
+
     texto.textContent = 'Lendo código de barras da etiqueta...';
 
     const html5QrCode = new Html5Qrcode("leitorCodigoBarras");
+
     html5QrCode.scanFile(arquivo, true)
-      .then(decodedText => {
-        codigoBarrasDetectado = decodedText;
-        const codigoVisual = document.getElementById('codigoBarrasVisual');
-        if(codigoVisual) codigoVisual.value = decodedText;
-        texto.textContent = 'Código lido com sucesso ✓';
-        try { html5QrCode.clear(); } catch(err) {}
-      })
-      .catch(err => {
-        codigoBarrasDetectado = '';
-        const codigoVisual = document.getElementById('codigoBarrasVisual');
-        if(codigoVisual) codigoVisual.value = 'Foto lida — código não identificado automaticamente';
-        texto.textContent = 'Foto processada (código não detectado)';
-        try { html5QrCode.clear(); } catch(err) {}
-      });
+        .then(decodedText => {
 
+            // Recupera os códigos já registrados
+            let codigos = [];
+
+            if (Array.isArray(codigoBarrasDetectado)) {
+                codigos = codigoBarrasDetectado;
+            } else if (codigoBarrasDetectado) {
+                codigos = String(codigoBarrasDetectado)
+                    .split(',')
+                    .map(c => c.trim())
+                    .filter(Boolean);
+            }
+
+            // Evita adicionar o mesmo código duas vezes
+            if (!codigos.includes(decodedText)) {
+                codigos.push(decodedText);
+            }
+
+            // Armazena todos os códigos encontrados
+            codigoBarrasDetectado = codigos.join(', ');
+
+            // Atualiza o campo visual
+            if (codigoVisual) {
+                codigoVisual.value = codigoBarrasDetectado;
+            }
+
+            texto.textContent =
+                codigos.length + (codigos.length === 1
+                    ? ' código lido com sucesso ✓'
+                    : ' códigos lidos com sucesso ✓');
+
+            try {
+                html5QrCode.clear();
+            } catch (err) {}
+
+        })
+        .catch(err => {
+
+            // Não apaga os códigos que já foram lidos
+            const quantidade = codigoBarrasDetectado
+                ? String(codigoBarrasDetectado)
+                    .split(',')
+                    .filter(c => c.trim()).length
+                : 0;
+
+            if (codigoVisual && !codigoVisual.value && codigoBarrasDetectado) {
+                codigoVisual.value = codigoBarrasDetectado;
+            }
+
+            texto.textContent = quantidade > 0
+                ? 'Código não identificado nesta foto. Os códigos anteriores foram mantidos.'
+                : 'Foto processada, mas o código não foi identificado. Tente novamente.';
+
+            try {
+                html5QrCode.clear();
+            } catch (err) {}
+        });
+
+    // Permite selecionar ou fotografar novamente
     e.target.value = '';
-  });
-
+});
   document.getElementById('fotoPacoteSalvar').addEventListener('change', e => {
     if (!e.target.files.length) return;
     const arquivo = e.target.files[0];
