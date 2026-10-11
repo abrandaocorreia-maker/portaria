@@ -1731,7 +1731,18 @@ function salvar(){
   const remetente = document.getElementById('remetente').value;
   const quantidade = Number(document.getElementById('quantidade').value) || 1;
   const dataRecebimento = document.getElementById('dataRecebimento').value;
-  const codigoBarras = codigoBarrasDetectado || document.getElementById('codigoBarrasVisual').value.trim();
+  
+const codigoVisual = document.getElementById('codigoBarrasVisual').value.trim();
+
+const codigoBarras = String(
+  codigoBarrasDetectado || codigoVisual || ''
+).trim();
+
+const codigoBarrasFinal =
+  codigoBarras.includes('Foto lida') ||
+  codigoBarras.includes('não identificado automaticamente')
+    ? ''
+    : codigoBarras;
 
   if(!porteiro){
     mostrarToast('Informe o nome do porteiro.');
@@ -1753,8 +1764,7 @@ function salvar(){
     remetente,
     quantidade,
     dataRecebimento,
-    codigoBarras: codigoBarras.indexOf('Foto') === -1 ? codigoBarras : ''
-  };
+    codigoBarras: codigoBarrasFinal
 
   abrirModalFotoPacote();
 }
@@ -1763,8 +1773,15 @@ function enviarDadosComFotoFinal(){
   if(!dadosEncomendaTemporaria) return;
   const dados = dadosEncomendaTemporaria;
   dados.imagem = fotoPacoteBase64 || '';
-  dados.imagens = fotoPacoteBase64 ? [fotoPacoteBase64] : [];
-  dados.codigosBarras = dados.codigoBarras ? [dados.codigoBarras] : [];
+dados.imagens = fotoPacoteBase64 ? [fotoPacoteBase64] : [];
+
+// Separa os códigos, mantendo cada um em um elemento
+dados.codigosBarras = dados.codigoBarras
+  ? String(dados.codigoBarras)
+      .split(',')
+      .map(codigo => codigo.trim())
+      .filter(Boolean)
+  : [];
 
   const btn = document.getElementById('btnSalvar');
   btn.disabled = true;
