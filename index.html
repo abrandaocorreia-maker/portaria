@@ -767,6 +767,76 @@ body{padding-bottom:90px;}
     line-height: 1.2 !important;
 }
 
+/* ===== LAYOUT COMPACTO: PÁGINA REGISTRAR ===== */
+
+.registration,
+.registration * {
+box-sizing: border-box;
+}
+
+.registration {
+width: 100%;
+min-width: 0;
+max-width: 100%;
+}
+
+.registration .form-grid {
+display: grid !important;
+grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+gap: 8px !important;
+width: 100%;
+min-width: 0;
+max-width: 100%;
+}
+
+.registration .field {
+min-width: 0;
+width: 100%;
+max-width: 100%;
+padding: 8px !important;
+min-height: 0 !important;
+border-radius: 10px;
+}
+
+.registration .field-label {
+font-size: 12px !important;
+line-height: 1.2 !important;
+margin-bottom: 5px;
+}
+
+.registration .field input,
+.registration .field select {
+width: 100%;
+min-width: 0;
+max-width: 100%;
+box-sizing: border-box;
+font-size: 13px !important;
+padding: 9px 7px !important;
+}
+
+.registration .photo-code-field {
+grid-column: 1 / -1;
+}
+
+.registration .photo-code-status {
+font-size: 11px !important;
+line-height: 1.3 !important;
+margin-top: 5px;
+}
+
+.registration #btnSalvar {
+width: 100% !important;
+min-width: 0 !important;
+max-width: 100%;
+align-self: stretch;
+padding: 10px 4px !important;
+font-size: 12px !important;
+line-height: 1.3 !important;
+white-space: normal !important;
+margin: 0 !important;
+border-radius: 10px;
+}
+
 </style>
 </head>
 <body>
@@ -796,55 +866,121 @@ body{padding-bottom:90px;}
    
 
     <section class="card registration">
-      <div class="section-title">
-        <div class="section-icon orange">📦</div>
-        <span>Registrar encomenda</span>
-      </div>
-      <div class="form-grid">
-        <div class="field">
-          <div class="field-label"><span class="field-icon">👤</span>Porteiro</div>
-          <input type="text" id="porteiro" placeholder="Nome do porteiro">
-        </div>
+  <div class="section-title">
+    <div class="section-icon orange">📦</div>
+    <span>Registrar encomenda</span>
+  </div>  <div class="form-grid"><!-- Data -->
+<div class="field">
+  <div class="field-label"><span class="field-icon">📅</span>Data</div>
+  <input type="date" id="dataRecebimento">
+</div>
 
-        <div class="field photo-code-field">
-          <div class="field-label"><span class="field-icon">📷</span>Código de Barras / Etiqueta</div>
-          <div class="photo-code-row" style="display:flex !important;align-items:center !important;gap:10px !important;width:100% !important;min-width:0 !important;">
-            <input type="text" id="codigoBarrasVisual" placeholder="Tire foto da etiqueta para ler o código" readonly style="flex:1 1 auto !important;width:auto !important;min-width:0 !important;">
-            <button type="button" class="photo-code-button" title="Ler código de barras" aria-label="Ler código de barras" onclick="document.getElementById('fotoLeitura').click()" style="width:56px !important;height:56px !important;min-width:56px !important;max-width:56px !important;flex:0 0 56px !important;padding:0 !important;margin:0 !important;border:0 !important;border-radius:12px !important;background:#08a45b !important;color:#fff !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:27px !important;line-height:1 !important;cursor:pointer !important;box-shadow:0 3px 8px rgba(5,137,75,.16) !important;appearance:none !important;-webkit-appearance:none !important;">
-              <span style="display:block !important;line-height:1 !important;">📷</span>
-            </button>
-            <input type="file" id="fotoLeitura" accept="image/*" capture="environment" style="display:none !important;width:0 !important;height:0 !important;">
-          </div>
-          <div id="fotoTexto" class="photo-code-status">Tire uma foto por etiqueta. Você pode adicionar vários códigos para o mesmo morador.</div>
-          <button type="button" id="limparCodigosBarras" onclick="limparCodigosBarras()" style="display:none;margin-top:6px;border:0;background:none;color:#b13b3b;font-size:13px;font-weight:800;padding:4px 0;cursor:pointer;">Limpar códigos lidos</button>
-        </div>
+<!-- Porteiro -->
+<div class="field">
+  <div class="field-label"><span class="field-icon">👤</span>Porteiro</div>
+  <input type="text" id="porteiro" placeholder="Nome do porteiro">
+</div>
 
-        <div class="field">
-          <div class="field-label"><span class="field-icon">👤</span>Destinatário / Apartamento</div>
-          <input type="text" id="destinatario" placeholder="Ex.: João Silva - Apto 203" list="sugestoesDestinatarios">
-          <datalist id="sugestoesDestinatarios"></datalist>
-        </div>
-        <div class="field">
-          <div class="field-label"><span class="field-icon">📦</span>Remetente</div>
-          <input type="text" id="remetente" placeholder="Digite ou escolha um remetente" list="sugestoesRemetentesRegistrar" autocomplete="off">
-          <datalist id="sugestoesRemetentesRegistrar"></datalist>
-          <button type="button" onclick="adicionarRemetenteRegistrar()" style="margin-top:8px;border:0;border-radius:9px;background:#edf2f7;color:#31527d;font-size:14px;font-weight:800;padding:9px 11px;cursor:pointer;">＋ Adicionar novo remetente</button>
-        </div>
-        <div class="field">
-          <div class="field-label"><span class="field-icon">📦</span>Quantidade de volumes</div>
-          <select id="quantidade">
-            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-            <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
-            <option value="9">9</option><option value="10">10</option>
-          </select>
-        </div>
-        <div class="field">
-          <div class="field-label"><span class="field-icon">📅</span>Data de recebimento</div>
-          <input type="date" id="dataRecebimento">
-        </div>
-      </div>
-      <button class="save-button" id="btnSalvar" onclick="salvar()">💾 &nbsp; SALVAR ENCOMENDA</button>
-    </section>
+<!-- Código de barras -->
+<div class="field photo-code-field">
+  <div class="field-label"><span class="field-icon">📷</span>Código da etiqueta</div>
+
+  <div class="photo-code-row" style="display:flex !important;align-items:center !important;gap:8px !important;width:100% !important;min-width:0 !important;">
+    <input
+      type="text"
+      id="codigoBarrasVisual"
+      placeholder="Fotografar etiqueta"
+      readonly
+      style="flex:1 1 auto !important;width:auto !important;min-width:0 !important;"
+    >
+
+    <button
+      type="button"
+      class="photo-code-button"
+      title="Ler código de barras"
+      aria-label="Ler código de barras"
+      onclick="document.getElementById('fotoLeitura').click()"
+      style="width:48px !important;height:48px !important;min-width:48px !important;max-width:48px !important;flex:0 0 48px !important;padding:0 !important;margin:0 !important;border:0 !important;border-radius:12px !important;background:#08a45b !important;color:#fff !important;display:flex !important;align-items:center !important;justify-content:center !important;font-size:25px !important;line-height:1 !important;cursor:pointer !important;"
+    >
+      <span style="display:block !important;line-height:1 !important;">📷</span>
+    </button>
+
+    <input
+      type="file"
+      id="fotoLeitura"
+      accept="image/*"
+      capture="environment"
+      style="display:none !important;width:0 !important;height:0 !important;"
+    >
+  </div>
+
+  <div id="fotoTexto" class="photo-code-status">Fotografe cada etiqueta para adicionar vários códigos.</div>
+
+  <button
+    type="button"
+    id="limparCodigosBarras"
+    onclick="limparCodigosBarras()"
+    style="display:none;margin-top:6px;border:0;background:none;color:#b13b3b;font-size:12px;font-weight:800;padding:4px 0;cursor:pointer;"
+  >Limpar códigos</button>
+</div>
+
+<!-- Destinatário -->
+<div class="field">
+  <div class="field-label"><span class="field-icon">🏠</span>Apto. / Morador</div>
+  <input
+    type="text"
+    id="destinatario"
+    placeholder="Nome ou apartamento"
+    list="sugestoesDestinatarios"
+  >
+  <datalist id="sugestoesDestinatarios"></datalist>
+</div>
+
+<!-- Quantidade -->
+<div class="field">
+  <div class="field-label"><span class="field-icon">📦</span>Quantidade</div>
+  <select id="quantidade">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+  </select>
+</div>
+
+<!-- Remetente -->
+<div class="field">
+  <div class="field-label"><span class="field-icon">📦</span>Remetente</div>
+
+  <input
+    type="text"
+    id="remetente"
+    placeholder="Nome do remetente"
+    list="sugestoesRemetentesRegistrar"
+    autocomplete="off"
+  >
+
+  <datalist id="sugestoesRemetentesRegistrar"></datalist>
+
+  <button
+    type="button"
+    onclick="adicionarRemetenteRegistrar()"
+    style="margin-top:6px;border:0;border-radius:8px;background:#edf2f7;color:#31527d;font-size:12px;font-weight:800;padding:7px;cursor:pointer;width:100%;"
+  >＋ Novo remetente</button>
+</div>
+
+<!-- Botão Salvar -->
+<button class="save-button" id="btnSalvar" onclick="salvar()">
+  💾 SALVAR
+</button>
+
+  </div>
+</section>
 
   </div>
 
