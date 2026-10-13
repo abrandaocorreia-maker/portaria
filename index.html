@@ -831,11 +831,15 @@ border-radius: 10px;
   height: 44px;
 }
 .pesquisa-campos-container .filter-box select,
-.pesquisa-campos-container .filter-box input {
-  font-size: 12px;
+.pesquisa-campos-container .filter-box input[type="date"] {
+  font-size: 11px;
+  padding: 0;
   width: 100%;
-  text-overflow: ellipsis;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
+
 .pesquisa-campos-container .filter-box span {
   font-size: 14px;
   flex-shrink: 0;
