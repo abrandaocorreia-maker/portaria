@@ -1569,6 +1569,8 @@ function carregarResumo(){
       const totalDiaCadastro = document.getElementById('resumoTotalDiaCadastro');
       if(totalDiaCadastro) totalDiaCadastro.textContent = totalDia;
       const entregadoresDia = res.totalEntregadoresDia || 0;
+document.getElementById('resumoEntregadoresDia').textContent = entregadoresDia;
+
       const entregadoresDiaCadastro = document.getElementById('resumoEntregadoresDiaCadastro');
       if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDia;
       document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
