@@ -828,25 +828,29 @@ border-radius: 10px;
   flex: 1;
   min-width: 0;
   padding: 0 6px;
-  height: 54px;
+  height: 54px; /* Aumente ou diminua aqui a altura que preferir (ex: 50px, 54px, 60px) */
+  overflow: hidden;
 }
 .pesquisa-campos-container .filter-box select,
-.pesquisa-campos-container .filter-box input[type="date"] {
+.pesquisa-campos-container .filter-box input {
   font-size: 11px;
-  padding: 0;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  text-align: center;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  text-overflow: ellipsis;
+  padding: 0;
 }
-
 .pesquisa-campos-container .filter-box span {
   font-size: 14px;
   flex-shrink: 0;
+  margin-right: 4px;
 }
+
 @media (max-width: 600px) {
   .pesquisa-campos-container .filter-box {
     padding: 0 4px;
+    height: 54px; /* Garante que a altura maior se mantenha no celular */
   }
   .pesquisa-campos-container .filter-box select,
   .pesquisa-campos-container .filter-box input {
