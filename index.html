@@ -2285,7 +2285,7 @@ function renderizarLista(lista){
     html += '<div style="margin:6px 0;color:#60758c;font-size:13px;font-weight:700;">📦 ' + totalVolumes + (totalVolumes === 1 ? ' volume' : ' volumes') + (remetentes.length ? ' · ' + escapeHtml(remetentes.join(', ')) : '') + '</div>';
     if(fotos.length){
       html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:7px 0;">';
-      html += '<span style="color:#60758c;font-size:12px;font-weight:800;">Fotos:</span>';
+      html += '';
       fotos.forEach((url,indice)=>{
         html += '<button type="button" class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(url) + '\')" title="Ver foto do pacote ' + (indice+1) + '">📷 ' + (indice+1) + '</button>';
       });
