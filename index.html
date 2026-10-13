@@ -13,7 +13,7 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>Controle de Encomendas</title>
+<title>Encomendas</title>
 <!-- Biblioteca do Leitor de Código de Barras -->
 <script src="https://unpkg.com/html5-qrcode"></script>
 <style>
@@ -71,10 +71,7 @@ overflow-wrap: anywhere;
 }
 
 .header-subtitle {
-margin-top: 5px;
-font-size: clamp(11px, 3vw, 15px);
-font-weight: 500;
-overflow-wrap: anywhere;
+display: none;
 }
 
 .header-refresh {
@@ -82,14 +79,11 @@ border: 2px solid rgba(255,255,255,.9);
 background: rgba(255,255,255,.12);
 color: white;
 border-radius: 11px;
-padding: 8px 6px;
-font-size: 12px;
+padding: 8px 12px;
+font-size: 14px;
 font-weight: 900;
 cursor: pointer;
 flex: 0 0 auto;
-max-width: 100px;
-white-space: normal;
-overflow-wrap: anywhere;
 box-sizing: border-box;
 box-shadow: 0 2px 6px rgba(0,0,0,.12);
 }
@@ -103,12 +97,9 @@ opacity: .6;
 cursor: not-allowed;
 }
 
-.header-refresh:active{transform:scale(.98);}
-.header-refresh:disabled{opacity:.6;cursor:not-allowed;}
 .header-icon{width:62px;height:62px;border:3px solid white;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#0b4da2;}
 .header-icon img{width:100%;height:100%;object-fit:cover;display:block;}
 .header-title{font-size:18px;font-weight:900;line-height:1.05;}
-.header-subtitle{margin-top:7px;font-size:14px;font-weight:500;opacity:.98;}
 .container{width:min(calc(100% - 24px),1100px);margin:15px auto 32px;}
 .card{background:#fff;border-radius:19px;box-shadow:0 5px 18px rgba(34,73,120,.10);border:1px solid #e9f0f8;}
 
@@ -146,7 +137,9 @@ cursor: not-allowed;
 .tab-content.active{display:block;}
 
 .registration{padding:18px;margin-bottom:15px;}
-.section-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:900;color:#10458d;margin:0 0 14px;}
+.section-title{display:flex;align-items:center;gap:12px;font-size:20px !important;font-weight:900;color:#10458d;margin:0 0 14px;}
+.filter-title{display:flex;align-items:center;gap:10px;font-size:20px !important;font-weight:900;color:#10458d;margin-bottom:11px;}
+.list-title{display:flex;align-items:center;gap:11px;color:#10458d;font-size:20px !important;font-weight:900;margin:3px 5px 12px;}
 .section-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:27px;}
 .section-icon.orange{color:#ed6800;background:#fff0df;}
 .registration,
@@ -208,24 +201,18 @@ box-sizing: border-box;
 .pending-number strong{display:block;font-size:58px;line-height:1;font-weight:900;}
 .pending-number span{display:block;font-size:20px;font-weight:800;margin-top:3px;}
 
-/* GRID DE PENDENTES (4 CARDS POR LINHA) */
+/* GRID DE PENDENTES (2 CARDS POR LINHA) */
 .pendentes-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 10px;
 }
-@media (max-width: 900px) {
+@media (max-width: 500px) {
   .pendentes-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 500px) {
-  .pendentes-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 
 .pendente-card {
     background: #fff;
@@ -305,11 +292,9 @@ box-sizing: border-box;
 .summary-table td{color:#31527d;font-weight:600;}
 
 .filter-card{padding:15px 18px;margin-bottom:15px;}
-.filter-title{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:900;color:#10458d;margin-bottom:11px;}
 .filter-box{border:2px solid #c7ddf7;border-radius:12px;min-height:53px;display:flex;align-items:center;padding:0 14px;gap:10px;color:#10458d;font-size:21px;}
 .filter-box select, .filter-box input{width:100%;border:0;outline:0;background:transparent;font-size:18px;color:#17345f;}
 .list-card{padding:13px;margin-bottom:15px;}
-.list-title{display:flex;align-items:center;gap:11px;color:#10458d;font-size:25px;font-weight:900;margin:3px 5px 12px;}
 
 .report-card{background:#fff;border-radius:19px;padding:16px 18px;box-shadow:0 5px 18px rgba(34,73,120,.10);display:flex;align-items:center;gap:15px;margin-top:15px;}
 .report-icon{font-size:49px;color:#0878ed;flex-shrink:0;}
@@ -353,7 +338,6 @@ body{
   border-radius:16px;background:rgba(255,255,255,.10);
 }
 .header-title{font-size:28px;letter-spacing:-.3px;}
-.header-subtitle{font-size:16px;margin-top:5px;}
 .header-refresh{
   border:2px solid rgba(255,255,255,.72);
   background:rgba(255,255,255,.10);
@@ -570,44 +554,6 @@ body{padding-bottom:90px;}
   }
 }
 
-/* Ajustes exclusivos da faixa de ações da página Pendentes */
-.pendentes-acoes-topo{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:10px;
-  align-items:stretch;
-  margin-bottom:13px;
-}
-.pendentes-selecao-card{
-  margin:0;
-  padding:10px;
-  display:flex;
-  align-items:center;
-  min-width:0;
-}
-.pendentes-selecao-botao{
-  width:100%;
-  min-height:46px;
-  border:0;
-  border-radius:10px;
-  background:#e5f3eb;
-  color:#176443;
-  font-size:14px;
-  line-height:1.2;
-  font-weight:900;
-  padding:9px 8px;
-  cursor:pointer;
-}
-.pendentes-relatorio-card{
-  margin:0;
-  padding:10px;
-  gap:8px;
-  min-width:0;
-}
-.pendentes-relatorio-card .report-icon{font-size:27px;}
-.pendentes-relatorio-card .report-title{font-size:14px;line-height:1.2;}
-.pendentes-relatorio-card .report-description{font-size:11px;line-height:1.25;}
-.pendentes-relatorio-card .report-button{font-size:12px;padding:8px 9px;}
 .pendentes-grupo-modal{
   margin:12px 0 5px;
   padding:9px 11px;
@@ -630,23 +576,12 @@ body{padding-bottom:90px;}
 }
 .pendente-selecao-linha input{width:20px;height:20px;flex:0 0 20px;margin:1px 0 0;accent-color:#07934f;}
 .pendente-selecao-linha label{flex:1;min-width:0;font-size:14px;color:#263b52;font-weight:700;line-height:1.35;}
-@media(max-width:480px){
-  .pendentes-acoes-topo{gap:7px;}
-  .pendentes-selecao-card{padding:7px;}
-  .pendentes-selecao-botao{font-size:12px;padding:8px 5px;}
-  .pendentes-relatorio-card{padding:8px;gap:5px;}
-  .pendentes-relatorio-card .report-icon{display:none;}
-  .pendentes-relatorio-card .report-title{font-size:12px;}
-  .pendentes-relatorio-card .report-description{font-size:10px;}
-  .pendentes-relatorio-card .report-button{font-size:11px;padding:7px;}
-}
-
 
 /* Layout compacto e consistente para cards de Pendentes e Pesquisa */
 .pendentes-grid,
 .pesquisa-cards-grid {
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
   align-items:stretch;
   margin-top:10px;
@@ -755,7 +690,7 @@ body{padding-bottom:90px;}
 .pesquisa-entregador-rodape .pendente-btn {flex:0 0 32px;}
 @media(max-width:600px){
   .pendentes-grid,
-  .pesquisa-cards-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .pesquisa-cards-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
   .pendente-card {padding:7px;min-height:112px;border-radius:11px;}
   .pendente-data {font-size:9px;}
   .pendente-acoes {gap:4px;}
@@ -842,6 +777,56 @@ margin: 0 !important;
 border-radius: 10px;
 }
 
+/* ===== ESTILOS ESPECÍFICOS SOLICITADOS ===== */
+/* Pesquisa em 1 linha na horizontal e espaçamento distribuído */
+.pesquisa-campos-container {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.pesquisa-campos-container .filter-box {
+  flex: 1;
+  min-width: 0;
+  padding: 0 8px;
+}
+.pesquisa-campos-container .filter-box select,
+.pesquisa-campos-container .filter-box input {
+  font-size: 14px;
+}
+@media (max-width: 768px) {
+  .pesquisa-campos-container .filter-box select,
+  .pesquisa-campos-container .filter-box input {
+    font-size: 12px;
+  }
+}
+
+/* Botões do Resumo com mesmo tamanho e disposição solicitada */
+.resumo-botoes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+.resumo-botao-item {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #08a45b, #07934f);
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(5,137,75,.18);
+}
+.resumo-botao-item.full-width {
+  grid-column: 1 / -1;
+}
 </style>
 </head>
 <body>
@@ -849,10 +834,9 @@ border-radius: 10px;
   <div class="header-inner">
     <div class="header-icon"><img src="./icon-192.png" alt="Portaria"></div>
     <div>
-      <div class="header-title">Controle de Encomendas</div>
-      <div class="header-subtitle">Registro e aviso de encomendas</div>
+      <div class="header-title">Encomendas</div>
     </div>
-    <button class="header-refresh" type="button" onclick="atualizarPagina()">🔄 Atualizar</button>
+    <button class="header-refresh" type="button" onclick="atualizarPagina()">🔄</button>
   </div>
 </header>
 <main class="container">
@@ -867,8 +851,8 @@ border-radius: 10px;
 
   <!-- ABA 1: REGISTRO -->
   <div id="aba-cadastro" class="tab-content active">
-
-   
+
+
 
     <section class="card registration">
   <div class="section-title">
@@ -991,31 +975,6 @@ border-radius: 10px;
 
   <!-- ABA 2: LISTAGEM DE PENDENTES -->
   <div id="aba-listagem" class="tab-content">
-    <section class="card filter-card">
-      <div class="filter-title"><span>🔍</span><span>Filtrar encomendas</span></div>
-      <div class="filter-box">
-        <span>☰</span>
-        <select id="filtroApartamento" onchange="aplicarFiltro()">
-          <option value="">Apartamento</option>
-        </select>
-      </div>
-    </section>
-
-    <div class="pendentes-acoes-topo">
-      <section class="card pendentes-selecao-card">
-        <button type="button" onclick="abrirSelecaoPendentes()" class="pendentes-selecao-botao">📦 Selecionar encomendas</button>
-      </section>
-
-      <section class="report-card pendentes-relatorio-card">
-        <div class="report-icon">➤</div>
-        <div class="report-content">
-          <div class="report-title">Enviar Relatório de Encomendas</div>
-          <div class="report-description">Envia pelo WhatsApp um resumo das encomendas que continuam pendentes para o próximo porteiro.</div>
-        </div>
-       <button class="report-button" onclick="enviarRelatorio()">📤 Enviar Relatório</button>
-      </section>
-    </div>
-
     <section class="card list-card">
       <div class="list-title"><span>☷</span><span>Encomendas pendentes</span></div>
       <div id="lista">
@@ -1028,22 +987,24 @@ border-radius: 10px;
   <!-- ABA 3: PESQUISA GERAL (PENDENTES, RETIRADAS E ENTREGADORES) -->
   <div id="aba-pesquisa" class="tab-content">
     <section class="card filter-card">
-      <div class="filter-title"><span>🔍</span><span>Pesquisar Encomendas e Entregas</span></div>
+      <div class="list-title" style="margin-bottom:12px;">Pesquisa</div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div class="filter-box">
-          <span>📂</span>
-          <select id="tipoPesquisa" onchange="executarPesquisa()" style="width:100%;border:0;outline:0;background:transparent;font-size:17px;color:#17345f;font-weight:800;">
-            <option value="encomendas">Encomendas</option>
-            <option value="entregadores">Entregadores</option>
-          </select>
-        </div>
-        <div class="filter-box">
-          <span>👤</span>
-          <input type="text" id="filtroNomePesquisa" placeholder="Pesquisar por nome, apto, remetente, código ou entregador..." oninput="executarPesquisa()">
-        </div>
-        <div class="filter-box">
-          <span>📅</span>
-          <input type="date" id="filtroDataPesquisa" onchange="executarPesquisa()" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 18px; color: #17345f;">
+        <div class="pesquisa-campos-container">
+          <div class="filter-box">
+            <span>📂</span>
+            <select id="tipoPesquisa" onchange="executarPesquisa()">
+              <option value="encomendas">Encomendas</option>
+              <option value="entregadores">Entregadores</option>
+            </select>
+          </div>
+          <div class="filter-box">
+            <span>👤</span>
+            <input type="text" id="filtroNomePesquisa" placeholder="Nome, apto, remetente..." oninput="executarPesquisa()">
+          </div>
+          <div class="filter-box">
+            <span>📅</span>
+            <input type="date" id="filtroDataPesquisa" onchange="executarPesquisa()">
+          </div>
         </div>
         <button onclick="limparFiltroPesquisa()" style="border:0; border-radius:8px; background:#edf2f7; color:#4c6179; font-size:14px; font-weight:800; padding:10px; cursor:pointer;">Limpar Filtros</button>
       </div>
@@ -1097,7 +1058,7 @@ border-radius: 10px;
           <input type="date" id="dataEntregador">
         </div>
       </div>
-      <button class="save-button" id="btnSalvarEntregador" onclick="salvarEntregador()">💾 &nbsp; REGISTRAR ENTREGA</button>
+      <button class="save-button" id="btnSalvarEntregador" onclick="salvarEntregador()"><span style="display:inline-block; font-size:18px;">🚚</span></button>
     </section>
   </div>
 
@@ -1129,45 +1090,13 @@ border-radius: 10px;
       </div>
     </section>
 
-    <section class="card" style="padding: 18px; margin-bottom: 15px;">
-      <div class="section-title" style="font-size: 21px; margin-bottom: 10px;">
-        <div class="section-icon orange">📊</div>
-        <span>Resumo por Dia</span>
-      </div>
-      <div style="overflow-x: auto;">
-        <table class="summary-table">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th style="text-align: right;">Total de Volumes</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaResumoDias">
-            <tr><td colspan="2" style="text-align: center; color: #70849f;">Carregando dados...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card" style="padding: 18px; margin-bottom: 15px;">
-      <div class="section-title" style="font-size: 21px; margin-bottom: 10px;">
-        <div class="section-icon orange">📈</div>
-        <span>Resumo por Mês</span>
-      </div>
-      <div style="overflow-x: auto;">
-        <table class="summary-table">
-          <thead>
-            <tr>
-              <th>Mês/Ano</th>
-              <th style="text-align: right;">Total de Volumes</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaResumoMeses">
-            <tr><td colspan="2" style="text-align: center; color: #70849f;">Carregando dados...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    <div class="resumo-botoes-grid">
+      <button type="button" class="resumo-botao-item" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])">Entregas do dia</button>
+      <button type="button" class="resumo-botao-item" onclick="mudarAba('entregadores', document.querySelectorAll('.tab-btn')[3])">Entregadores do dia</button>
+      <button type="button" class="resumo-botao-item" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])">Fornecedor que mais entregou</button>
+      <button type="button" class="resumo-botao-item" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[4])">Total do mês</button>
+      <button type="button" class="resumo-botao-item full-width" onclick="enviarRelatorio()">📤 Enviar Relatório</button>
+    </div>
   </div>
 </main>
 
@@ -1244,7 +1173,7 @@ border-radius: 10px;
     </div>
   </div>
 </div>
-    
+
 <!-- MODAL DE EDIÇÃO DE REGISTRO -->
 <div class="modal-overlay" id="modalEdicao">
   <div class="modal">
@@ -1565,7 +1494,7 @@ function mudarAba(abaId, elementoBtn) {
     document.getElementById('aba-resumo').classList.add('active');
     carregarResumo();
   }
-  elementoBtn.classList.add('active');
+  if (elementoBtn) elementoBtn.classList.add('active');
 }
 
 function carregarResumo(){
@@ -1583,28 +1512,6 @@ function carregarResumo(){
       if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDia;
       document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
       document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
-
-      const tbodyDias = document.getElementById('tabelaResumoDias');
-      if(res.entregasPorDia && res.entregasPorDia.length > 0){
-        let htmlDias = '';
-        res.entregasPorDia.forEach(item => {
-          htmlDias += '<tr><td>' + escapeHtml(item.data) + '</td><td style="text-align: right; font-weight: 800; color: #0878ed;">' + item.quantidade + '</td></tr>';
-        });
-        tbodyDias.innerHTML = htmlDias;
-      } else {
-        tbodyDias.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #70849f;">Nenhum registro encontrado.</td></tr>';
-      }
-
-      const tbodyMeses = document.getElementById('tabelaResumoMeses');
-      if(res.entregasPorMes && res.entregasPorMes.length > 0){
-        let htmlMeses = '';
-        res.entregasPorMes.forEach(item => {
-          htmlMeses += '<tr><td>' + escapeHtml(item.mes) + '</td><td style="text-align: right; font-weight: 800; color: #0878ed;">' + item.quantidade + '</td></tr>';
-        });
-        tbodyMeses.innerHTML = htmlMeses;
-      } else {
-        tbodyMeses.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #70849f;">Nenhum registro encontrado.</td></tr>';
-      }
     })
     .withFailureHandler(function(err){
       console.error(err);
@@ -1826,12 +1733,12 @@ function salvarEntregador(){
 
   const btn = document.getElementById('btnSalvarEntregador');
   btn.disabled = true;
-  btn.textContent = '⏳ SALVANDO...';
+  btn.textContent = '⏳';
 
   google.script.run
     .withSuccessHandler(function(){
       btn.disabled = false;
-      btn.textContent = '💾 REGISTRAR ENTREGA';
+      btn.innerHTML = '<span style="display:inline-block; font-size:18px;">🚚</span>';
       mostrarToast('Entrega registrada com sucesso!');
       limparFormularioEntregador();
       const ativa=document.querySelector('.tab-content.active');
@@ -1842,7 +1749,7 @@ function salvarEntregador(){
     .withFailureHandler(function(erro){
       console.error(erro);
       btn.disabled = false;
-      btn.textContent = '💾 REGISTRAR ENTREGA';
+      btn.innerHTML = '<span style="display:inline-block; font-size:18px;">🚚</span>';
       mostrarToast('Erro ao registrar a entrega.');
     })
     .salvarEntregaEntregador({
@@ -1868,7 +1775,7 @@ function atualizarPagina(){
   const btn = document.querySelector('.header-refresh');
   if(btn){
     btn.disabled = true;
-    btn.textContent = '⏳ Atualizando...';
+    btn.textContent = '⏳';
   }
 
   configurarData();
@@ -1894,7 +1801,7 @@ function atualizarPagina(){
       }
       if(btn){
         btn.disabled = false;
-        btn.textContent = '🔄 Atualizar';
+        btn.textContent = '🔄';
       }
       mostrarToast('Página atualizada!');
       return;
@@ -1905,10 +1812,8 @@ function atualizarPagina(){
 
   google.script.run.withSuccessHandler(function(lista){
     encomendas = lista || [];
-    atualizarFiltro();
     atualizarSugestoesDestinatarios();
     aplicarFiltro();
-    atualizarTotal();
     pendentesOk = true;
     finalizarBase();
   }).withFailureHandler(function(erro){
@@ -1982,7 +1887,7 @@ function enviarDadosComFotoFinal(){
 
   google.script.run.withSuccessHandler(function(){
     btn.disabled = false;
-    btn.textContent = '💾 SALVAR ENCOMENDA';
+    btn.textContent = '💾 SALVAR';
     mostrarToast('Encomenda registrada com sucesso!');
     limparFormulario();
     const ativa=document.querySelector('.tab-content.active');
@@ -1994,7 +1899,7 @@ function enviarDadosComFotoFinal(){
     setTimeout(function(){
       confirmarCadastroNoServidor(dados.id, function(existe){
         btn.disabled = false;
-        btn.textContent = '💾 SALVAR ENCOMENDA';
+        btn.textContent = '💾 SALVAR';
         if(existe){
           mostrarToast('Encomenda registrada com sucesso!');
           limparFormulario();
@@ -2056,10 +1961,8 @@ function carregarEncomendas(){
     .withSuccessHandler(function(lista){
       encomendas = lista || [];
       linhasSelecionadasPendentes = new Set();
-      atualizarFiltro();
       atualizarSugestoesDestinatarios();
       aplicarFiltro();
-      atualizarTotal();
     })
     .withFailureHandler(function(erro){
       console.error(erro);
@@ -2319,43 +2222,6 @@ function atualizarSugestoesDestinatarios(){
   });
 }
 
-function atualizarTotal(){
-  let total = 0;
-  encomendas.forEach(function(item){
-    if(normalizar(item.status) === 'retirado') return;
-    total += Number(item.quantidade) || 0;
-  });
-  document.getElementById('totalPendente').textContent = total;
-}
-
-function atualizarFiltro(){
-  const select = document.getElementById('filtroApartamento');
-  const atual = select.value;
-  const apartamentos = new Set();
-  encomendas.forEach(function(item){
-    if(normalizar(item.status) === 'retirado') return;
-    apartamentos.add(item.apartamento || 'Sem apartamento');
-  });
-  select.innerHTML = '<option value="">Apartamento</option>';
-  Array.from(apartamentos).sort((a,b)=>a.localeCompare(b,'pt-BR',{numeric:true})).forEach(apto=>{
-    const option = document.createElement('option');
-    option.value = apto;
-    option.textContent = apto;
-    if(apto===atual) option.selected = true;
-    select.appendChild(option);
-  });
-}
-
-function aplicarFiltro(){
-  const filtro = document.getElementById('filtroApartamento').value;
-  const lista = encomendas.filter(item=>{
-    if(normalizar(item.status)==='retirado') return false;
-    if(filtro && item.apartamento!==filtro) return false;
-    return true;
-  });
-  renderizarLista(lista);
-}
-
 function normalizar(texto){
   return String(texto||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 }
@@ -2365,6 +2231,14 @@ function obterNomeDestinatario(texto){
   nome = nome.replace(/\s*[-–—]?\s*(?:APARTAMENTO|APTO|APT|AP)\s*[-.:]?\s*\d{1,5}\s*$/i,'');
   nome = nome.replace(/\s*[-–—]?\s*\b\d{3,5}\b\s*$/, '');
   return nome.trim();
+}
+
+function aplicarFiltro(){
+  const lista = encomendas.filter(item=>{
+    if(normalizar(item.status)==='retirado') return false;
+    return true;
+  });
+  renderizarLista(lista);
 }
 
 function renderizarLista(lista){
@@ -2414,7 +2288,6 @@ function renderizarLista(lista){
     html += '<div style="margin:6px 0;color:#60758c;font-size:13px;font-weight:700;">📦 ' + totalVolumes + (totalVolumes === 1 ? ' volume' : ' volumes') + (remetentes.length ? ' · ' + escapeHtml(remetentes.join(', ')) : '') + '</div>';
     if(fotos.length){
       html += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:7px 0;">';
-      html += '';
       fotos.forEach((url,indice)=>{
         html += '<button type="button" class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(url) + '\')" title="Ver foto do pacote ' + (indice+1) + '">📷 ' + (indice+1) + '</button>';
       });
