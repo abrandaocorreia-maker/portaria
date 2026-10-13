@@ -2149,9 +2149,10 @@ function executarPesquisaLocal(){
       html += '<div class="pesquisa-entregador-detalhe">Tel.: ' + escapeHtml(item.telefone || '—') + '</div>';
       html += '<div class="pesquisa-entregador-remetente">' + escapeHtml(item.remetente || '') + '</div>';
       html += '<div class="pesquisa-entregador-rodape"><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol.</span>';
-      if(registroEhHojeNoApp(item.data)){
-        html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEntregadorPorIndice(' + Number(item._indicePesquisa || 0) + ')" title="Editar">✏️</button>';
+            if(registroEhHojeNoApp(item.data)){
+        html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEntregadorPorLinha(' + Number(item.linha) + ')" title="Editar">✏️</button>';
       }
+
       html += '</div></div>';
     }
   });
@@ -2205,26 +2206,27 @@ function abrirEdicaoEncomenda(linha){
   document.getElementById('modalEdicao').classList.add('show');
 }
 
-function abrirEdicaoEntregadorPorIndice(indice){
-  const pos=Number(indice);
-  const item=todosEntregadoresPesquisa[pos];
-  if(!item){mostrarToast('Registro de entrega não encontrado.');return;}
+function abrirEdicaoEntregadorPorLinha(linhaAlvo){
+  const item = todosEntregadoresPesquisa.find(x => Number(x.linha) === Number(linhaAlvo));
+  if(!item){
+    mostrarToast('Registro de entrega não encontrado.');
+    return;
+  }
 
-  const linhaInformada=Number(item.linha);
-  const linha=Number.isFinite(linhaInformada) && linhaInformada>=2 ? linhaInformada : (pos+2);
-  tipoEdicaoAtual='entregador';
-  linhaEdicaoAtual=linha;
+  tipoEdicaoAtual = 'entregador';
+  linhaEdicaoAtual = Number(linhaAlvo);
 
-  document.getElementById('modalEdicaoTitulo').textContent='✏️ Editar entrega';
-  document.getElementById('camposEdicaoEncomenda').style.display='none';
-  document.getElementById('camposEdicaoEntregador').style.display='block';
-  document.getElementById('editarEntregador').value=item.entregador||'';
-  document.getElementById('editarTelefoneEntregador').value=item.telefone||'';
-  document.getElementById('editarRemetenteEntregador').value=item.remetente||'';
-  document.getElementById('editarQuantidadeEntregador').value=String(item.quantidade||1);
-  document.getElementById('editarDestinatariosEntregador').value=item.destinatarios||'';
+  document.getElementById('modalEdicaoTitulo').textContent = '✏️ Editar entrega';
+  document.getElementById('camposEdicaoEncomenda').style.display = 'none';
+  document.getElementById('camposEdicaoEntregador').style.display = 'block';
+  document.getElementById('editarEntregador').value = item.entregador || '';
+  document.getElementById('editarTelefoneEntregador').value = item.telefone || '';
+  document.getElementById('editarRemetenteEntregador').value = item.remetente || '';
+  document.getElementById('editarQuantidadeEntregador').value = String(item.quantidade || 1);
+  document.getElementById('editarDestinatariosEntregador').value = item.destinatarios || '';
   document.getElementById('modalEdicao').classList.add('show');
 }
+
 
 function fecharModalEdicao(){document.getElementById('modalEdicao').classList.remove('show');tipoEdicaoAtual='';linhaEdicaoAtual=null;}
 
