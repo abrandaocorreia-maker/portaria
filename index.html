@@ -149,8 +149,46 @@ cursor: not-allowed;
 .section-title{display:flex;align-items:center;gap:12px;font-size:27px;font-weight:900;color:#10458d;margin:0 0 14px;}
 .section-icon{width:45px;height:45px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:27px;}
 .section-icon.orange{color:#ed6800;background:#fff0df;}
-.form-grid{display:grid;grid-template-columns:1fr;gap:11px;}
-.field{border:2px solid #c7ddf7;border-radius:13px;min-height:80px;padding:10px 15px;background:#fff;}
+.registration,
+.registration * {
+box-sizing: border-box;
+}
+
+.registration {
+width: 100%;
+min-width: 0;
+max-width: 100%;
+}
+
+.registration .form-grid {
+display: grid;
+grid-template-columns: minmax(0, 1fr);
+gap: 11px;
+width: 100%;
+min-width: 0;
+max-width: 100%;
+}
+
+.registration .field {
+border: 2px solid #c7ddf7;
+border-radius: 13px;
+min-height: 80px;
+padding: 10px 12px;
+background: #fff;
+width: 100%;
+min-width: 0;
+max-width: 100%;
+}
+
+.registration .field input,
+.registration .field select,
+.registration .field textarea {
+display: block;
+width: 100%;
+min-width: 0;
+max-width: 100%;
+box-sizing: border-box;
+}
 .field-label{display:flex;align-items:center;gap:9px;color:#174987;font-size:16px;font-weight:800;margin-bottom:6px;}
 .field-icon{font-size:23px;}
 .field input, .field select{width:100%;border:0;outline:0;background:transparent;color:#17345f;font-size:19px;font-weight:500;padding:0;}
