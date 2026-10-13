@@ -24,7 +24,7 @@ button,input,select{font-family:inherit;}
 .header {
 background: linear-gradient(135deg, #0878ed, #1769d8);
 color: white;
-padding: 14px 12px;
+padding: 10px 12px;
 box-shadow: 0 4px 14px rgba(0,0,0,.18);
 }
 
@@ -34,19 +34,25 @@ max-width: 1100px;
 margin: 0 auto;
 display: flex;
 align-items: center;
+justify-content: space-between;
 gap: 10px;
 min-width: 0;
 }
 
+.header-inner > div:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
 .header-icon {
-width: 50px;
-height: 50px;
+width: 40px;
+height: 40px;
 border: 2px solid white;
-border-radius: 12px;
+border-radius: 10px;
 display: flex;
 align-items: center;
 justify-content: center;
-flex: 0 0 50px;
+flex: 0 0 40px;
 overflow: hidden;
 background: #0b4da2;
 }
@@ -64,9 +70,9 @@ min-width: 0;
 }
 
 .header-title {
-font-size: clamp(15px, 2.5vw, 23px);
+font-size: 16px !important;
 font-weight: 900;
-line-height: 1.1;
+line-height: 1.2 !important;
 overflow-wrap: anywhere;
 }
 
@@ -75,17 +81,20 @@ display: none;
 }
 
 .header-refresh {
-border: 2px solid rgba(255,255,255,.9);
-background: rgba(255,255,255,.12);
+border: none !important;
+background: transparent !important;
 color: white;
-border-radius: 11px;
-padding: 8px 12px;
-font-size: 14px;
+border-radius: 8px;
+padding: 6px;
+font-size: 18px;
 font-weight: 900;
 cursor: pointer;
 flex: 0 0 auto;
-box-sizing: border-box;
-box-shadow: 0 2px 6px rgba(0,0,0,.12);
+box-shadow: none !important;
+display: flex;
+align-items: center;
+justify-content: center;
+margin-left: auto;
 }
 
 .header-refresh:active {
@@ -97,9 +106,6 @@ opacity: .6;
 cursor: not-allowed;
 }
 
-.header-icon{width:62px;height:62px;border:3px solid white;border-radius:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#0b4da2;}
-.header-icon img{width:100%;height:100%;object-fit:cover;display:block;}
-.header-title{font-size:18px;font-weight:900;line-height:1.05;}
 .container{width:min(calc(100% - 24px),1100px);margin:15px auto 32px;}
 .card{background:#fff;border-radius:19px;box-shadow:0 5px 18px rgba(34,73,120,.10);border:1px solid #e9f0f8;}
 
@@ -329,21 +335,15 @@ body{
 }
 .header{
   background:linear-gradient(135deg,#07934f,#087c49);
-  padding:18px 20px 17px;
+  padding:12px 16px;
   box-shadow:0 3px 12px rgba(22,75,52,.18);
 }
-.header-inner{max-width:1400px;gap:14px;}
+.header-inner{max-width:1400px;gap:10px;}
 .header-icon{
-  width:58px;height:58px;border:2px solid rgba(255,255,255,.92);
-  border-radius:16px;background:rgba(255,255,255,.10);
+  width:40px;height:40px;border:2px solid rgba(255,255,255,.92);
+  border-radius:10px;background:rgba(255,255,255,.10);
 }
-.header-title{font-size:28px;letter-spacing:-.3px;}
-.header-refresh{
-  border:2px solid rgba(255,255,255,.72);
-  background:rgba(255,255,255,.10);
-  border-radius:12px;padding:9px 12px;font-size:14px;
-  box-shadow:none;
-}
+.header-title{font-size:20px;letter-spacing:-.3px;}
 .container{
   width:min(calc(100% - 20px),1400px);
   margin:14px auto 22px;
@@ -439,25 +439,65 @@ body{
 /* AJUSTES DO NOVO MODELO - HOME / NAVEGAÇÃO */
 .home-summary-grid{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
   margin:0 0 14px;
 }
 .summary-home-grid{
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
 }
 
 .summary-home-grid .home-summary-card{
-min-height:95px !important;
-padding:9px 7px !important;
+min-height:75px !important;
+padding:10px 12px !important;
 border-radius:12px !important;
 box-shadow:0 2px 7px rgba(36,72,55,.07) !important;
+flex-direction: row !important;
+align-items: center !important;
+justify-content: space-between !important;
+}
+
+.summary-home-grid .home-summary-card .home-summary-icon {
+  order: 2;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+}
+
+.summary-home-grid .home-summary-card .home-summary-content {
+  order: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-home-grid .home-summary-card .home-summary-title {
+  margin-top: 0 !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  flex: 1;
+  min-width: 0;
+}
+
+.summary-home-grid .home-summary-card .home-summary-value {
+  margin-top: 0 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  letter-spacing: normal !important;
+  flex-shrink: 0;
+  line-height: 1 !important;
 }
 
 .summary-provider-value{
-  font-size:20px;
-  line-height:1.08;
+  font-size:14px !important;
+  line-height:1.1;
   overflow-wrap:anywhere;
+  text-align: right;
 }
 
 .home-summary-card{
@@ -787,45 +827,49 @@ border-radius: 10px;
 .pesquisa-campos-container .filter-box {
   flex: 1;
   min-width: 0;
-  padding: 0 8px;
+  padding: 0 6px;
+  height: 44px;
 }
 .pesquisa-campos-container .filter-box select,
 .pesquisa-campos-container .filter-box input {
-  font-size: 14px;
+  font-size: 12px;
+  width: 100%;
+  text-overflow: ellipsis;
 }
-@media (max-width: 768px) {
+.pesquisa-campos-container .filter-box span {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .pesquisa-campos-container .filter-box {
+    padding: 0 4px;
+  }
   .pesquisa-campos-container .filter-box select,
   .pesquisa-campos-container .filter-box input {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 
-/* Botões do Resumo com mesmo tamanho e disposição solicitada */
-.resumo-botoes-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 15px;
-}
-.resumo-botao-item {
+/* Botão de relatório com mesmo tamanho dos cards do resumo */
+.resumo-botao-card {
   width: 100%;
-  min-height: 52px;
-  border: 0;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #08a45b, #07934f);
+  min-height: 75px !important;
+  border: 1px solid #dce9e3;
+  border-radius: 12px !important;
+  background: linear-gradient(145deg,#08a45b,#078b4d);
   color: white;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 900;
-  padding: 10px;
+  padding: 10px 12px !important;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(5,137,75,.18);
+  justify-content: space-between;
+  text-align: left;
+  box-shadow: 0 2px 7px rgba(36,72,55,.07) !important;
 }
-.resumo-botao-item.full-width {
-  grid-column: 1 / -1;
+.resumo-botao-card:active {
+  transform: scale(0.98);
 }
 </style>
 </head>
@@ -836,7 +880,7 @@ border-radius: 10px;
     <div>
       <div class="header-title">Encomendas</div>
     </div>
-    <button class="header-refresh" type="button" onclick="atualizarPagina()">🔄</button>
+    <button class="header-refresh" type="button" onclick="atualizarPagina()" title="Atualizar">🔄</button>
   </div>
 </header>
 <main class="container">
@@ -999,11 +1043,11 @@ border-radius: 10px;
           </div>
           <div class="filter-box">
             <span>👤</span>
-            <input type="text" id="filtroNomePesquisa" placeholder="Nome, apto, remetente..." oninput="executarPesquisa()">
+            <input type="text" id="filtroNomePesquisa" placeholder="Nome, apto..." oninput="executarPesquisa()">
           </div>
           <div class="filter-box">
             <span>📅</span>
-            <input type="date" id="filtroDataPesquisa" onchange="executarPesquisa()">
+            <input type="date" id="filtroDataPesquisa" onchange="executarPesquisa()" style="text-align: center;">
           </div>
         </div>
         <button onclick="limparFiltroPesquisa()" style="border:0; border-radius:8px; background:#edf2f7; color:#4c6179; font-size:14px; font-weight:800; padding:10px; cursor:pointer;">Limpar Filtros</button>
@@ -1065,38 +1109,51 @@ border-radius: 10px;
   <!-- ABA 5: RESUMO E ESTATÍSTICAS -->
   <div id="aba-resumo" class="tab-content">
     <section class="home-summary-grid summary-home-grid" aria-label="Resumo e estatísticas">
-      <div class="home-summary-card pending">
+      <div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
         <div class="home-summary-icon">📦</div>
-        <div class="home-summary-title">Total de entregas do dia</div>
-        <div class="home-summary-value" id="resumoTotalDia">0</div>
+        <div class="home-summary-content">
+          <div class="home-summary-title">Entregas do dia</div>
+          <div class="home-summary-value" id="resumoTotalDia">0</div>
+        </div>
       </div>
 
-      <div class="home-summary-card day">
+      <div class="home-summary-card day" onclick="mudarAba('entregadores', document.querySelectorAll('.tab-btn')[3])" style="cursor:pointer;">
         <div class="home-summary-icon">🚚</div>
-        <div class="home-summary-title">Total de entregadores</div>
-        <div class="home-summary-value" id="resumoEntregadoresDia">0</div>
+        <div class="home-summary-content">
+          <div class="home-summary-title">Total de entregadores</div>
+          <div class="home-summary-value" id="resumoEntregadoresDia">0</div>
+        </div>
       </div>
 
-      <div class="home-summary-card day summary-provider-card">
+      <div class="home-summary-card day summary-provider-card" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
         <div class="home-summary-icon">🏆</div>
-        <div class="home-summary-title">Fornecedor que mais entregou</div>
-        <div class="home-summary-value summary-provider-value" id="resumoFornecedorTop">Carregando...</div>
+        <div class="home-summary-content">
+          <div class="home-summary-title">Fornecedor que mais entregou</div>
+          <div class="home-summary-value summary-provider-value" id="resumoFornecedorTop">Carregando...</div>
+        </div>
       </div>
 
-      <div class="home-summary-card day">
+      <div class="home-summary-card day" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[4])" style="cursor:pointer;">
         <div class="home-summary-icon">📅</div>
-        <div class="home-summary-title">Total do mês</div>
-        <div class="home-summary-value" id="resumoTotalMes">0</div>
+        <div class="home-summary-content">
+          <div class="home-summary-title">Total do mês</div>
+          <div class="home-summary-value" id="resumoTotalMes">0</div>
+        </div>
       </div>
-    </section>
 
-    <div class="resumo-botoes-grid">
-      <button type="button" class="resumo-botao-item" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])">Entregas do dia</button>
-      <button type="button" class="resumo-botao-item" onclick="mudarAba('entregadores', document.querySelectorAll('.tab-btn')[3])">Entregadores do dia</button>
-      <button type="button" class="resumo-botao-item" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])">Fornecedor que mais entregou</button>
-      <button type="button" class="resumo-botao-item" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[4])">Total do mês</button>
-      <button type="button" class="resumo-botao-item full-width" onclick="enviarRelatorio()">📤 Enviar Relatório</button>
-    </div>
+      <div class="home-summary-card pending" onclick="mudarAba('listagem', document.querySelectorAll('.tab-btn')[1])" style="cursor:pointer;">
+        <div class="home-summary-icon">📦</div>
+        <div class="home-summary-content">
+          <div class="home-summary-title">Total de entregas pendentes</div>
+          <div class="home-summary-value" id="resumoTotalPendentes">0</div>
+        </div>
+      </div>
+
+      <button type="button" class="resumo-botao-card" onclick="enviarRelatorio()">
+        <span style="font-size:13px; font-weight:900;">📤 Enviar Relatório</span>
+        <span style="font-size:18px;">💬</span>
+      </button>
+    </section>
   </div>
 </main>
 
@@ -1512,6 +1569,7 @@ function carregarResumo(){
       if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDia;
       document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
       document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
+      document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
     })
     .withFailureHandler(function(err){
       console.error(err);
