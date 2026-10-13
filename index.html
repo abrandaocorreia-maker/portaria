@@ -22,10 +22,14 @@ html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:#
 button,input,select{font-family:inherit;}
 
 .header {
-background: linear-gradient(135deg, #0878ed, #1769d8);
-color: white;
-padding: 10px 12px;
-box-shadow: 0 4px 14px rgba(0,0,0,.18);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Garante que a barra fique sempre acima dos outros elementos */
+  background: linear-gradient(135deg, #07934f, #087c49);
+  padding: 12px 16px;
+  box-shadow: 0 3px 12px rgba(22,75,52,.18);
 }
 
 .header-inner {
@@ -106,8 +110,10 @@ opacity: .6;
 cursor: not-allowed;
 }
 
-.container{width:min(calc(100% - 24px),1100px);margin:15px auto 32px;}
-.card{background:#fff;border-radius:19px;box-shadow:0 5px 18px rgba(34,73,120,.10);border:1px solid #e9f0f8;}
+.container {
+  width: min(calc(100% - 20px), 1400px);
+  margin: 75px auto 22px auto; /* O '75px' afasta o conteúdo para baixo da altura do cabeçalho */
+}
 
 /* SISTEMA DE ABAS AJUSTADO PARA ROLAGEM HORIZONTAL */
 .nav-tabs{
