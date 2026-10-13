@@ -2280,7 +2280,7 @@ function renderizarLista(lista){
 
     html += '<div class="pendente-card">';
     html += '<div class="pendente-data">' + escapeHtml(datas.length ? datas.join(' · ') : '') + '</div>';
-    html += '<div class="pendente-info-linha"><span>🏠 Apto ' + escapeHtml(grupo.apartamento) + '</span><span class="pendente-qtd">' + grupo.itens.length + (grupo.itens.length === 1 ? ' encomenda' : ' encomendas') + '</span></div>';
+    html += '<div class="pendente-info-linha"><span>🏠 Apto ' + escapeHtml(grupo.apartamento) + '</span><span class="pendente-qtd">' + grupo.itens.length + '</span></div>';
     html += '<div class="pendente-nome" title="' + escapeHtml(grupo.nome) + '">' + escapeHtml(grupo.nome) + '</div>';
     html += '<div style="margin:6px 0;color:#60758c;font-size:13px;font-weight:700;">📦 ' + totalVolumes + (totalVolumes === 1 ? ' volume' : ' volumes') + (remetentes.length ? ' · ' + escapeHtml(remetentes.join(', ')) : '') + '</div>';
     if(fotos.length){
