@@ -2223,7 +2223,7 @@ function abrirEdicaoEncomenda(linha){
   document.getElementById('camposEdicaoEntregador').style.display='none';
   document.getElementById('editarPorteiro').value=item.porteiro||'';
   document.getElementById('editarDestinatario').value=item.destinatario||'';
-  document.getElementById('editarQuantidade').value=String(item.quantidade||1);
+  document.getElementById('editarQuantidadeEncomenda').value=String(item.quantidade||1);
   document.getElementById('editarCodigoBarras').value=item.codigoBarras||'';
   const select=document.getElementById('editarRemetente'); select.innerHTML='';
   const nomes=Array.from(new Set((remetentesCadastrados||[]).concat([item.remetente||'Outros']).filter(Boolean)));
