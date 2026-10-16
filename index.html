@@ -1256,32 +1256,38 @@ border-radius: 10px;
 <div class="modal-overlay" id="modalEdicao">
   <div class="modal">
     <div class="modal-title" id="modalEdicaoTitulo">✏️ Editar registro</div>
+    
+    <!-- Campos de Edição de Encomenda -->
     <div id="camposEdicaoEncomenda">
       <div class="modal-field"><label>Porteiro</label><input type="text" id="editarPorteiro" placeholder="Nome do porteiro"></div>
       <div class="modal-field"><label>Destinatário / Apartamento</label><input type="text" id="editarDestinatario" placeholder="Ex.: João Silva - Apto 203"></div>
       <div class="modal-field"><label>Remetente</label><select id="editarRemetente" style="width:100%;border:2px solid #cad9ea;border-radius:9px;padding:12px;font-size:17px;outline:0;background:#fff;"></select></div>
       <div class="field">
-  <label>Quantidade</label>
-  <input type="number" id="editarQuantidadeEntregador" value="1" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px;"></div>
+        <label>Quantidade</label>
+        <input type="number" id="editarQuantidadeEncomenda" value="1" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px;">
+      </div>
+      <div class="modal-field"><label>Código de barras</label><input type="text" id="editarCodigoBarras" placeholder="Código de barras (opcional)"></div>
+    </div>
 
- <div class="modal-field"><label>Código de barras</label><input type="text" id="editarCodigoBarras" placeholder="Código de barras (opcional)"></div>
-    
+    <!-- Campos de Edição de Entregador -->
     <div id="camposEdicaoEntregador" style="display:none;">
       <div class="modal-field"><label>Entregador</label><input type="text" id="editarEntregador" placeholder="Nome do entregador"></div>
       <div class="modal-field"><label>Telefone</label><input type="text" id="editarTelefoneEntregador" placeholder="Telefone"></div>
       <div class="modal-field"><label>Remetente</label><input type="text" id="editarRemetenteEntregador" placeholder="Remetente"></div>
       <div class="field">
-  <label>Quantidade</label>
-  <input type="number" id="editarQuantidadeEntregador" value="1" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px;">
-</div>
+        <label>Quantidade</label>
+        <input type="number" id="editarQuantidadeEntregador" value="1" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px;">
+      </div>
       <div class="modal-field"><label>Destinatários / Apartamentos</label><input type="text" id="editarDestinatariosEntregador" placeholder="Ex.: Apto 101, 202, 303"></div>
     </div>
+
     <div class="modal-buttons">
       <button class="cancel-button" type="button" onclick="fecharModalEdicao()">Cancelar</button>
       <button class="confirm-button" type="button" id="btnSalvarEdicao" onclick="salvarEdicao()">💾 Salvar alterações</button>
     </div>
   </div>
 </div>
+
 
 <div id="leitorCodigoBarras" style="display:none;width:1px;height:1px;overflow:hidden;"></div>
 <div id="toast" class="toast"></div>
