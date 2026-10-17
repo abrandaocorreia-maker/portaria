@@ -2429,6 +2429,11 @@ if(!linhas.length){
 mostrarToast('Nenhuma encomenda foi selecionada.');
 return;
 }
+
+// Gera a data e a hora atual formatada (Ex: 17/10/2026 19:30:00)
+const agora = new Date();
+const dataHoraRetirada = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR');
+
 const btnConfirmar = document.getElementById('btnConfirmarBaixa');
 btnConfirmar.disabled = true;
 btnConfirmar.textContent = 'Confirmando...';
@@ -2457,9 +2462,10 @@ falhas++;
 restantes--;
 if(restantes === 0) finalizar();
 })
-.darBaixaEncomenda(linha, nome, dadosAssinatura);
+.darBaixaEncomenda(linha, nome, dadosAssinatura, dataHoraRetirada);
 });
 }
+
 
 function enviarRelatorio(){
 const pendentes = encomendas.filter(item=>normalizar(item.status)!=='retirado');
