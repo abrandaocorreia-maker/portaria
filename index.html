@@ -2129,12 +2129,15 @@ datalist.appendChild(opt);
 function normalizar(texto){
 return String(texto||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 }
+
 function obterNomeDestinatario(texto){
-let nome = String(texto||'').trim();
-nome = nome.replace(/\s*-\s*(?:APARTAMENTO|APTO|APT|AP)\s*[-.:]?\s*\d{1,5}\s*$/i,'');
-nome = nome.replace(/\s*-\s*\b\d{3,5}\b\s*$/,'');
-return nome.trim();
+  let nome = String(texto||'').trim();
+  // Remove termos como "Apto 501", "- 501", ou apenas o número " 501" no final do nome
+  nome = nome.replace(/\s*[-–]?\s*(?:APARTAMENTO|APTO|APT|AP)?\s*[-.:]?\s*\b\d{1,5}\b\s*$/i, '');
+  nome = nome.replace(/\s*-\s*.*$/, ''); // Remove qualquer resto após hífen se houver
+  return nome.trim();
 }
+
 function aplicarFiltro(){
 const lista = encomendas.filter(item=>{
 if(normalizar(item.status)==='retirado') return false;
@@ -2257,9 +2260,11 @@ function selecionarTodasNoModalPendentes(marcar){
 document.querySelectorAll('#listaSelecaoPendentes input[type="checkbox"]').forEach(c => c.checked = !!marcar);
 atualizarResumoSelecaoBaixa();
 }
+
 function fecharSelecaoPendentes(){
 document.getElementById('modalSelecaoPendentes').classList.remove('show');
 }
+
 function confirmarSelecaoPendentes(){
 linhasSelecionadasBaixa = Array.from(document.querySelectorAll('#listaSelecaoPendentes input[type="checkbox"]:checked'))
 .map(c => Number(c.value)).filter(Number.isFinite);
@@ -2275,6 +2280,7 @@ linhasBaixaAptoAtual = linhasSelecionadasBaixa.slice();
 document.getElementById('modalBaixa').classList.add('show');
 setTimeout(inicializarCanvas, 50);
 }
+
 function avisarGrupo(linhas){
 const grupo = encomendas.filter(item=>linhas.map(Number).includes(Number(item.linha)));
 if(!grupo.length) return;
@@ -2331,6 +2337,7 @@ concluirAviso('');
 })
 .obterLinkGaleriaFotos(primeiro.destinatario);
 }
+
 function marcarLinhasComoAvisadas(itens){
 if(!itens.length) return;
 let restante = itens.length;
@@ -2348,6 +2355,7 @@ if(restante <= 0) carregarEncomendas();
 .marcarEncomendaAvisada(item.linha);
 });
 }
+
 function abrirFoto(url){
 if(!url){
 mostrarToast('Esta encomenda não possui foto.');
@@ -2355,6 +2363,7 @@ return;
 }
 window.open(url, '_blank');
 }
+
 function abrirBaixa(linha){
 linhaBaixaAtual = linha;
 linhasBaixaAptoAtual = null;
