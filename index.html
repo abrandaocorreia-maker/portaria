@@ -2148,14 +2148,18 @@ if(!lista.length){
 container.innerHTML = '<div class="empty">Nenhuma encomenda pendente.</div>';
 return;
 }
-const grupos = new Map();
-lista.forEach(item => {
-const apartamento = String(item.apartamento || 'Sem apartamento').trim();
-const nome = obterNomeDestinatario(item.destinatario) || 'Destinatário não informado';
-const chave = normalizar(apartamento) + '||' + normalizar(nome);
-if(!grupos.has(chave)) grupos.set(chave, {apartamento, nome, itens:[]});
-grupos.get(chave).itens.push(item);
-});
+  const grupos = new Map();
+  lista.forEach(item => {
+    const apartamento = String(item.apartamento || 'Sem apartamento').trim();
+    // Limpa o nome para remover qualquer repetição de apartamento ou traço extra
+    const nomeBruto = obterNomeDestinatario(item.destinatario) || item.destinatario || 'Destinatário não informado';
+    const nome = obterNomeDestinatario(nomeBruto);
+    
+    const chave = normalizar(apartamento) + '||' + normalizar(nome);
+    if(!grupos.has(chave)) grupos.set(chave, {apartamento, nome, itens:[]});
+    grupos.get(chave).itens.push(item);
+  });
+
 const listaGrupos = Array.from(grupos.values()).sort((a,b) => {
 const cmpA = a.apartamento.localeCompare(b.apartamento, 'pt-BR', {numeric:true});
 if(cmpA) return cmpA;
@@ -2360,6 +2364,7 @@ document.getElementById('retiradoPor').value = nomeRec;
 document.getElementById('modalBaixa').classList.add('show');
 setTimeout(inicializarCanvas, 50);
 }
+
 function fecharModal(){
 linhaBaixaAtual = null;
 linhasBaixaAptoAtual = null;
@@ -2372,6 +2377,7 @@ btnConfirmar.textContent = 'Confirmar retirada';
 }
 document.getElementById('modalBaixa').classList.remove('show');
 }
+
 function confirmarBaixa(){
 const nome = document.getElementById('retiradoPor').value.trim();
 if(!nome){
@@ -2417,6 +2423,7 @@ if(restantes === 0) finalizar();
 .darBaixaEncomenda(linha, nome, dadosAssinatura);
 });
 }
+
 function enviarRelatorio(){
 const pendentes = encomendas.filter(item=>normalizar(item.status)!=='retirado');
 if(!pendentes.length){
