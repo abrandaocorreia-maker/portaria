@@ -914,7 +914,7 @@ autocomplete="off"
 >
 <datalist id="sugestoesDestinatarios"></datalist>
 </div>
-<!-- Quantidade -->
+<!-- Quantidade (Deixado em branco conforme solicitado) -->
 <div class="field">
 <div class="field-label"><span class="field-icon">📦</span>Quantidade</div>
 <input type="number" id="quantidade" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 19px;">
@@ -1064,6 +1064,21 @@ SALVAR
 <div class="home-summary-content">
 <div class="home-summary-title">Total de entregas pendentes</div>
 <div class="home-summary-value" id="resumoTotalPendentes">0</div>
+</div>
+</div>
+<!-- Novos cards adicionados para conferência de volumes -->
+<div class="home-summary-card pending" onclick="mudarAba('listagem', document.querySelectorAll('.tab-btn')[1])" style="cursor:pointer;">
+<div class="home-summary-icon">📦</div>
+<div class="home-summary-content">
+<div class="home-summary-title">Total de volumes pendentes</div>
+<div class="home-summary-value" id="resumoTotalVolumesPendentes">0</div>
+</div>
+</div>
+<div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
+<div class="home-summary-icon">📦</div>
+<div class="home-summary-content">
+<div class="home-summary-title">Volumes entregues no dia</div>
+<div class="home-summary-value" id="resumoVolumesEntreguesDia">0</div>
 </div>
 </div>
 <button type="button" class="resumo-botao-card" onclick="enviarRelatorio()">
@@ -1459,6 +1474,13 @@ if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDi
 document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
 document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
 document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
+// Atualização dos novos cards de volumes
+if(document.getElementById('resumoTotalVolumesPendentes')) {
+  document.getElementById('resumoTotalVolumesPendentes').textContent = res.totalVolumesPendentes || 0;
+}
+if(document.getElementById('resumoVolumesEntreguesDia')) {
+  document.getElementById('resumoVolumesEntreguesDia').textContent = res.volumesEntreguesDia || 0;
+}
 })
 .withFailureHandler(function(err){
 console.error(err);
@@ -1856,7 +1878,7 @@ atualizarCodigosBarrasVisuais();
 function limparFormulario(){
 document.getElementById('destinatario').value = "";
 document.getElementById('remetente').value = "";
-document.getElementById('quantidade').value = '1';
+document.getElementById('quantidade').value = "";
 const codigoVisual = document.getElementById('codigoBarrasVisual');
 if(codigoVisual) codigoVisual.value = "";
 document.getElementById('fotoTexto').textContent = 'Tire uma foto por etiqueta. Você pode adicionar vários códigos para o mesmo morador.';
@@ -1923,11 +1945,10 @@ else google.script.run.withSuccessHandler(ok).withFailureHandler(falha).pesquisa
 function filtrarPendentesLocal() {
   const termo = normalizar(document.getElementById('filtroPendentes').value);
 
-  // Filtra as encomendas que não foram retiradas e correspondem ao termo digitado
   const listaFiltrada = encomendas.filter(item => {
     if (normalizar(item.status) === 'retirado') return false;
 
-    if (!termo) return true; // Se estiver vazio, mostra todas as pendentes
+    if (!termo) return true;
 
     const nomeDest = normalizar(obterNomeDestinatario(item.destinatario));
     const apto = normalizar(item.apartamento);
@@ -2020,7 +2041,6 @@ html += '<div class="pendente-nome pesquisa-entregador-nome" title="' + escapeHt
 html += '<div class="pesquisa-entregador-detalhe">Tel.: ' + escapeHtml(item.telefone || '—') + '</div>';
 html += '<div class="pesquisa-entregador-remetente">' + escapeHtml(item.remetente || '') + '</div>';
 html += '<div class="pesquisa-entregador-rodape"><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol.</span>';
-// 1) página Pesquisa: coloque um botão para editar os registros dos Entregadores que aparecem nos resultados das pesquisas dessa página.
 html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEntregadorPorLinha(' + Number(item.linha) + ')" title="Editar">✏️</button>';
 html += '</div></div>';
 }
@@ -2213,8 +2233,6 @@ html += '<button type="button" class="pendente-btn pendente-btn-foto" onclick="a
 html += '</div>';
 }
 html += '<div class="pendente-acoes">';
-// 1) página Pendentes (Encomendas): retire os textos dos botões Avisar e Baixa e deixe apenas os icones.
-// 2) adicione um botão Editar nos cards das encomendas ao lado dos botões Avisar e Baixa, apenas com um ícone Editar.
 if(naoAvisados){
 html += '<button class="pendente-btn pendente-btn-msg" onclick="avisarGrupo([' + linhas.join(',') + '])" title="Avisar">💬</button>';
 } else {
@@ -2228,7 +2246,6 @@ html += '</div>';
 container.innerHTML = html;
 }
 
-// Função auxiliar para abrir a edição pelo card da página Encomendas (Pendentes)
 function abrirEdicaoEncomendaGrupo(linha){
   const item = encomendas.find(x => Number(x.linha) === Number(linha));
   if(!item){ mostrarToast('Encomenda não encontrada.'); return; }
