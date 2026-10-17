@@ -958,6 +958,16 @@ SALVAR
 <div id="aba-listagem" class="tab-content">
 <section class="card list-card">
 <div class="list-title"><span>⏳</span><span>Encomendas pendentes</span></div>
+
+
+    <!-- CAMPO DE FILTRO PARA PENDENTES -->
+    <div style="margin-bottom: 12px;">
+      <div class="filter-box" style="padding: 0 14px; min-height: 48px;">
+        <span>🔍</span>
+        <input type="text" id="filtroPendentes" placeholder="Filtrar por nome ou apto..." oninput="filtrarPendentesLocal()" style="font-size: 15px;">
+      </div>
+    </div>
+
 <div id="lista">
 <div class="loading">Carregando encomendas...</div>
 </div>
@@ -1920,6 +1930,27 @@ if(tipo==='encomendas') google.script.run.withSuccessHandler(ok).withFailureHand
 else google.script.run.withSuccessHandler(ok).withFailureHandler(falha).pesquisarEntregadores({termo:termo.trim(),data:data});
 },300);
 }
+
+function filtrarPendentesLocal() {
+  const termo = normalizar(document.getElementById('filtroPendentes').value);
+  
+  // Filtra as encomendas que não foram retiradas e correspondem ao termo digitado
+  const listaFiltrada = encomendas.filter(item => {
+    if (normalizar(item.status) === 'retirado') return false;
+    
+    if (!termo) return true; // Se estiver vazio, mostra todas as pendentes
+    
+    const nomeDest = normalizar(obterNomeDestinatario(item.destinatario));
+    const apto = normalizar(item.apartamento);
+    const rem = normalizar(item.remetente);
+    
+    return nomeDest.includes(termo) || apto.includes(termo) || rem.includes(termo);
+  });
+
+  renderizarLista(listaFiltrada);
+}
+
+
 function executarPesquisaLocal(){
 const termo = normalizar(document.getElementById('filtroNomePesquisa').value);
 const dataFiltro = document.getElementById('filtroDataPesquisa').value;
