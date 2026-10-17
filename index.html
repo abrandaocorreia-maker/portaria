@@ -1524,6 +1524,7 @@ if(input) input.value = "";
 })
 .listarRemetentes();
 }
+
 function adicionarRemetenteRegistrar(){
 abrirNovoRemetente('registrar');
 }
@@ -1541,6 +1542,7 @@ function fecharNovoRemetente(){
 const modal = document.getElementById('modalNovoRemetente');
 if(modal) modal.classList.remove('show');
 }
+
 function confirmarNovoRemetente(){
 const campo = document.getElementById('novoRemetenteNome');
 const btn = document.getElementById('btnSalvarNovoRemetente');
@@ -1570,6 +1572,7 @@ mostrarToast('Não foi possível adicionar o remetente.');
 })
 .adicionarRemetente(novo);
 }
+
 function atualizarSugestoesRemetentesRegistrar(lista){
 const datalist = document.getElementById('sugestoesRemetentesRegistrar');
 if(!datalist) return;
@@ -1585,6 +1588,7 @@ option.value = 'Outros';
 datalist.appendChild(option);
 }
 }
+
 function configurarDataEntregador(){
 const hoje = new Date();
 const ano = hoje.getFullYear();
@@ -1593,6 +1597,7 @@ const dia = String(hoje.getDate()).padStart(2, '0');
 const campo = document.getElementById('dataEntregador');
 if(campo) campo.value = ano + '-' + mes + '-' + dia;
 }
+
 function carregarEntregadores(){
 google.script.run
 .withSuccessHandler(function(lista){
@@ -1607,6 +1612,7 @@ atualizarSugestoesEntregadores();
 })
 .listarEntregadores();
 }
+
 function atualizarSugestoesEntregadores(){
 const datalist = document.getElementById('sugestoesEntregadores');
 if(!datalist) return;
@@ -1620,6 +1626,7 @@ opt.value = item.nome;
 datalist.appendChild(opt);
 });
 }
+
 function preencherTelefoneEntregador(){
 const campoNome = document.getElementById('entregador');
 const campoTelefone = document.getElementById('telefoneEntregador');
@@ -1629,6 +1636,7 @@ if(!nome) return;
 const encontrado = entregadoresCadastrados.find(item=>normalizar(item.nome)===nome);
 if(encontrado) campoTelefone.value = encontrado.telefone || "";
 }
+
 function carregarRemetentesEntregador(){
 google.script.run
 .withSuccessHandler(function(lista){
@@ -1640,6 +1648,7 @@ console.error(erro);
 })
 .listarRemetentes();
 }
+
 function atualizarSugestoesRemetentesEntregador(){
 const datalist = document.getElementById('sugestoesRemetentesEntregador');
 if(!datalist) return;
@@ -1803,6 +1812,7 @@ codigoBarras: codigoBarras
 };
 abrirModalFotoPacote();
 }
+
 function enviarDadosComFotoFinal(){
 if(!dadosEncomendaTemporaria) return;
 const dados = dadosEncomendaTemporaria;
@@ -2170,12 +2180,9 @@ function obterNomeDestinatario(texto){
 }
 
 function aplicarFiltro(){
-const lista = encomendas.filter(item=>{
-if(normalizar(item.status)==='retirado') return false;
-return true;
-});
-renderizarLista(lista);
+  filtrarPendentesLocal();
 }
+
 function renderizarLista(lista){
 const container = document.getElementById('lista');
 if(!lista.length){
