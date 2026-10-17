@@ -142,11 +142,11 @@ text-align:center;
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 .registration{padding: 18px;margin-bottom:15px;}
-.section-title{display: flex; align-items:center; gap: 12px;font-size:20px !important;font-weight:900;color:#10458d; margin:0 0 14px;}
-.filter-title{display:flex;align-items:center;gap:10px;font-size:20px !important;font-weight:900;color:#10458d; margin-bottom:11px;}
-.list-title{display:flex;align-items:center; gap: 11px; color:#10458d;font-size:20px !important;font-weight:900;margin:3px 5px 12px;}
+.section-title{display: flex; align-items:center; gap: 12px;font-size:20px !important;font-weight:900;color:#0b7750; margin:0 0 14px;}
+.filter-title{display:flex;align-items:center;gap:10px;font-size:20px !important;font-weight:900;color:#0b7750; margin-bottom:11px;}
+.list-title{display:flex;align-items:center; gap: 11px; color:#0b7750;font-size:20px !important;font-weight:900;margin:3px 5px 12px;}
 .section-icon{width:45px;height:45px;border-radius: 12px; display: flex; align-items:center;justify-content:center;font-size:27px;}
-.section-icon.orange{color:#ed6800;background:#fff0df;}
+.section-icon.orange{color:#0b9655;background:#e5f6ed;}
 .registration,
 .registration * {
 box-sizing: border-box;
@@ -426,11 +426,15 @@ margin:0 0 14px;
 .summary-home-grid{
 grid-template-columns:repeat(2,minmax(0,1fr));
 }
+/* Estilo ajustado para os cards do resumo ficarem parecidos com os campos (menores, brancos, borda suave) */
 .summary-home-grid.home-summary-card{
 min-height:75px !important;
 padding:10px 12px !important;
 border-radius:12px !important;
-box-shadow:0 2px 7px rgba(36,72,55,.07) !important;
+background:#fff !important;
+border:2px solid #d3e2dc !important;
+color:#263b52 !important;
+box-shadow:0 4px 14px rgba(36,72,55,.07) !important;
 flex-direction: row !important;
 align-items: center !important;
 justify-content: space-between !important;
@@ -441,6 +445,8 @@ margin: 0;
 width: 32px;
 height: 32px;
 font-size: 18px;
+background:#e5f6ed !important;
+color:#0b7750 !important;
 }
 .summary-home-grid.home-summary-card .home-summary-content {
 order: 1;
@@ -455,14 +461,16 @@ min-width: 0;
 margin-top: 0 !important;
 font-size: 13px !important;
 font-weight: 800 !important;
+color:#38556e !important;
 line-height: 1.2 !important;
 flex: 1;
 min-width: 0;
 }
 .summary-home-grid.home-summary-card .home-summary-value {
 margin-top: 0 !important;
-font-size: 14px !important;
+font-size: 16px !important;
 font-weight: 900 !important;
+color:#0b7750 !important;
 letter-spacing: normal !important;
 flex-shrink: 0;
 line-height: 1 !important;
@@ -472,13 +480,14 @@ font-size:14px !important;
 line-height:1.1;
 overflow-wrap:anywhere;
 text-align: right;
+color:#0b7750 !important;
 }
 .home-summary-card{
 min-height:132px;
-border:1px solid #dce9e3;
-border-radius:18px;
+border:2px solid #d3e2dc;
+border-radius:12px;
 background:#fff;
-box-shadow:0 5px 16px rgba(36,72,55,.08);
+box-shadow:0 4px 14px rgba(36,72,55,.07);
 padding: 13px 12px;
 display:flex;
 flex-direction:column;
@@ -486,33 +495,36 @@ justify-content:space-between;
 overflow:hidden;
 }
 .home-summary-card.pending{
-background:linear-gradient(145deg,#08a45b,#078b4d);
-border-color:#078b4d;
-color:#fff;
+background:#fff;
+border-color:#d3e2dc;
+color:#263b52;
 }
 .home-summary-card.day{
-background:linear-gradient(145deg,#eef9f4,#ffffff);
+background:#fff;
+border-color:#d3e2dc;
 }
 .home-summary-icon{
 width:34px;height:34px;border-radius: 10px;
 display:flex;align-items:center; justify-content:center;
 font-size:22px;
-background:#e7f7ee;color:#07934f;
+background:#e5f6ed;color:#0b7750;
 }
 .home-summary-card.pending .home-summary-icon{
-background:rgba(255,255,255,.18);color:#fff;
+background:#e5f6ed;color:#0b7750;
 }
 .home-summary-title{
 margin-top:7px;
 font-size:13px;
 line-height:1.12;
-font-weight:900;
+font-weight:800;
+color:#38556e;
 }
 .home-summary-value{
 margin-top:3px;
-font-size:34px;
+font-size:22px;
 line-height:1;
 font-weight:900;
+color:#0b7750;
 letter-spacing:-.5px;
 }
 .photo-card-button{
@@ -809,10 +821,10 @@ font-size: 11px;
 .resumo-botao-card {
 width: 100%;
 min-height: 75px !important;
-border: 1px solid #dce9e3;
+border: 2px solid #d3e2dc !important;
 border-radius: 12px !important;
-background: linear-gradient(145deg, #08a45b,#078b4d);
-color: white;
+background: #fff !important;
+color: #0b7750 !important;
 font-size: 13px;
 font-weight: 900;
 padding: 10px 12px !important;
@@ -821,7 +833,7 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 text-align: left;
-box-shadow: 0 2px 7px rgba(36,72,55,.07) !important;
+box-shadow: 0 4px 14px rgba(36,72,55,.07) !important;
 }
 .resumo-botao-card:active {
 transform: scale(0.98);
@@ -914,7 +926,7 @@ autocomplete="off"
 >
 <datalist id="sugestoesDestinatarios"></datalist>
 </div>
-<!-- Quantidade (Deixado em branco conforme solicitado) -->
+<!-- Quantidade -->
 <div class="field">
 <div class="field-label"><span class="field-icon">📦</span>Quantidade</div>
 <input type="number" id="quantidade" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 19px;">
@@ -942,7 +954,10 @@ SALVAR
 <!-- ABA 2: LISTAGEM DE PENDENTES -->
 <div id="aba-listagem" class="tab-content">
 <section class="card list-card">
-<div class="list-title"><span>⏳</span><span>Encomendas pendentes</span></div>
+<div class="section-title">
+<div class="section-icon orange">⏳</div>
+<span>Encomendas</span>
+</div>
 
 
     <!-- CAMPO DE FILTRO PARA PENDENTES -->
@@ -961,7 +976,10 @@ SALVAR
 <!-- ABA 3: PESQUISA GERAL (PENDENTES, RETIRADAS E ENTREGADORES) -->
 <div id="aba-pesquisa" class="tab-content">
 <section class="card filter-card">
-<div class="list-title" style="margin-bottom:12px;">Pesquisa</div>
+<div class="section-title" style="margin-bottom:12px;">
+<div class="section-icon orange">🔍</div>
+<span>Pesquisa</span>
+</div>
 <div style="display: flex; flex-direction: column; gap: 10px;">
 <div class="pesquisa-campos-container">
 <div class="filter-box">
@@ -995,7 +1013,7 @@ SALVAR
 <section class="card registration">
 <div class="section-title">
 <div class="section-icon orange">🚚</div>
-<span>Registrar entrega</span>
+<span>Entregadores</span>
 </div>
 <div class="form-grid">
 <div class="field">
@@ -1030,6 +1048,12 @@ SALVAR
 </div>
 <!-- ABA 5: RESUMO E ESTATÍSTICAS -->
 <div id="aba-resumo" class="tab-content">
+<section class="card registration" style="margin-bottom: 12px; padding: 14px 18px;">
+<div class="section-title" style="margin: 0;">
+<div class="section-icon orange">📊</div>
+<span>Resumo</span>
+</div>
+</section>
 <section class="home-summary-grid summary-home-grid" aria-label="Resumo e estatísticas">
 <div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
 <div class="home-summary-icon">📅</div>
@@ -1066,23 +1090,8 @@ SALVAR
 <div class="home-summary-value" id="resumoTotalPendentes">0</div>
 </div>
 </div>
-<!-- Novos cards adicionados para conferência de volumes -->
-<div class="home-summary-card pending" onclick="mudarAba('listagem', document.querySelectorAll('.tab-btn')[1])" style="cursor:pointer;">
-<div class="home-summary-icon">📦</div>
-<div class="home-summary-content">
-<div class="home-summary-title">Total de volumes pendentes</div>
-<div class="home-summary-value" id="resumoTotalVolumesPendentes">0</div>
-</div>
-</div>
-<div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
-<div class="home-summary-icon">📦</div>
-<div class="home-summary-content">
-<div class="home-summary-title">Volumes entregues no dia</div>
-<div class="home-summary-value" id="resumoVolumesEntreguesDia">0</div>
-</div>
-</div>
 <button type="button" class="resumo-botao-card" onclick="enviarRelatorio()">
-<span style="font-size: 13px; font-weight:900;">📤 Enviar Relatório</span>
+<span style="font-size: 13px; font-weight:900; color: #0b7750;">📤 Enviar Relatório</span>
 <span style="font-size:18px;">💬</span>
 </button>
 </section>
@@ -1474,13 +1483,6 @@ if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDi
 document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
 document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
 document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
-// Atualização dos novos cards de volumes
-if(document.getElementById('resumoTotalVolumesPendentes')) {
-  document.getElementById('resumoTotalVolumesPendentes').textContent = res.totalVolumesPendentes || 0;
-}
-if(document.getElementById('resumoVolumesEntreguesDia')) {
-  document.getElementById('resumoVolumesEntreguesDia').textContent = res.volumesEntreguesDia || 0;
-}
 })
 .withFailureHandler(function(err){
 console.error(err);
