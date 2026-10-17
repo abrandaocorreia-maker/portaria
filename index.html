@@ -842,7 +842,7 @@ transform: scale(0.98);
 <!-- 5 ABAS DE NAVEGAÇÃO -->
 <div class="nav-tabs">
 <button class="tab-btn active" onclick="mudarAba('cadastro', this)">📦 Registrar</button>
-<button class="tab-btn" onclick="mudarAba('listagem', this)">⏳ Pendentes</button>
+<button class="tab-btn" onclick="mudarAba('listagem', this)">⏳ Encomendas</button>
 <button class="tab-btn" onclick="mudarAba('pesquisa', this)">🔍 Pesquisa</button>
 <button class="tab-btn" onclick="mudarAba('entregadores', this)">🚚 Entregadores</button>
 <button class="tab-btn" onclick="mudarAba('resumo', this)">📊 Resumo</button>
@@ -931,11 +931,6 @@ list="sugestoesRemetentesRegistrar"
 autocomplete="off"
 >
 <datalist id="sugestoesRemetentesRegistrar"></datalist>
-<button
-type="button"
-onclick="adicionarRemetenteRegistrar()"
-style="margin-top:6px;border:0;border-radius:8px; background:#edf2f7;color:#31527d;font-size:12px;font-weight:800;padding:7px;cursor:pointer;width:100%;"
->+ Novo remetente</button>
 </div>
 <!-- Botão Salvar -->
 <button class="save-button" id="btnSalvar" onclick="salvar()">
@@ -1016,11 +1011,10 @@ SALVAR
 <div class="field-label"><span class="field-icon">🏢</span>Remetente</div>
 <input type="text" id="remetenteEntregador" placeholder="Digite ou escolha um remetente" list="sugestoesRemetentesEntregador" autocomplete="off">
 <datalist id="sugestoesRemetentesEntregador"></datalist>
-<button type="button" onclick="adicionarRemetenteEntregador()" style="margin-top:8px;border:0;border-radius:9px;background:#edf2f7;color:#31527d;font-size:14px;font-weight:800;padding:9px 11px; cursor:pointer;">+ Adicionar novo remetente</button>
 </div>
 <div class="field">
 <div class="field-label"><span class="field-icon">📦</span>Quantidade</div>
-<input type="number" id="quantidadeEntregador" value="1" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px;">
+<input type="number" id="quantidadeEntregador" min="1" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 16px;">
 </div>
 <div class="field">
 <div class="field-label"><span class="field-icon">🏠</span>Destinatários / Apartamentos</div>
@@ -1515,9 +1509,6 @@ if(input) input.value = "";
 .listarRemetentes();
 }
 
-function adicionarRemetenteRegistrar(){
-abrirNovoRemetente('registrar');
-}
 let contextoNovoRemetente = 'registrar';
 function abrirNovoRemetente(contexto){
 contextoNovoRemetente = contexto || 'registrar';
@@ -1649,9 +1640,7 @@ opt.value = nome;
 datalist.appendChild(opt);
 });
 }
-function adicionarRemetenteEntregador(){
-abrirNovoRemetente('entregador');
-}
+
 function salvarEntregador(){
 const nome = document.getElementById('entregador').value.trim();
 const telefone = document.getElementById('telefoneEntregador').value.trim();
@@ -1707,7 +1696,7 @@ function limparFormularioEntregador(){
 document.getElementById('entregador').value = "";
 document.getElementById('telefoneEntregador').value = "";
 document.getElementById('remetenteEntregador').value = "";
-document.getElementById('quantidadeEntregador').value = '1';
+document.getElementById('quantidadeEntregador').value = "";
 document.getElementById('destinatariosEntregador').value = "";
 configurarDataEntregador();
 }
@@ -1933,17 +1922,17 @@ else google.script.run.withSuccessHandler(ok).withFailureHandler(falha).pesquisa
 
 function filtrarPendentesLocal() {
   const termo = normalizar(document.getElementById('filtroPendentes').value);
-  
+
   // Filtra as encomendas que não foram retiradas e correspondem ao termo digitado
   const listaFiltrada = encomendas.filter(item => {
     if (normalizar(item.status) === 'retirado') return false;
-    
+
     if (!termo) return true; // Se estiver vazio, mostra todas as pendentes
-    
+
     const nomeDest = normalizar(obterNomeDestinatario(item.destinatario));
     const apto = normalizar(item.apartamento);
     const rem = normalizar(item.remetente);
-    
+
     return nomeDest.includes(termo) || apto.includes(termo) || rem.includes(termo);
   });
 
@@ -2031,9 +2020,8 @@ html += '<div class="pendente-nome pesquisa-entregador-nome" title="' + escapeHt
 html += '<div class="pesquisa-entregador-detalhe">Tel.: ' + escapeHtml(item.telefone || '—') + '</div>';
 html += '<div class="pesquisa-entregador-remetente">' + escapeHtml(item.remetente || '') + '</div>';
 html += '<div class="pesquisa-entregador-rodape"><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol.</span>';
-if(registroEhHojeNoApp(item.data)){
+// 1) página Pesquisa: coloque um botão para editar os registros dos Entregadores que aparecem nos resultados das pesquisas dessa página.
 html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEntregadorPorLinha(' + Number(item.linha) + ')" title="Editar">✏️</button>';
-}
 html += '</div></div>';
 }
 });
@@ -2163,9 +2151,8 @@ return String(texto||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLower
 
 function obterNomeDestinatario(texto){
   let nome = String(texto||'').trim();
-  // Remove termos como "Apto 501", "- 501", ou apenas o número " 501" no final do nome
   nome = nome.replace(/\s*[-–]?\s*(?:APARTAMENTO|APTO|APT|AP)?\s*[-.:]?\s*\b\d{1,5}\b\s*$/i, '');
-  nome = nome.replace(/\s*-\s*.*$/, ''); // Remove qualquer resto após hífen se houver
+  nome = nome.replace(/\s*-\s*.*$/, '');
   return nome.trim();
 }
 
@@ -2182,10 +2169,9 @@ return;
   const grupos = new Map();
   lista.forEach(item => {
     const apartamento = String(item.apartamento || 'Sem apartamento').trim();
-    // Limpa o nome para remover qualquer repetição de apartamento ou traço extra
     const nomeBruto = obterNomeDestinatario(item.destinatario) || item.destinatario || 'Destinatário não informado';
     const nome = obterNomeDestinatario(nomeBruto);
-    
+
     const chave = normalizar(apartamento) + '||' + normalizar(nome);
     if(!grupos.has(chave)) grupos.set(chave, {apartamento, nome, itens:[]});
     grupos.get(chave).itens.push(item);
@@ -2227,16 +2213,26 @@ html += '<button type="button" class="pendente-btn pendente-btn-foto" onclick="a
 html += '</div>';
 }
 html += '<div class="pendente-acoes">';
+// 1) página Pendentes (Encomendas): retire os textos dos botões Avisar e Baixa e deixe apenas os icones.
+// 2) adicione um botão Editar nos cards das encomendas ao lado dos botões Avisar e Baixa, apenas com um ícone Editar.
 if(naoAvisados){
-html += '<button class="pendente-btn pendente-btn-msg" onclick="avisarGrupo([' + linhas.join(',') + '])" title="Avisar morador no WhatsApp">💬 Avisar</button>';
+html += '<button class="pendente-btn pendente-btn-msg" onclick="avisarGrupo([' + linhas.join(',') + '])" title="Avisar">💬</button>';
 } else {
-html += '<button class="pendente-btn pendente-btn-msg" disabled style="opacity:0.6" title="Avisado">✔️ Avisado</button>';
+html += '<button class="pendente-btn pendente-btn-msg" disabled style="opacity:0.6" title="Avisado">✔️</button>';
 }
-html += '<button class="pendente-btn pendente-btn-ret" onclick="abrirSelecaoPendentes([' + linhas.join(',') + '])" title="Dar baixa nas encomendas deste morador">📦 Baixa</button>';
+html += '<button class="pendente-btn pendente-btn-ret" onclick="abrirSelecaoPendentes([' + linhas.join(',') + '])" title="Baixa">📦</button>';
+html += '<button class="pendente-btn" onclick="abrirEdicaoEncomendaGrupo(' + Number(linhas[0]) + ')" title="Editar">✏️</button>';
 html += '</div></div>';
 });
 html += '</div>';
 container.innerHTML = html;
+}
+
+// Função auxiliar para abrir a edição pelo card da página Encomendas (Pendentes)
+function abrirEdicaoEncomendaGrupo(linha){
+  const item = encomendas.find(x => Number(x.linha) === Number(linha));
+  if(!item){ mostrarToast('Encomenda não encontrada.'); return; }
+  abrirEdicaoEncomenda(Number(item.linha));
 }
 function abrirSelecaoPendentes(linhasIniciais){
 grupoBaixaAtual = encomendas.filter(item => normalizar(item.status) !== 'retirado' && (!Array.isArray(linhasIniciais) || linhasIniciais.map(Number).includes(Number(item.linha))));
@@ -2430,7 +2426,6 @@ mostrarToast('Nenhuma encomenda foi selecionada.');
 return;
 }
 
-// Gera a data e a hora atual formatada (Ex: 17/10/2026 19:30:00)
 const agora = new Date();
 const dataHoraRetirada = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR');
 
