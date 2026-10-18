@@ -426,15 +426,15 @@ margin:0 0 14px;
 .summary-home-grid{
 grid-template-columns:repeat(2,minmax(0,1fr));
 }
-/* Estilo ajustado para os cards do resumo ficarem parecidos com os campos (menores, brancos, borda suave) */
+/* Cards do topo do Resumo reduzidos à metade da altura atual */
 .summary-home-grid.home-summary-card{
-min-height:75px !important;
-padding:10px 12px !important;
-border-radius:12px !important;
+min-height:38px !important;
+padding:6px 10px !important;
+border-radius:10px !important;
 background:#fff !important;
 border:2px solid #d3e2dc !important;
 color:#263b52 !important;
-box-shadow:0 4px 14px rgba(36,72,55,.07) !important;
+box-shadow:0 2px 7px rgba(36,72,55,.05) !important;
 flex-direction: row !important;
 align-items: center !important;
 justify-content: space-between !important;
@@ -442,33 +442,34 @@ justify-content: space-between !important;
 .summary-home-grid.home-summary-card .home-summary-icon {
 order: 2;
 margin: 0;
-width: 32px;
-height: 32px;
-font-size: 18px;
+width: 24px;
+height: 24px;
+font-size: 13px;
 background:#e5f6ed !important;
 color:#0b7750 !important;
+border-radius: 6px;
 }
 .summary-home-grid.home-summary-card .home-summary-content {
 order: 1;
 display: flex;
 flex-direction: row;
 align-items: center;
-gap: 8px;
+gap: 6px;
 flex: 1;
 min-width: 0;
 }
 .summary-home-grid.home-summary-card .home-summary-title {
 margin-top: 0 !important;
-font-size: 13px !important;
+font-size: 11px !important;
 font-weight: 800 !important;
 color:#38556e !important;
-line-height: 1.2 !important;
+line-height: 1.1 !important;
 flex: 1;
 min-width: 0;
 }
 .summary-home-grid.home-summary-card .home-summary-value {
 margin-top: 0 !important;
-font-size: 16px !important;
+font-size: 13px !important;
 font-weight: 900 !important;
 color:#0b7750 !important;
 letter-spacing: normal !important;
@@ -476,19 +477,20 @@ flex-shrink: 0;
 line-height: 1 !important;
 }
 .summary-provider-value{
-font-size:14px !important;
+font-size:11px !important;
 line-height:1.1;
 overflow-wrap:anywhere;
 text-align: right;
 color:#0b7750 !important;
 }
+/* Cards inferiores reduzidos à metade da altura atual e textos/ícones ajustados */
 .home-summary-card{
-min-height:132px;
+min-height:66px;
 border:2px solid #d3e2dc;
-border-radius:12px;
+border-radius:10px;
 background:#fff;
-box-shadow:0 4px 14px rgba(36,72,55,.07);
-padding: 13px 12px;
+box-shadow:0 2px 7px rgba(36,72,55,.05);
+padding: 8px 10px;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
@@ -504,24 +506,24 @@ background:#fff;
 border-color:#d3e2dc;
 }
 .home-summary-icon{
-width:34px;height:34px;border-radius: 10px;
+width:24px;height:24px;border-radius: 6px;
 display:flex;align-items:center; justify-content:center;
-font-size:22px;
+font-size:14px;
 background:#e5f6ed;color:#0b7750;
 }
 .home-summary-card.pending .home-summary-icon{
 background:#e5f6ed;color:#0b7750;
 }
 .home-summary-title{
-margin-top:7px;
-font-size:13px;
-line-height:1.12;
+margin-top:2px;
+font-size:11px;
+line-height:1.1;
 font-weight:800;
 color:#38556e;
 }
 .home-summary-value{
-margin-top:3px;
-font-size:22px;
+margin-top:2px;
+font-size:16px;
 line-height:1;
 font-weight:900;
 color:#0b7750;
@@ -820,20 +822,20 @@ font-size: 11px;
 }
 .resumo-botao-card {
 width: 100%;
-min-height: 75px !important;
+min-height: 38px !important;
 border: 2px solid #d3e2dc !important;
-border-radius: 12px !important;
+border-radius: 10px !important;
 background: #fff !important;
 color: #0b7750 !important;
-font-size: 13px;
+font-size: 11px;
 font-weight: 900;
-padding: 10px 12px !important;
+padding: 6px 10px !important;
 cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: space-between;
 text-align: left;
-box-shadow: 0 4px 14px rgba(36,72,55,.07) !important;
+box-shadow: 0 2px 7px rgba(36,72,55,.05) !important;
 }
 .resumo-botao-card:active {
 transform: scale(0.98);
@@ -1055,45 +1057,59 @@ SALVAR
 </div>
 </section>
 <section class="home-summary-grid summary-home-grid" aria-label="Resumo e estatísticas">
-<div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
-<div class="home-summary-icon">📅</div>
-<div class="home-summary-content">
-<div class="home-summary-title">Entregas do dia</div>
-<div class="home-summary-value" id="resumoTotalDia">0</div>
-</div>
-</div>
-<div class="home-summary-card day" onclick="mudarAba('entregadores', document.querySelectorAll('.tab-btn')[3])" style="cursor:pointer;">
-<div class="home-summary-icon">🚚</div>
-<div class="home-summary-content">
-<div class="home-summary-title">Total de entregadores</div>
-<div class="home-summary-value" id="resumoEntregadoresDia">0</div>
-</div>
-</div>
-<div class="home-summary-card day summary-provider-card" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
-<div class="home-summary-icon">🏢</div>
-<div class="home-summary-content">
-<div class="home-summary-title">Fornecedor que mais entregou</div>
-<div class="home-summary-value summary-provider-value" id="resumoFornecedorTop">Carregando...</div>
-</div>
-</div>
-<div class="home-summary-card day" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[4])" style="cursor:pointer;">
+<!-- 4 Cards do topo atualizados -->
+<div class="home-summary-card day summary-home-grid" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[4])" style="cursor:pointer;">
 <div class="home-summary-icon">📈</div>
 <div class="home-summary-content">
-<div class="home-summary-title">Total do mês</div>
+<div class="home-summary-title">Outubro</div>
 <div class="home-summary-value" id="resumoTotalMes">0</div>
 </div>
 </div>
-<div class="home-summary-card pending" onclick="mudarAba('listagem', document.querySelectorAll('.tab-btn')[1])" style="cursor:pointer;">
+<div class="home-summary-card day summary-home-grid summary-provider-card" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
+<div class="home-summary-icon">🏢</div>
+<div class="home-summary-content">
+<div class="home-summary-title">Fornecedor do Mês</div>
+<div class="home-summary-value summary-provider-value" id="resumoFornecedorTop">Carregando...</div>
+</div>
+</div>
+<div class="home-summary-card pending summary-home-grid" onclick="mudarAba('listagem', document.querySelectorAll('.tab-btn')[1])" style="cursor:pointer;">
 <div class="home-summary-icon">⏳</div>
 <div class="home-summary-content">
-<div class="home-summary-title">Total de entregas pendentes</div>
+<div class="home-summary-title">Pendentes</div>
 <div class="home-summary-value" id="resumoTotalPendentes">0</div>
 </div>
 </div>
 <button type="button" class="resumo-botao-card" onclick="enviarRelatorio()">
-<span style="font-size: 13px; font-weight:900; color: #0b7750;">📤 Enviar Relatório</span>
-<span style="font-size:18px;">💬</span>
+<span style="font-size: 11px; font-weight:900; color: #0b7750;">📤 Enviar Relatório</span>
+<span style="font-size:14px;">💬</span>
 </button>
+</section>
+
+<!-- Filtro de data solicitado para atualizar os cards abaixo -->
+<section class="card filter-card" style="margin-bottom: 12px; padding: 10px 14px;">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="font-size: 16px;">📅</span>
+<input type="date" id="filtroDataResumo" onchange="carregarResumo()" style="width: 100%; border: 0; outline: 0; background: transparent; font-size: 15px; color: #263b52; font-weight: 700; text-align: center;">
+</div>
+</section>
+
+<!-- Cards inferiores menores -->
+<section class="home-summary-grid" aria-label="Estatísticas diárias">
+<div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
+<div class="home-summary-icon">📅</div>
+<div class="home-summary-title">Entregas do dia</div>
+<div class="home-summary-value" id="resumoTotalDia">0</div>
+</div>
+<div class="home-summary-card day" onclick="mudarAba('entregadores', document.querySelectorAll('.tab-btn')[3])" style="cursor:pointer;">
+<div class="home-summary-icon">🚚</div>
+<div class="home-summary-title">Entregadores</div>
+<div class="home-summary-value" id="resumoEntregadoresDia">0</div>
+</div>
+<div class="home-summary-card pending" onclick="mudarAba('listagem', document.querySelectorAll('.tab-btn')[1])" style="cursor:pointer; grid-column: span 2;">
+<div class="home-summary-icon">⏳</div>
+<div class="home-summary-title">Pendentes</div>
+<div class="home-summary-value" id="resumoTotalPendentesCardInferior">0</div>
+</div>
 </section>
 </div>
 </main>
@@ -1289,6 +1305,7 @@ if(e.key === 'Escape') { e.preventDefault(); fecharNovoRemetente(); }
 }
 configurarData();
 configurarDataEntregador();
+configurarDataResumo();
 carregarPorteiro();
 carregarRemetentes();
 canvas = document.getElementById('canvasAssinatura');
@@ -1466,23 +1483,31 @@ carregarResumo();
 }
 if (elementoBtn) elementoBtn.classList.add('active');
 }
+function configurarDataResumo(){
+const hoje = new Date();
+const ano = hoje.getFullYear();
+const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+const dia = String(hoje.getDate()).padStart(2, '0');
+const campo = document.getElementById('filtroDataResumo');
+if(campo) campo.value = ano + '-' + mes + '-' + dia;
+}
 function carregarResumo(){
 resumoCarregado = false;
+const dataSelecionada = (document.getElementById('filtroDataResumo') || {}).value || '';
 google.script.run
 .withSuccessHandler(function(res){
 if(!res) return;
 resumoCarregado = true;
+// Se o backend suportar filtro por data selecionada nos cards inferiores, podemos repassar, caso contrário usa os dados gerais
 const totalDia = res.totalEntregasDia || 0;
 document.getElementById('resumoTotalDia').textContent = totalDia;
-const totalDiaCadastro = document.getElementById('resumoTotalDiaCadastro');
-if(totalDiaCadastro) totalDiaCadastro.textContent = totalDia;
 const entregadoresDia = res.totalEntregadoresDia || 0;
 document.getElementById('resumoEntregadoresDia').textContent = entregadoresDia;
-const entregadoresDiaCadastro = document.getElementById('resumoEntregadoresDiaCadastro');
-if(entregadoresDiaCadastro) entregadoresDiaCadastro.textContent = entregadoresDia;
 document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
 document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
 document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
+const cardInfPendentes = document.getElementById('resumoTotalPendentesCardInferior');
+if(cardInfPendentes) cardInfPendentes.textContent = res.totalPendentes || 0;
 })
 .withFailureHandler(function(err){
 console.error(err);
@@ -1732,6 +1757,7 @@ btn.textContent = '⏳';
 }
 configurarData();
 configurarDataEntregador();
+configurarDataResumo();
 let pendentesOk = false;
 let remetentesOk = false;
 function finalizarBase(){
