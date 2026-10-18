@@ -1492,28 +1492,27 @@ const campo = document.getElementById('filtroDataResumo');
 if(campo) campo.value = ano + '-' + mes + '-' + dia;
 }
 function carregarResumo(){
-resumoCarregado = false;
-const dataSelecionada = (document.getElementById('filtroDataResumo') || {}).value || '';
-google.script.run
-.withSuccessHandler(function(res){
-if(!res) return;
-resumoCarregado = true;
-// Se o backend suportar filtro por data selecionada nos cards inferiores, podemos repassar, caso contrário usa os dados gerais
-const totalDia = res.totalEntregasDia || 0;
-document.getElementById('resumoTotalDia').textContent = totalDia;
-const entregadoresDia = res.totalEntregadoresDia || 0;
-document.getElementById('resumoEntregadoresDia').textContent = entregadoresDia;
-document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
-document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
-document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
-const cardInfPendentes = document.getElementById('resumoTotalPendentesCardInferior');
-if(cardInfPendentes) cardInfPendentes.textContent = res.totalPendentes || 0;
-})
-.withFailureHandler(function(err){
-console.error(err);
-})
-.obterDadosResumo();
+  resumoCarregado = false;
+  const dataSelecionada = (document.getElementById('filtroDataResumo') || {}).value || '';
+  
+  google.script.run
+    .withSuccessHandler(function(res){
+      if(!res) return;
+      resumoCarregado = true;
+      document.getElementById('resumoTotalDia').textContent = res.totalEntregasDia || 0;
+      document.getElementById('resumoEntregadoresDia').textContent = res.totalEntregadoresDia || 0;
+      document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
+      document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
+      document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
+      const cardInfPendentes = document.getElementById('resumoTotalPendentesCardInferior');
+      if(cardInfPendentes) cardInfPendentes.textContent = res.totalPendentes || 0;
+    })
+    .withFailureHandler(function(err){
+      console.error(err);
+    })
+    .obterDadosResumo(dataSelecionada); // <-- Passando a data selecionada aqui
 }
+
 function configurarData(){
 const hoje = new Date();
 const ano = hoje.getFullYear();
