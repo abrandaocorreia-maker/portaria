@@ -2347,62 +2347,65 @@ setTimeout(inicializarCanvas, 50);
 <!-- Substitua apenas a função avisarGrupo existente no seu Index Encomendas -->
 
 function avisarGrupo(linhas){
-const grupo = encomendas.filter(item=>linhas.map(Number).includes(Number(item.linha)));
-if(!grupo.length) return;
-const naoAvisados = grupo.filter(item=>!item.avisadoEm);
-if(!naoAvisados.length) {
-mostrarToast('Este destinatário já foi avisado.');
-return;
+  const grupo = encomendas.filter(item=>linhas.map(Number).includes(Number(item.linha)));
+  if(!grupo.length) return;
+  const naoAvisados = grupo.filter(item=>!item.avisadoEm);
+  if(!naoAvisados.length) {
+    mostrarToast('Este destinatário já foi avisado.');
+    return;
+  }
+  const primeiro = naoAvisados[0];
+  const nome = obterNomeDestinatario(primeiro.destinatario);
+  const remetentes = [];
+  naoAvisados.forEach(item=>{
+    const rem = String(item.remetente||'').trim();
+    if(rem && !remetentes.some(x=>normalizar(x)===normalizar(rem)))
+      remetentes.push(rem);
+  });
+  const totalVolumes = naoAvisados.reduce((total,item)=>total+(Number(item.quantidade)||1),0);
+  const fotos = [];
+  grupo.forEach(item=>{
+    String(item.fotoUrl||'').split(/\r?\n/).forEach(url=>{
+      const limpo = String(url||'').trim();
+      if(limpo && !fotos.includes(limpo)) fotos.push(limpo);
+    });
+  });
+  const janelaWhatsApp = window.open('about:blank', '_blank');
+  const concluirAviso = function(linkGaleria){
+    let linkFotoTexto = '';
+    if(linkGaleria){
+      linkFotoTexto = '\n\n📸 *Ver fotos dos pacotes:*\n' + linkGaleria;
+    } else if(fotos.length){
+      linkFotoTexto = '\n\n📸 *Ver fotos dos pacotes:*\n' + fotos[0];
+    }
+    
+    const totalEncomendas = naoAvisados.length;
+    const fraseEncomendas = totalEncomendas === 1 ? 'Chegou uma encomenda.' : 'Chegaram algumas encomendas.';
+    
+    // Layout ajustado
+    const mensagem = '👋 Olá!\n' + fraseEncomendas + '\n\n👤 Nome: *' + nome + '*\n📦 Quantidade: *' + totalVolumes + '*\n🏢 Remetente(s): *' + remetentes.join(', ') + '*' + linkFotoTexto;
+    
+    const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
+    if(janelaWhatsApp && !janelaWhatsApp.closed){
+      janelaWhatsApp.location.href = urlWhatsApp;
+    } else {
+      window.open(urlWhatsApp, '_blank');
+    }
+    marcarLinhasComoAvisadas(naoAvisados);
+  };
+  if(!fotos.length){
+    concluirAviso('');
+    return;
+  }
+  google.script.run
+    .withSuccessHandler(function(linkGaleria){ concluirAviso(linkGaleria || ''); })
+    .withFailureHandler(function(erro){
+      console.error('Não foi possível gerar o link da galeria:', erro);
+      concluirAviso('');
+    })
+    .obterLinkGaleriaFotos(primeiro.destinatario);
 }
-const primeiro = naoAvisados[0];
-const nome = obterNomeDestinatario(primeiro.destinatario);
-const apartamento = primeiro.apartamento || 'Sem apartamento';
-const remetentes = [];
-naoAvisados.forEach(item=>{
-const rem = String(item.remetente||'').trim();
-if(rem && !remetentes.some(x=>normalizar(x)===normalizar(rem)))
-remetentes.push(rem);
-});
-const totalVolumes = naoAvisados.reduce((total,item)=>total+(Number(item.quantidade)||1),0);
-const fotos = [];
-grupo.forEach(item=>{
-String(item.fotoUrl||'').split(/\r?\n/).forEach(url=>{
-const limpo = String(url||'').trim();
-if(limpo && !fotos.includes(limpo)) fotos.push(limpo);
-});
-});
-const janelaWhatsApp = window.open('about:blank', '_blank');
-const concluirAviso = function(linkGaleria){
-let linkFotoTexto = '';
-if(linkGaleria){
-// Exibe o link curto gerado pelo seu próprio script de forma limpa
-linkFotoTexto = '\n\n📸 *Ver fotos dos pacotes:*\n' + linkGaleria;
-} else if(fotos.length){
-linkFotoTexto = '\n\n📸 *Ver fotos dos pacotes:*\n' + fotos[0];
-}
-const totalEncomendas = naoAvisados.length;
-const fraseEncomendas = totalEncomendas === 1 ? 'Uma encomenda chegou' : 'Chegaram ' + totalEncomendas + ' encomendas';
-const mensagem = 'Olá, *' + nome + '*! \n' + fraseEncomendas + ' para você.\n\nApartamento: *' + apartamento + '*\nRemetente: *' + remetentes.join(', ') + '*\nVolume(s): *' + totalVolumes + '*' + linkFotoTexto;
-const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
-if(janelaWhatsApp && !janelaWhatsApp.closed){
-janelaWhatsApp.location.href = urlWhatsApp;
-} else {
-window.open(urlWhatsApp, '_blank');
-}
-marcarLinhasComoAvisadas(naoAvisados);
-};
-if(!fotos.length){
-concluirAviso('');
-return;
-}
-google.script.run
-.withSuccessHandler(function(linkGaleria){ concluirAviso(linkGaleria || ''); })
-.withFailureHandler(function(erro){
-console.error('Não foi possível gerar o link da galeria:', erro);
-concluirAviso('');
-})
-.obterLinkGaleriaFotos(primeiro.destinatario);
-}
+
 
 
 
