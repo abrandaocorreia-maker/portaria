@@ -2096,9 +2096,12 @@ function executarPesquisaLocal(){
       }
 
       html += '<div class="pendente-acoes" onclick="event.stopPropagation();">';
-      if(item.fotoUrl) {
+      
+      // O botão de foto no card aparece APENAS se NÃO estiver entregue (ou seja, se for pendente)
+      if(!isEntregue && item.fotoUrl) {
         html += '<button class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(item.fotoUrl) + '\')" title="Ver Foto">📷</button>';
       }
+
       if(registroEhHojeNoApp(item.dataRecebimento)){
         html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEncomenda(' + Number(item.linha) + ')" title="Editar">✏️</button>';
       }
