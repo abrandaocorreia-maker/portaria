@@ -962,15 +962,15 @@ SALVAR
 </div>
 
 
-   <!-- CAMPOS DE FILTRO PARA PENDENTES -->
-    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-      <div class="filter-box" style="padding: 0 14px; min-height: 48px; flex: 1;">
-        <span>🔍</span>
-        <input type="text" id="filtroPendentes" placeholder="Filtrar por nome ou apto..." oninput="filtrarPendentesLocal()" style="font-size: 15px;">
+  <!-- CAMPOS DE FILTRO PARA PENDENTES -->
+    <div style="display: flex; gap: 8px; margin-bottom: 12px; width: 100%; box-sizing: border-box;">
+      <div class="filter-box" style="padding: 0 10px; min-height: 48px; flex: 1 1 60%; min-width: 0; display: flex; align-items: center; gap: 6px;">
+        <span style="flex-shrink: 0;">🔍</span>
+        <input type="text" id="filtroPendentes" placeholder="Filtrar por nome ou apto..." oninput="filtrarPendentesLocal()" style="font-size: 14px; width: 100%; min-width: 0;">
       </div>
-      <div class="filter-box" style="padding: 0 14px; min-height: 48px; width: 140px; flex: 0 0 auto;">
-        <span>📅</span>
-        <input type="date" id="filtroDataPendentes" onchange="filtrarPendentesLocal()" style="font-size: 14px; text-align: center; width: 100%; background: transparent; border: 0; outline: 0;">
+      <div class="filter-box" style="padding: 0 8px; min-height: 48px; flex: 1 1 40%; min-width: 0; display: flex; align-items: center; gap: 4px; overflow: hidden;">
+        <span style="flex-shrink: 0;">📅</span>
+        <input type="date" id="filtroDataPendentes" onchange="filtrarPendentesLocal()" style="font-size: 12px; text-align: center; width: 100%; min-width: 0; background: transparent; border: 0; outline: 0; padding: 0;">
       </div>
     </div>
 
