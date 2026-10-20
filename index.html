@@ -2592,14 +2592,20 @@ function abrirDetalhesRetirada(linha) {
   document.getElementById('detalheRetiradoPor').textContent = item.retiradoPor || 'Não informado';
   document.getElementById('detalheDataRetirada').textContent = item.dataRetirada || 'Não informada';
 
-  const btnFoto = document.getElementById('btnVerFotoDetalhe');
+  // Botão para a foto da encomenda (foto cadastrada na chegada)
+  const btnFotoPacote = document.getElementById('btnVerFotoPacoteDetalhe');
   if (item.fotoUrl) {
-    btnFoto.style.display = 'flex';
-    btnFoto.onclick = function() { abrirFoto(item.fotoUrl); };
+    btnFotoPacote.style.display = 'flex';
+    btnFotoPacote.onclick = function() { abrirFoto(item.fotoUrl); };
   } else {
-    btnFoto.style.display = 'none';
+    btnFotoPacote.style.display = 'none';
   }
 
+  // Mantém compatibilidade caso haja outro campo de foto extra
+  const btnFoto = document.getElementById('btnVerFotoDetalhe');
+  btnFoto.style.display = 'none';
+
+  // Botão para a assinatura virtual
   const btnAssinatura = document.getElementById('btnVerAssinaturaDetalhe');
   if (item.assinaturaUrl) {
     btnAssinatura.style.display = 'flex';
