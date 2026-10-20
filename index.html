@@ -962,11 +962,15 @@ SALVAR
 </div>
 
 
-    <!-- CAMPO DE FILTRO PARA PENDENTES -->
-    <div style="margin-bottom: 12px;">
-      <div class="filter-box" style="padding: 0 14px; min-height: 48px;">
+   <!-- CAMPOS DE FILTRO PARA PENDENTES -->
+    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+      <div class="filter-box" style="padding: 0 14px; min-height: 48px; flex: 1;">
         <span>🔍</span>
         <input type="text" id="filtroPendentes" placeholder="Filtrar por nome ou apto..." oninput="filtrarPendentesLocal()" style="font-size: 15px;">
+      </div>
+      <div class="filter-box" style="padding: 0 14px; min-height: 48px; width: 140px; flex: 0 0 auto;">
+        <span>📅</span>
+        <input type="date" id="filtroDataPendentes" onchange="filtrarPendentesLocal()" style="font-size: 14px; text-align: center; width: 100%; background: transparent; border: 0; outline: 0;">
       </div>
     </div>
 
@@ -1998,9 +2002,20 @@ else google.script.run.withSuccessHandler(ok).withFailureHandler(falha).pesquisa
 
 function filtrarPendentesLocal() {
   const termo = normalizar(document.getElementById('filtroPendentes').value);
+  const dataFiltro = document.getElementById('filtroDataPendentes').value;
+
+  const dataFiltroFormatada = dataFiltro ? (function(){
+    const partesD = dataFiltro.split('-');
+    return `${partesD[2]}/${partesD[1]}/${partesD[0]}`;
+  })() : '';
 
   const listaFiltrada = encomendas.filter(item => {
     if (normalizar(item.status) === 'retirado') return false;
+
+    // Filtra por data caso tenha sido preenchida
+    if (dataFiltroFormatada && item.dataRecebimento !== dataFiltroFormatada) {
+      return false;
+    }
 
     if (!termo) return true;
 
