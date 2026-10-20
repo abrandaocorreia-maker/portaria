@@ -2096,21 +2096,46 @@ const hoje = new Date();
 return dia === hoje.getDate() && mes === hoje.getMonth()+1 && ano === hoje.getFullYear();
 }
 function abrirEdicaoEncomenda(linha){
-const item = todasEncomendasPesquisa.find(x=>Number(x.linha)===Number(linha));
-if(!item){mostrarToast('Registro de encomenda não encontrado.');return;}
-if(!registroEhHojeNoApp(item.dataRecebimento)){mostrarToast('Somente registros de hoje podem ser editados.');return;}
-tipoEdicaoAtual='encomenda'; linhaEdicaoAtual=Number(linha);
-document.getElementById('modalEdicaoTitulo').textContent='✏️ Editar encomenda';
-document.getElementById('camposEdicaoEncomenda').style.display='block';
-document.getElementById('camposEdicaoEntregador').style.display='none';
-document.getElementById('editarPorteiro').value=item.porteiro||'';
-document.getElementById('editarDestinatario').value=item.destinatario||'';
-document.getElementById('editarQuantidadeEncomenda').value=String(item.quantidade||1);
-document.getElementById('editarCodigoBarras').value=item.codigoBarras||'';
-const select=document.getElementById('editarRemetente'); select.innerHTML='';
-const nomes=Array.from(new Set((remetentesCadastrados||[]).concat([item.remetente||'Outros']).filter(Boolean)));
-nomes.forEach(nome=>{const o=document.createElement('option');o.value=nome;o.textContent=nome;if(normalizar(nome)===normalizar(item.remetente||'Outros'))o.selected=true;select.appendChild(o);});
-document.getElementById('modalEdicao').classList.add('show');
+  // Procura primeiro na lista de encomendas pendentes e depois na lista de pesquisa
+  let item = encomendas.find(x => Number(x.linha) === Number(linha));
+  if(!item){
+    item = todasEncomendasPesquisa.find(x => Number(x.linha) === Number(linha));
+  }
+
+  if(!item){
+    mostrarToast('Registro de encomenda não encontrado.');
+    return;
+  }
+  if(!registroEhHojeNoApp(item.dataRecebimento)){
+    mostrarToast('Somente registros de hoje podem ser editados.');
+    return;
+  }
+
+  tipoEdicaoAtual = 'encomenda'; 
+  linhaEdicaoAtual = Number(linha);
+
+  document.getElementById('modalEdicaoTitulo').textContent = '✏️ Editar encomenda';
+  document.getElementById('camposEdicaoEncomenda').style.display = 'block';
+  document.getElementById('camposEdicaoEntregador').style.display = 'none';
+
+  document.getElementById('editarPorteiro').value = item.porteiro || '';
+  document.getElementById('editarDestinatario').value = item.destinatario || '';
+  document.getElementById('editarQuantidadeEncomenda').value = String(item.quantidade || 1);
+  document.getElementById('editarCodigoBarras').value = item.codigoBarras || '';
+
+  const select = document.getElementById('editarRemetente'); 
+  select.innerHTML = '';
+
+  const nomes = Array.from(new Set((remetentesCadastrados || []).concat([item.remetente || 'Outros']).filter(Boolean)));
+  nomes.forEach(nome => {
+    const o = document.createElement('option');
+    o.value = nome;
+    o.textContent = nome;
+    if(normalizar(nome) === normalizar(item.remetente || 'Outros')) o.selected = true;
+    select.appendChild(o);
+  });
+
+  document.getElementById('modalEdicao').classList.add('show');
 }
 function abrirEdicaoEntregadorPorLinha(linhaAlvo){
 const item = todosEntregadoresPesquisa.find(x => Number(x.linha) === Number(linhaAlvo));
