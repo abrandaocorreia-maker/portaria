@@ -1210,6 +1210,35 @@ SALVAR
 </div>
 </div>
 <div id="leitorCodigoBarras" style="display:none;width:1px;height: 1px; overflow:hidden;"></div>
+
+<!-- MODAL DE DETALHES DA RETIRADA -->
+<div class="modal-overlay" id="modalDetalhesRetirada">
+  <div class="modal" style="width: min(100%, 450px);">
+    <div class="modal-title">📦 Detalhes da Retirada</div>
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+      <div style="background: #f4f7f6; padding: 12px; border-radius: 10px; border: 1px solid #dce9e1;">
+        <span style="font-size: 13px; color: #58708f; font-weight: 800; display: block; margin-bottom: 2px;">👤 RETIRADO POR</span>
+        <strong id="detalheRetiradoPor" style="font-size: 17px; color: #17345f;">—</strong>
+      </div>
+      <div style="background: #f4f7f6; padding: 12px; border-radius: 10px; border: 1px solid #dce9e1;">
+        <span style="font-size: 13px; color: #58708f; font-weight: 800; display: block; margin-bottom: 2px;">📅 DATA E HORA DA RETIRADA</span>
+        <strong id="detalheDataRetirada" style="font-size: 16px; color: #17345f;">—</strong>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 5px;">
+        <button id="btnVerFotoDetalhe" type="button" class="confirm-button" style="background: #ff9700; display: none; align-items: center; justify-content: center; gap: 6px;" onclick="">
+          📷 Ver Foto
+        </button>
+        <button id="btnVerAssinaturaDetalhe" type="button" class="confirm-button" style="background: #0878ed; display: none; align-items: center; justify-content: center; gap: 6px;" onclick="">
+          ✍️ Ver Assinatura
+        </button>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="cancel-button" type="button" onclick="fecharModalDetalhesRetirada()">Fechar</button>
+    </div>
+  </div>
+</div>
+    
 <div id="toast" class="toast"></div>
 <script>
 /* ============================================================
@@ -2036,17 +2065,21 @@ function executarPesquisaLocal(){
     return;
   }
 
-  let html = '<div class="pesquisa-cards-grid">';
+ let html = '<div class="pesquisa-cards-grid">';
   resultados.forEach(function(resultado){
     const item = resultado.item;
     if(resultado.tipo === 'encomenda'){
       const nomeLimpo = obterNomeDestinatario(item.destinatario);
       const isEntregue = item.status && (item.status.includes('Retirado') || item.status.includes('Entregue'));
+      
+      // Torna o card clicável para abrir o modal caso esteja entregue
+      const clickCard = isEntregue ? 'onclick="abrirDetalhesRetirada(' + Number(item.linha) + ')" style="cursor:pointer;"' : '';
+      
       const badgeStatus = isEntregue
         ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">✅ Entregue</span>'
         : '<span style="background: #fff3e0; color: #ef6c00; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">⏳ Pendente</span>';
       
-      html += '<div class="pendente-card pesquisa-card-encomenda">';
+      html += '<div class="pendente-card pesquisa-card-encomenda" ' + clickCard + '>';
       html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">';
       html += '<div class="pendente-data" style="margin:0;">Recebido: ' + escapeHtml(item.dataRecebimento || '') + '</div>';
       html += badgeStatus;
@@ -2055,15 +2088,11 @@ function executarPesquisaLocal(){
       html += '<div class="pendente-info-linha"><span class="pesquisa-apartamento">Apto. ' + escapeHtml(item.apartamento || '—') + '</span><span class="pendente-qtd">' + (item.quantidade || 1) + '</span></div>';
       html += '<div class="pendente-nome" title="' + escapeHtml(nomeLimpo) + '">' + escapeHtml(nomeLimpo) + '</div>';
       
-      // Bloco que exibe a data de retirada e quem retirou se já estiver entregue
-      if(isEntregue && (item.dataRetirada || item.retiradoPor)){
-        html += '<div style="font-size: 12px; color: #526574; margin-top: 2px; line-height: 1.3;">';
-        if(item.dataRetirada) html += '📅 Retirada em: ' + escapeHtml(item.dataRetirada) + '<br>';
-        if(item.retiradoPor) html += '👤 Retirado por: <strong>' + escapeHtml(item.retiradoPor) + '</strong>';
-        html += '</div>';
+      if(isEntregue){
+        html += '<div style="font-size: 11px; color: #0878ed; font-weight: bold; margin-top: 4px;">🔍 Clique para ver detalhes da retirada</div>';
       }
 
-      html += '<div class="pendente-acoes">';
+      html += '<div class="pendente-acoes" onclick="event.stopPropagation();">';
       if(item.fotoUrl) {
         html += '<button class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(item.fotoUrl) + '\')" title="Ver Foto">📷</button>';
       }
@@ -2072,6 +2101,7 @@ function executarPesquisaLocal(){
       }
       html += '</div></div>';
     } else {
+      // (card do entregador continua igual)
       html += '<div class="pendente-card pesquisa-card-entregador">';
       html += '<div class="pendente-data">' + escapeHtml(item.data || '') + '</div>';
       html += '<div class="pendente-nome pesquisa-entregador-nome" title="' + escapeHtml(item.entregador || '') + '">' + escapeHtml(item.entregador || 'Entregador') + '</div>';
@@ -2549,7 +2579,39 @@ if(restantes === 0) finalizar();
 });
 }
 
+function abrirDetalhesRetirada(linha) {
+  const item = todasEncomendasPesquisa.find(x => Number(x.linha) === Number(linha));
+  if (!item) {
+    mostrarToast('Informações da retirada não encontradas.');
+    return;
+  }
 
+  document.getElementById('detalheRetiradoPor').textContent = item.retiradoPor || 'Não informado';
+  document.getElementById('detalheDataRetirada').textContent = item.dataRetirada || 'Não informada';
+
+  const btnFoto = document.getElementById('btnVerFotoDetalhe');
+  if (item.fotoUrl) {
+    btnFoto.style.display = 'flex';
+    btnFoto.onclick = function() { abrirFoto(item.fotoUrl); };
+  } else {
+    btnFoto.style.display = 'none';
+  }
+
+  const btnAssinatura = document.getElementById('btnVerAssinaturaDetalhe');
+  if (item.assinaturaUrl) {
+    btnAssinatura.style.display = 'flex';
+    btnAssinatura.onclick = function() { abrirFoto(item.assinaturaUrl); };
+  } else {
+    btnAssinatura.style.display = 'none';
+  }
+
+  document.getElementById('modalDetalhesRetirada').classList.add('show');
+}
+
+function fecharModalDetalhesRetirada() {
+  document.getElementById('modalDetalhesRetirada').classList.remove('show');
+}
+    
 function enviarRelatorio(){
 const pendentes = encomendas.filter(item=>normalizar(item.status)!=='retirado');
 if(!pendentes.length){
