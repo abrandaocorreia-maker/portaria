@@ -1982,106 +1982,110 @@ function filtrarPendentesLocal() {
   renderizarLista(listaFiltrada);
 }
 
-
 function executarPesquisaLocal(){
-const termo = normalizar(document.getElementById('filtroNomePesquisa').value);
-const dataFiltro = document.getElementById('filtroDataPesquisa').value;
-const tipoPesquisaEl = document.getElementById('tipoPesquisa');
-const tipoPesquisa = tipoPesquisaEl ? tipoPesquisaEl.value : 'encomendas';
-const container = document.getElementById('listaPesquisa');
-if(!container) return;
-const dataFiltroFormatada = dataFiltro ? (function(){
-const partesD = dataFiltro.split('-');
-return `${partesD[2]}/${partesD[1]}/${partesD[0]}`;
-})() : '';
-let resultados = [];
-if(tipoPesquisa === 'encomendas'){
-resultados = todasEncomendasPesquisa.filter(item => {
-const nomeDest = normalizar(item.destinatario);
-const apto = normalizar(item.apartamento);
-const rem = normalizar(item.remetente);
-const codBarras = normalizar(item.codigoBarras);
-const entregador = normalizar(item.entregador);
-if(termo && !nomeDest.includes(termo) && !apto.includes(termo) && !rem.includes(termo) && !codBarras.includes(termo) && !entregador.includes(termo)) return false;
-if(dataFiltroFormatada && item.dataRecebimento !== dataFiltroFormatada) return false;
-return true;
-}).map(item => ({tipo:'encomenda', item:item}));
-} else {
-resultados = todosEntregadoresPesquisa.filter(item => {
-const nomeEnt = normalizar(item.entregador);
-const telEnt = normalizar(item.telefone);
-const remEnt = normalizar(item.remetente);
-const destEnt = normalizar(item.destinatarios);
-if(termo && !nomeEnt.includes(termo) && !telEnt.includes(termo) && !remEnt.includes(termo) && !destEnt.includes(termo)) return false;
-if(dataFiltroFormatada && item.data !== dataFiltroFormatada) return false;
-return true;
-}).map(item => ({tipo:'entregador', item:item}));
-}
-if(tipoPesquisa === 'encomendas'){
-resultados.sort(ordenarPorApartamento);
-} else {
-resultados.sort(function(a, b){
-const dataA = a.item.data;
-const dataB = b.item.data;
-return obterDataPesquisa(dataB) - obterDataPesquisa(dataA);
-});
-}
-if(resultados.length === 0){
-container.innerHTML = tipoPesquisa === 'encomendas'
-? '<div class="empty">📦 Nenhuma encomenda encontrada com esses filtros.</div>'
-: '<div class="empty">🚚 Nenhum entregador encontrado com esses filtros.</div>';
-return;
-}
-let html = '<div class="pesquisa-cards-grid">';
-resultados.forEach(function(resultado){
-      const item = resultado.item;
-      if(resultado.tipo === 'encomenda'){
-        const nomeLimpo = obterNomeDestinatario(item.destinatario);
-        const isEntregue = item.status && (item.status.includes('Retirado') || item.status.includes('Entregue'));
-        const badgeStatus = isEntregue
-          ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">✅ Entregue</span>'
-          : '<span style="background: #fff3e0; color: #ef6c00; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">⏳ Pendente</span>';
-        
-        html += '<div class="pendente-card pesquisa-card-encomenda">';
-        html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">';
-        html += '<div class="pendente-data" style="margin:0;">Recebido: ' + escapeHtml(item.dataRecebimento || '') + '</div>';
-        html += badgeStatus;
-        html += '</div>';
-        
-        html += '<div class="pendente-info-linha"><span class="pesquisa-apartamento">Apto. ' + escapeHtml(item.apartamento || '—') + '</span><span class="pendente-qtd">' + (item.quantidade || 1) + '</span></div>';
-        html += '<div class="pendente-nome" title="' + escapeHtml(nomeLimpo) + '">' + escapeHtml(nomeLimpo) + '</div>';
-        
-        // Se já foi retirada, exibe a data da retirada e quem retirou
-        if(isEntregue && (item.dataRetirada || item.retiradoPor)){
-          html += '<div style="font-size: 12px; color: #526574; margin-top: 2px; line-height: 1.3;">';
-          if(item.dataRetirada) html += '📅 Retirada em: ' + escapeHtml(item.dataRetirada) + '<br>';
-          if(item.retiradoPor) html += '👤 Retirado por: <strong>' + escapeHtml(item.retiradoPor) + '</strong>';
-          html += '</div>';
-        }
+  const termo = normalizar(document.getElementById('filtroNomePesquisa').value);
+  const dataFiltro = document.getElementById('filtroDataPesquisa').value;
+  const tipoPesquisaEl = document.getElementById('tipoPesquisa');
+  const tipoPesquisa = tipoPesquisaEl ? tipoPesquisaEl.value : 'encomendas';
+  const container = document.getElementById('listaPesquisa');
+  if(!container) return;
 
-        html += '<div class="pendente-acoes">';
-        if(item.fotoUrl) {
-          html += '<button class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(item.fotoUrl) + '\')" title="Ver Foto">📷</button>';
-        }
-        if(registroEhHojeNoApp(item.dataRecebimento)){
-          html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEncomenda(' + Number(item.linha) + ')" title="Editar">✏️</button>';
-        }
-        html += '</div></div>';
-      } else {
-        // ... (código dos entregadores continua igual)
-html += '<div class="pendente-card pesquisa-card-entregador">';
-html += '<div class="pendente-data">' + escapeHtml(item.data || '') + '</div>';
-html += '<div class="pendente-nome pesquisa-entregador-nome" title="' + escapeHtml(item.entregador || '') + '">' + escapeHtml(item.entregador || 'Entregador') + '</div>';
-html += '<div class="pesquisa-entregador-detalhe">Tel.: ' + escapeHtml(item.telefone || '—') + '</div>';
-html += '<div class="pesquisa-entregador-remetente">' + escapeHtml(item.remetente || '') + '</div>';
-html += '<div class="pesquisa-entregador-rodape"><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol.</span>';
-html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEntregadorPorLinha(' + Number(item.linha) + ')" title="Editar">✏️</button>';
-html += '</div></div>';
+  const dataFiltroFormatada = dataFiltro ? (function(){
+    const partesD = dataFiltro.split('-');
+    return `${partesD[2]}/${partesD[1]}/${partesD[0]}`;
+  })() : '';
+
+  let resultados = [];
+  if(tipoPesquisa === 'encomendas'){
+    resultados = todasEncomendasPesquisa.filter(item => {
+      const nomeDest = normalizar(item.destinatario);
+      const apto = normalizar(item.apartamento);
+      const rem = normalizar(item.remetente);
+      const codBarras = normalizar(item.codigoBarras);
+      const entregador = normalizar(item.entregador);
+      if(termo && !nomeDest.includes(termo) && !apto.includes(termo) && !rem.includes(termo) && !codBarras.includes(termo) && !entregador.includes(termo)) return false;
+      if(dataFiltroFormatada && item.dataRecebimento !== dataFiltroFormatada) return false;
+      return true;
+    }).map(item => ({tipo:'encomenda', item:item}));
+  } else {
+    resultados = todosEntregadoresPesquisa.filter(item => {
+      const nomeEnt = normalizar(item.entregador);
+      const telEnt = normalizar(item.telefone);
+      const remEnt = normalizar(item.remetente);
+      const destEnt = normalizar(item.destinatarios);
+      if(termo && !nomeEnt.includes(termo) && !telEnt.includes(termo) && !remEnt.includes(termo) && !destEnt.includes(termo)) return false;
+      if(dataFiltroFormatada && item.data !== dataFiltroFormatada) return false;
+      return true;
+    }).map(item => ({tipo:'entregador', item:item}));
+  }
+
+  if(tipoPesquisa === 'encomendas'){
+    resultados.sort(ordenarPorApartamento);
+  } else {
+    resultados.sort(function(a, b){
+      const dataA = a.item.data;
+      const dataB = b.item.data;
+      return obterDataPesquisa(dataB) - obterDataPesquisa(dataA);
+    });
+  }
+
+  if(resultados.length === 0){
+    container.innerHTML = tipoPesquisa === 'encomendas'
+      ? '<div class="empty">📦 Nenhuma encomenda encontrada com esses filtros.</div>'
+      : '<div class="empty">🚚 Nenhum entregador encontrado com esses filtros.</div>';
+    return;
+  }
+
+  let html = '<div class="pesquisa-cards-grid">';
+  resultados.forEach(function(resultado){
+    const item = resultado.item;
+    if(resultado.tipo === 'encomenda'){
+      const nomeLimpo = obterNomeDestinatario(item.destinatario);
+      const isEntregue = item.status && (item.status.includes('Retirado') || item.status.includes('Entregue'));
+      const badgeStatus = isEntregue
+        ? '<span style="background: #e8f5e9; color: #2e7d32; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">✅ Entregue</span>'
+        : '<span style="background: #fff3e0; color: #ef6c00; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: bold;">⏳ Pendente</span>';
+      
+      html += '<div class="pendente-card pesquisa-card-encomenda">';
+      html += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">';
+      html += '<div class="pendente-data" style="margin:0;">Recebido: ' + escapeHtml(item.dataRecebimento || '') + '</div>';
+      html += badgeStatus;
+      html += '</div>';
+      
+      html += '<div class="pendente-info-linha"><span class="pesquisa-apartamento">Apto. ' + escapeHtml(item.apartamento || '—') + '</span><span class="pendente-qtd">' + (item.quantidade || 1) + '</span></div>';
+      html += '<div class="pendente-nome" title="' + escapeHtml(nomeLimpo) + '">' + escapeHtml(nomeLimpo) + '</div>';
+      
+      // Bloco que exibe a data de retirada e quem retirou se já estiver entregue
+      if(isEntregue && (item.dataRetirada || item.retiradoPor)){
+        html += '<div style="font-size: 12px; color: #526574; margin-top: 2px; line-height: 1.3;">';
+        if(item.dataRetirada) html += '📅 Retirada em: ' + escapeHtml(item.dataRetirada) + '<br>';
+        if(item.retiradoPor) html += '👤 Retirado por: <strong>' + escapeHtml(item.retiradoPor) + '</strong>';
+        html += '</div>';
+      }
+
+      html += '<div class="pendente-acoes">';
+      if(item.fotoUrl) {
+        html += '<button class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(item.fotoUrl) + '\')" title="Ver Foto">📷</button>';
+      }
+      if(registroEhHojeNoApp(item.dataRecebimento)){
+        html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEncomenda(' + Number(item.linha) + ')" title="Editar">✏️</button>';
+      }
+      html += '</div></div>';
+    } else {
+      html += '<div class="pendente-card pesquisa-card-entregador">';
+      html += '<div class="pendente-data">' + escapeHtml(item.data || '') + '</div>';
+      html += '<div class="pendente-nome pesquisa-entregador-nome" title="' + escapeHtml(item.entregador || '') + '">' + escapeHtml(item.entregador || 'Entregador') + '</div>';
+      html += '<div class="pesquisa-entregador-detalhe">Tel.: ' + escapeHtml(item.telefone || '—') + '</div>';
+      html += '<div class="pesquisa-entregador-remetente">' + escapeHtml(item.remetente || '') + '</div>';
+      html += '<div class="pesquisa-entregador-rodape"><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol.</span>';
+      html += '<button type="button" class="pendente-btn pendente-btn-ret" onclick="abrirEdicaoEntregadorPorLinha(' + Number(item.linha) + ')" title="Editar">✏️</button>';
+      html += '</div></div>';
+    }
+  });
+  html += '</div>';
+  container.innerHTML = html;
 }
-});
-html += '</div>';
-container.innerHTML = html;
-}
+
 function obterDataPesquisa(dataTexto){
 if(!dataTexto) return 0;
 const texto = String(dataTexto).trim();
