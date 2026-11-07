@@ -426,7 +426,6 @@ margin:0 0 14px;
 .summary-home-grid{
 grid-template-columns:repeat(2,minmax(0,1fr));
 }
-/* Cards do topo do Resumo reduzidos à metade da altura atual */
 .summary-home-grid.home-summary-card{
 min-height:38px !important;
 padding:6px 10px !important;
@@ -483,7 +482,6 @@ overflow-wrap:anywhere;
 text-align: right;
 color:#0b7750 !important;
 }
-/* Cards inferiores reduzidos à metade da altura atual e textos/ícones ajustados */
 .home-summary-card{
 min-height:66px;
 border:2px solid #d3e2dc;
@@ -843,6 +841,63 @@ transform: scale(0.98);
 </style>
 </head>
 <body>
+
+<? if (typeof tokenMorador !== 'undefined' && tokenMorador) { ?>
+  <!-- CARTEIRA DIGITAL DE RETIRADA DO MORADOR -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-icon"><img src="./icon-192.png" alt="Portaria"></div>
+      <div><div class="header-title">Retirada de Encomenda</div></div>
+    </div>
+  </header>
+  <main class="container" style="max-width:480px; margin-top:20px;">
+    <section class="card registration" style="text-align:center; padding:24px 16px;">
+      <div class="section-title" style="justify-content:center; margin-bottom:10px;">
+        <span style="font-size:24px;">📦</span>
+        <span>Apresente na Portaria</span>
+      </div>
+      <p style="color:#58708f; font-size:14px; margin-bottom:15px;">Mostre este QR Code ou informe o código abaixo para retirar seu pacote:</p>
+      
+      <div style="background:#fff; border:3px solid #07934f; border-radius:16px; padding:15px; display:inline-block; margin-bottom:15px; box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+        <img id="qrCodeMoradorImg" src="" alt="QR Code" style="width:200px; height:200px; display:block; margin:0 auto;">
+      </div>
+
+      <div style="background:#e5f6ed; border:1px solid #c9e7d5; border-radius:12px; padding:12px; margin-bottom:15px;">
+        <span style="font-size:12px; color:#0b7750; font-weight:800; display:block;">CÓDIGO DE RETIRADA</span>
+        <strong id="tokenMoradorTxt" style="font-size:32px; color:#176443; letter-spacing:4px; font-weight:900;"><?= tokenMorador ?></strong>
+      </div>
+
+      <div id="detalhesMoradorBox" style="text-align:left; background:#f4f7f6; border-radius:12px; padding:12px; font-size:14px; color:#263b52;">
+        <div style="margin-bottom:6px;"><strong>Destinatário:</strong> <span id="mNome">—</span></div>
+        <div style="margin-bottom:6px;"><strong>Apartamento:</strong> <span id="mApto">—</span></div>
+        <div style="margin-bottom:6px;"><strong>Remetente:</strong> <span id="mRemetente">—</span></div>
+        <div><strong>Status:</strong> <span id="mStatus" style="font-weight:900; color:#0b7750;">Carregando...</span></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const token = '<?= tokenMorador ?>';
+      google.script.run.withSuccessHandler(function(data){
+        if(data){
+          document.getElementById('qrCodeMoradorImg').src = data.qrCodeUrl;
+          document.getElementById('mNome').textContent = data.destinatario || '—';
+          document.getElementById('mApto').textContent = data.apartamento || '—';
+          document.getElementById('mRemetente').textContent = data.remetente || '—';
+          document.getElementById('mStatus').textContent = data.status || 'Pendente';
+          if(data.status === 'Retirado'){
+            document.getElementById('mStatus').style.color = '#dc3545';
+            document.getElementById('mStatus').textContent = '✅ Já Retirado';
+          }
+        }
+      }).obterEncomendaPorToken(token);
+    });
+  </script>
+
+<? } else { ?>
+
+<!-- INTERFACE COMPLETA DO PORTEIRO -->
 <header class="header">
 <div class="header-inner">
 <div class="header-icon"><img src="./icon-192.png" alt="Portaria"></div>
@@ -966,7 +1021,7 @@ SALVAR
     <div style="display: flex; gap: 8px; margin-bottom: 12px; width: 100%; box-sizing: border-box;">
       <div class="filter-box" style="padding: 0 10px; min-height: 48px; flex: 1 1 60%; min-width: 0; display: flex; align-items: center; gap: 6px;">
         <span style="flex-shrink: 0;">🔍</span>
-        <input type="text" id="filtroPendentes" placeholder="Filtrar por nome ou apto..." oninput="filtrarPendentesLocal()" style="font-size: 14px; width: 100%; min-width: 0;">
+        <input type="text" id="filtroPendentes" placeholder="Nome, apto ou TOKEN..." oninput="filtrarPendentesLocal()" style="font-size: 14px; width: 100%; min-width: 0;">
       </div>
       <div class="filter-box" style="padding: 0 8px; min-height: 48px; flex: 1 1 40%; min-width: 0; display: flex; align-items: center; gap: 4px; overflow: hidden;">
         <span style="flex-shrink: 0;">📅</span>
@@ -997,7 +1052,7 @@ SALVAR
 </div>
 <div class="filter-box">
 <span>🔍</span>
-<input type="text" id="filtroNomePesquisa" placeholder="Nome, apto..." oninput="executarPesquisa()">
+<input type="text" id="filtroNomePesquisa" placeholder="Nome, apto, Token..." oninput="executarPesquisa()">
 </div>
 <div class="filter-box">
 <span>📅</span>
@@ -1061,7 +1116,6 @@ SALVAR
 </div>
 </section>
 <section class="home-summary-grid summary-home-grid" aria-label="Resumo e estatísticas">
-<!-- 4 Cards do topo atualizados -->
 <div class="home-summary-card day summary-home-grid" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[4])" style="cursor:pointer;">
 <div class="home-summary-icon">📈</div>
 <div class="home-summary-content">
@@ -1089,7 +1143,6 @@ SALVAR
 </button>
 </section>
 
-<!-- Filtro de data solicitado para atualizar os cards abaixo -->
 <section class="card filter-card" style="margin-bottom: 12px; padding: 10px 14px;">
 <div style="display: flex; align-items: center; gap: 8px;">
 <span style="font-size: 16px;">📅</span>
@@ -1097,7 +1150,6 @@ SALVAR
 </div>
 </section>
 
-<!-- Cards inferiores menores -->
 <section class="home-summary-grid" aria-label="Estatísticas diárias">
 <div class="home-summary-card day" onclick="mudarAba('pesquisa', document.querySelectorAll('.tab-btn')[2])" style="cursor:pointer;">
 <div class="home-summary-icon">📅</div>
@@ -1185,7 +1237,6 @@ SALVAR
 <div class="modal-overlay" id="modalEdicao">
 <div class="modal">
 <div class="modal-title" id="modalEdicaoTitulo">✏️ Editar registro</div>
-<!-- Campos de Edição de Encomenda -->
 <div id="camposEdicaoEncomenda">
 <div class="modal-field"><label>Porteiro</label><input type="text" id="editarPorteiro" placeholder="Nome do porteiro"></div>
 <div class="modal-field"><label>Destinatário / Apartamento</label><input type="text" id="editarDestinatario" placeholder="Ex.: João Silva - Apto 203"></div>
@@ -1196,7 +1247,6 @@ SALVAR
 </div>
 <div class="modal-field"><label>Código de barras</label><input type="text" id="editarCodigoBarras" placeholder="Código de barras (opcional)"></div>
 </div>
-<!-- Campos de Edição de Entregador -->
 <div id="camposEdicaoEntregador" style="display:none;">
 <div class="modal-field"><label>Entregador</label><input type="text" id="editarEntregador" placeholder="Nome do entregador"></div>
 <div class="modal-field"><label>Telefone</label><input type="text" id="editarTelefoneEntregador" placeholder="Telefone"></div>
@@ -1248,9 +1298,7 @@ SALVAR
     
 <div id="toast" class="toast"></div>
 <script>
-/* ============================================================
-   PONTE PARA O APPS SCRIPT
-   ============================================================ */
+/* PONTE PARA O APPS SCRIPT */
 (function(){
 if (window.google && window.google.script && window.google.script.run) return;
 const APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycby9vBVxWnOEALnmP-K0BU0Fx6M1N5NXJgNbOvDqlr3_Ds3INFZ09ksrsMqj7F0dcO0w/exec';
@@ -1304,6 +1352,7 @@ window.google = window.google || {};
 window.google.script = window.google.script || {};
 window.google.script.run = criarRunner(null, null);
 })();
+
 let encomendas = [];
 let todasEncomendasPesquisa = [];
 let todosEntregadoresPesquisa = [];
@@ -1326,6 +1375,7 @@ let tipoEdicaoAtual = "";
 let linhaEdicaoAtual = null;
 let linhasSelecionadasPendentes = new Set();
 let linhasPermitidasSelecaoPendentes = null;
+
 document.addEventListener('DOMContentLoaded', function(){
 const campoNovoRemetente = document.getElementById('novoRemetenteNome');
 if(campoNovoRemetente){
@@ -1395,6 +1445,7 @@ reader.readAsDataURL(arquivo);
 e.target.value = "";
 });
 });
+
 function comprimirImagemParaUpload(arquivo){
 return new Promise(function(resolve, reject){
 if(!arquivo || !arquivo.type || arquivo.type.indexOf('image/') !== 0){ reject(new Error('Arquivo de imagem inválido.')); return; }
@@ -1425,6 +1476,7 @@ reader.onerror = reject;
 reader.readAsDataURL(arquivo);
 });
 }
+
 function inicializarCanvas() {
 if(!canvas) canvas = document.getElementById('canvasAssinatura');
 if(canvas) {
@@ -1522,6 +1574,7 @@ const dia = String(hoje.getDate()).padStart(2, '0');
 const campo = document.getElementById('filtroDataResumo');
 if(campo) campo.value = ano + '-' + mes + '-' + dia;
 }
+
 function carregarResumo(){
   resumoCarregado = false;
   const dataSelecionada = (document.getElementById('filtroDataResumo') || {}).value || '';
@@ -1535,13 +1588,11 @@ function carregarResumo(){
       document.getElementById('resumoFornecedorTop').textContent = res.fornecedorMaisEntregou || 'Nenhum';
       document.getElementById('resumoTotalMes').textContent = res.totalEntregasMes || 0;
       document.getElementById('resumoTotalPendentes').textContent = res.totalPendentes || 0;
-      const cardInfPendentes = document.getElementById('resumoTotalPendentesCardInferior');
-      if(cardInfPendentes) cardInfPendentes.textContent = res.totalPendentes || 0;
     })
     .withFailureHandler(function(err){
       console.error(err);
     })
-    .obterDadosResumo(dataSelecionada); // <-- Passando a data selecionada aqui
+    .obterDadosResumo(dataSelecionada);
 }
 
 function configurarData(){
@@ -1771,6 +1822,7 @@ destinatarios: destinatarios,
 data: data
 });
 }
+
 function limparFormularioEntregador(){
 document.getElementById('entregador').value = "";
 document.getElementById('telefoneEntregador').value = "";
@@ -1779,6 +1831,7 @@ document.getElementById('quantidadeEntregador').value = "";
 document.getElementById('destinatariosEntregador').value = "";
 configurarDataEntregador();
 }
+
 function atualizarPagina(){
 const btn = document.querySelector('.header-refresh');
 if(btn){
@@ -1838,6 +1891,7 @@ remetentesOk = true;
 finalizarBase();
 }).listarRemetentes();
 }
+
 let dadosEncomendaTemporaria = null;
 function salvar(){
 const porteiro = document.getElementById('porteiro').value.trim();
@@ -1881,10 +1935,11 @@ dados.codigosBarras = (codigosBarrasDetectados.length ? codigosBarrasDetectados 
 const btn = document.getElementById('btnSalvar');
 btn.disabled = true;
 btn.textContent = '⏳ SALVANDO...';
-google.script.run.withSuccessHandler(function(){
+
+google.script.run.withSuccessHandler(function(res){
 btn.disabled = false;
 btn.textContent = 'SALVAR';
-mostrarToast('Encomenda registrada com sucesso!');
+mostrarToast('Encomenda registrada! Token: ' + (res.token || ''));
 limparFormulario();
 const ativa = document.querySelector('.tab-content.active');
 if(ativa && ativa.id==='aba-listagem') carregarEncomendas();
@@ -1911,6 +1966,7 @@ mostrarToast('Não foi possível confirmar o salvamento. Verifique os registros.
 }).salvarEncomenda(dados);
 dadosEncomendaTemporaria = null;
 }
+
 function confirmarCadastroNoServidor(id, callback){
 google.script.run
 .withSuccessHandler(function(existe){ callback(!!existe); })
@@ -1961,6 +2017,7 @@ document.getElementById('lista').innerHTML = '<div class="empty">Não foi possí
 })
 .listarEncomendasDoDia();
 }
+
 function ordenarPorApartamento(a, b) {
 const strA = String(a.tipo === 'encomenda' ? (a.item.apartamento || a.item.destinatario || '') : '');
 const strB = String(b.tipo === 'encomenda' ? (b.item.apartamento || b.item.destinatario || '') : '');
@@ -1971,6 +2028,7 @@ return numA - numB;
 }
 return strA.localeCompare(strB);
 }
+
 function executarPesquisa(){
 clearTimeout(pesquisaTimer);
 pesquisaTimer=setTimeout(function(){
@@ -2012,7 +2070,6 @@ function filtrarPendentesLocal() {
   const listaFiltrada = encomendas.filter(item => {
     if (normalizar(item.status) === 'retirado') return false;
 
-    // Filtra por data caso tenha sido preenchida
     if (dataFiltroFormatada && item.dataRecebimento !== dataFiltroFormatada) {
       return false;
     }
@@ -2022,8 +2079,9 @@ function filtrarPendentesLocal() {
     const nomeDest = normalizar(obterNomeDestinatario(item.destinatario));
     const apto = normalizar(item.apartamento);
     const rem = normalizar(item.remetente);
+    const token = normalizar(item.token);
 
-    return nomeDest.includes(termo) || apto.includes(termo) || rem.includes(termo);
+    return nomeDest.includes(termo) || apto.includes(termo) || rem.includes(termo) || token.includes(termo);
   });
 
   renderizarLista(listaFiltrada);
@@ -2050,7 +2108,8 @@ function executarPesquisaLocal(){
       const rem = normalizar(item.remetente);
       const codBarras = normalizar(item.codigoBarras);
       const entregador = normalizar(item.entregador);
-      if(termo && !nomeDest.includes(termo) && !apto.includes(termo) && !rem.includes(termo) && !codBarras.includes(termo) && !entregador.includes(termo)) return false;
+      const token = normalizar(item.token);
+      if(termo && !nomeDest.includes(termo) && !apto.includes(termo) && !rem.includes(termo) && !codBarras.includes(termo) && !entregador.includes(termo) && !token.includes(termo)) return false;
       if(dataFiltroFormatada && item.dataRecebimento !== dataFiltroFormatada) return false;
       return true;
     }).map(item => ({tipo:'encomenda', item:item}));
@@ -2083,14 +2142,13 @@ function executarPesquisaLocal(){
     return;
   }
 
- let html = '<div class="pesquisa-cards-grid">';
+  let html = '<div class="pesquisa-cards-grid">';
   resultados.forEach(function(resultado){
     const item = resultado.item;
     if(resultado.tipo === 'encomenda'){
       const nomeLimpo = obterNomeDestinatario(item.destinatario);
       const isEntregue = item.status && (item.status.includes('Retirado') || item.status.includes('Entregue'));
       
-      // Torna o card clicável para abrir o modal caso esteja entregue
       const clickCard = isEntregue ? 'onclick="abrirDetalhesRetirada(' + Number(item.linha) + ')" style="cursor:pointer;"' : '';
       
       const badgeStatus = isEntregue
@@ -2105,6 +2163,9 @@ function executarPesquisaLocal(){
       
       html += '<div class="pendente-info-linha"><span class="pesquisa-apartamento">Apto. ' + escapeHtml(item.apartamento || '—') + '</span><span class="pendente-qtd">' + (item.quantidade || 1) + '</span></div>';
       html += '<div class="pendente-nome" title="' + escapeHtml(nomeLimpo) + '">' + escapeHtml(nomeLimpo) + '</div>';
+      if(item.token){
+        html += '<div style="font-size:11px; color:#176443; font-weight:800; margin-bottom:4px;">🔑 Token: ' + escapeHtml(item.token) + '</div>';
+      }
       
       if(isEntregue){
         html += '<div style="font-size: 11px; color: #0878ed; font-weight: bold; margin-top: 4px;">🔍 Clique para ver detalhes da retirada</div>';
@@ -2112,7 +2173,6 @@ function executarPesquisaLocal(){
 
       html += '<div class="pendente-acoes" onclick="event.stopPropagation();">';
       
-      // O botão de foto no card aparece APENAS se NÃO estiver entregue (ou seja, se for pendente)
       if(!isEntregue && item.fotoUrl) {
         html += '<button class="pendente-btn pendente-btn-foto" onclick="abrirFoto(\'' + escapeAttr(item.fotoUrl) + '\')" title="Ver Foto">📷</button>';
       }
@@ -2122,7 +2182,6 @@ function executarPesquisaLocal(){
       }
       html += '</div></div>';
     } else {
-      // (card do entregador continua igual)
       html += '<div class="pendente-card pesquisa-card-entregador">';
       html += '<div class="pendente-data">' + escapeHtml(item.data || '') + '</div>';
       html += '<div class="pendente-nome pesquisa-entregador-nome" title="' + escapeHtml(item.entregador || '') + '">' + escapeHtml(item.entregador || 'Entregador') + '</div>';
@@ -2151,6 +2210,7 @@ return new Date(Number(m[1]), Number(m[2])-1, Number(m[3]), Number(m[4]||0), Num
 const parsed = Date.parse(texto);
 return Number.isNaN(parsed) ? 0 : parsed;
 }
+
 function registroEhHojeNoApp(dataTexto){
 if(!dataTexto) return false;
 const texto = String(dataTexto).trim();
@@ -2162,8 +2222,8 @@ const ano = Number(partes[2]);
 const hoje = new Date();
 return dia === hoje.getDate() && mes === hoje.getMonth()+1 && ano === hoje.getFullYear();
 }
+
 function abrirEdicaoEncomenda(linha){
-  // Procura primeiro na lista de encomendas pendentes e depois na lista de pesquisa
   let item = encomendas.find(x => Number(x.linha) === Number(linha));
   if(!item){
     item = todasEncomendasPesquisa.find(x => Number(x.linha) === Number(linha));
@@ -2204,6 +2264,7 @@ function abrirEdicaoEncomenda(linha){
 
   document.getElementById('modalEdicao').classList.add('show');
 }
+
 function abrirEdicaoEntregadorPorLinha(linhaAlvo){
 const item = todosEntregadoresPesquisa.find(x => Number(x.linha) === Number(linhaAlvo));
 if(!item){
@@ -2222,7 +2283,9 @@ document.getElementById('editarQuantidadeEntregador').value = String(item.quanti
 document.getElementById('editarDestinatariosEntregador').value = item.destinatarios || '';
 document.getElementById('modalEdicao').classList.add('show');
 }
+
 function fecharModalEdicao(){document.getElementById('modalEdicao').classList.remove('show'); tipoEdicaoAtual=''; linhaEdicaoAtual=null;}
+
 function salvarEdicao(){
 if(!tipoEdicaoAtual || linhaEdicaoAtual === null || !Number.isFinite(Number(linhaEdicaoAtual)) || Number(linhaEdicaoAtual) < 2){
 mostrarToast('Registro de edição inválido.');
@@ -2259,11 +2322,13 @@ if(dados.quantidade<1){mostrarToast('Informe uma quantidade válida.'); btn.disa
 google.script.run.withSuccessHandler(sucesso).withFailureHandler(falha).editarEntregadorHoje(linhaEdicaoAtual, dados);
 }
 }
+
 function limparFiltroPesquisa(){
 document.getElementById('filtroNomePesquisa').value = '';
 document.getElementById('filtroDataPesquisa').value = '';
 executarPesquisa();
 }
+
 function atualizarSugestoesDestinatarios(){
 const datalist = document.getElementById('sugestoesDestinatarios');
 if(!datalist) return;
@@ -2279,6 +2344,7 @@ opt.value = dest;
 datalist.appendChild(opt);
 });
 }
+
 function normalizar(texto){
 return String(texto||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 }
@@ -2334,11 +2400,18 @@ if(url && !fotos.includes(url)) fotos.push(url);
 });
 const naoAvisados = grupo.itens.some(item=>!item.avisadoEm);
 const datas = grupo.itens.map(item=>String(item.dataRecebimento||'').trim()).filter(Boolean);
+
+// Token do grupo (se houver)
+const tokensGrupo = grupo.itens.map(i=>i.token).filter(Boolean).join(', ');
+
 html += '<div class="pendente-card">';
 html += '<div class="pendente-data">' + escapeHtml(datas.length ? datas[0] : '') + '</div>';
 html += '<div class="pendente-info-linha"><span>Apto ' + escapeHtml(grupo.apartamento) + '</span><span class="pendente-qtd">' + grupo.itens.length + '</span></div>';
 html += '<div class="pendente-nome" title="' + escapeHtml(grupo.nome) + '">' + escapeHtml(grupo.nome) + '</div>';
-html += '<div style="margin:6px 0;color:#60758c;font-size: 13px; font-weight:700;">' + totalVolumes + (totalVolumes === 1 ? ' volume' : ' volumes') + (remetentes.length ? ' • ' + escapeHtml(remetentes.join(', ')) : '') + '</div>';
+if(tokensGrupo){
+  html += '<div style="font-size:11px; color:#176443; font-weight:800; margin-bottom:2px;">🔑 Token: ' + escapeHtml(tokensGrupo) + '</div>';
+}
+html += '<div style="margin:4px 0;color:#60758c;font-size: 13px; font-weight:700;">' + totalVolumes + (totalVolumes === 1 ? ' volume' : ' volumes') + (remetentes.length ? ' • ' + escapeHtml(remetentes.join(', ')) : '') + '</div>';
 if(fotos.length){
 html += '<div style="display: flex; align-items:center;gap:6px; flex-wrap:wrap;margin:7px 0;">';
 fotos.forEach((url,indice)=>{
@@ -2392,11 +2465,11 @@ grupo.itens.sort((a,b) => (Number(b.timestampRecebimento)||0) - (Number(a.timest
 grupo.itens.forEach(item => {
 const id = 'baixaPend_' + indice++;
 const descricao = (item.dataRecebimento || 'Data não informada') + ' • ' + (item.remetente || 'Sem remetente') + ' • ' + (Number(item.quantidade) || 1) + ' volume(s)';
-const codigo = item.codigoBarras ? 'Código: ' + item.codigoBarras : 'Código não informado';
+const codigo = item.token ? ('Token: ' + item.token) : (item.codigoBarras ? 'Código: ' + item.codigoBarras : 'Código não informado');
 html += '<div class="pendente-selecao-linha">' +
 '<input type="checkbox" id="' + id + '" value="' + Number(item.linha) + '" checked onchange="atualizarResumoSelecaoBaixa()">' +
 '<label for="' + id + '"><strong>' + escapeHtml(descricao) + '</strong><br>' +
-'<span style="font-weight:500;color:#718394;">' + escapeHtml(codigo) + '</span></label></div>';
+'<span style="font-weight:700;color:#0b7750;">' + escapeHtml(codigo) + '</span></label></div>';
 });
 });
 document.getElementById('listaSelecaoPendentes').innerHTML = html;
@@ -2436,8 +2509,7 @@ document.getElementById('modalBaixa').classList.add('show');
 setTimeout(inicializarCanvas, 50);
 }
 
-<!-- Substitua apenas a função avisarGrupo existente no seu Index Encomendas -->
-
+/* AUTOMATIZAÇÃO DO DISPARO DO WHATSAPP COM TOKEN E LINK DO MORADOR */
 function avisarGrupo(linhas){
   const grupo = encomendas.filter(item=>linhas.map(Number).includes(Number(item.linha)));
   if(!grupo.length) return;
@@ -2455,51 +2527,32 @@ function avisarGrupo(linhas){
       remetentes.push(rem);
   });
   const totalVolumes = naoAvisados.reduce((total,item)=>total+(Number(item.quantidade)||1),0);
-  const fotos = [];
-  grupo.forEach(item=>{
-    String(item.fotoUrl||'').split(/\r?\n/).forEach(url=>{
-      const limpo = String(url||'').trim();
-      if(limpo && !fotos.includes(limpo)) fotos.push(limpo);
-    });
-  });
+  
+  // Captura o Token da primeira encomenda
+  const token = primeiro.token || '';
+  const webAppUrl = window.location.href.split('?')[0];
+  const linkMorador = token ? (webAppUrl + '?token=' + token) : '';
+
   const janelaWhatsApp = window.open('about:blank', '_blank');
-  const concluirAviso = function(linkGaleria){
-    let linkFotoTexto = '';
-    if(linkGaleria){
-      linkFotoTexto = '\n\n📸 *Ver fotos dos pacotes:*\n' + linkGaleria;
-    } else if(fotos.length){
-      linkFotoTexto = '\n\n📸 *Ver fotos dos pacotes:*\n' + fotos[0];
-    }
-    
-    const totalEncomendas = naoAvisados.length;
-    const fraseEncomendas = totalEncomendas === 1 ? 'Chegou uma encomenda.' : 'Chegaram algumas encomendas.';
-    
-    // Layout ajustado
-    const mensagem = '👋 Olá!\n' + fraseEncomendas + '\n\n👤 Nome: *' + nome + '*\n📦 Quantidade: *' + totalVolumes + '*\n🏢 Remetente(s): *' + remetentes.join(', ') + '*' + linkFotoTexto;
-    
-    const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
-    if(janelaWhatsApp && !janelaWhatsApp.closed){
-      janelaWhatsApp.location.href = urlWhatsApp;
-    } else {
-      window.open(urlWhatsApp, '_blank');
-    }
-    marcarLinhasComoAvisadas(naoAvisados);
-  };
-  if(!fotos.length){
-    concluirAviso('');
-    return;
+  
+  const totalEncomendas = naoAvisados.length;
+  const fraseEncomendas = totalEncomendas === 1 ? 'Chegou uma encomenda.' : 'Chegaram algumas encomendas.';
+  
+  let mensagem = '👋 Olá!\n' + fraseEncomendas + '\n\n👤 Nome: *' + nome + '*\n📦 Quantidade: *' + totalVolumes + '*\n🏢 Remetente(s): *' + remetentes.join(', ') + '*';
+  
+  if (token) {
+    mensagem += '\n\n🔑 *Código de Retirada:* ' + token;
+    mensagem += '\n📱 *Ver QR Code para Retirada:*\n' + linkMorador;
   }
-  google.script.run
-    .withSuccessHandler(function(linkGaleria){ concluirAviso(linkGaleria || ''); })
-    .withFailureHandler(function(erro){
-      console.error('Não foi possível gerar o link da galeria:', erro);
-      concluirAviso('');
-    })
-    .obterLinkGaleriaFotos(primeiro.destinatario);
+  
+  const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
+  if(janelaWhatsApp && !janelaWhatsApp.closed){
+    janelaWhatsApp.location.href = urlWhatsApp;
+  } else {
+    window.open(urlWhatsApp, '_blank');
+  }
+  marcarLinhasComoAvisadas(naoAvisados);
 }
-
-
-
 
 function marcarLinhasComoAvisadas(itens){
 if(!itens.length) return;
@@ -2610,7 +2663,6 @@ function abrirDetalhesRetirada(linha) {
   document.getElementById('detalheRetiradoPor').textContent = item.retiradoPor || 'Não informado';
   document.getElementById('detalheDataRetirada').textContent = item.dataRetirada || 'Não informada';
 
-  // Botão para a foto da encomenda (foto cadastrada na chegada)
   const btnFotoPacote = document.getElementById('btnVerFotoPacoteDetalhe');
   if (item.fotoUrl) {
     btnFotoPacote.style.display = 'flex';
@@ -2619,11 +2671,9 @@ function abrirDetalhesRetirada(linha) {
     btnFotoPacote.style.display = 'none';
   }
 
-  // Mantém compatibilidade caso haja outro campo de foto extra
   const btnFoto = document.getElementById('btnVerFotoDetalhe');
   btnFoto.style.display = 'none';
 
-  // Botão para a assinatura virtual
   const btnAssinatura = document.getElementById('btnVerAssinaturaDetalhe');
   if (item.assinaturaUrl) {
     btnAssinatura.style.display = 'flex';
@@ -2684,6 +2734,7 @@ mensagem += '\n';
 mensagem += '*Total de volumes pendentes: ' + total + '*';
 window.open('https://wa.me/?text=' + encodeURIComponent(mensagem), '_blank');
 }
+
 function escapeHtml(texto){
 return String(texto||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
@@ -2709,6 +2760,7 @@ navigator.serviceWorker.register('./sw.js', {scope:'./'})
 });
 }
 </script>
+
+<? } ?>
 </body>
 </html>
-
