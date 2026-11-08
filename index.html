@@ -833,21 +833,24 @@ transform: scale(0.98);
 }
 </style>
 </head>
-<body>
-<style>
-  /* Se houver token na URL, esconde a portaria e mostra o morador via CSS puro */
-  body:has(script) /* suporte universal */
-</style>
+
 <script>
   (function() {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('token')) {
+    const token = params.get('token');
+    if (token) {
+      // Adiciona uma classe no body e injeta CSS com alta prioridade
+      document.body.classList.add('modo-morador');
       const css = document.createElement('style');
-      css.innerHTML = '#sistemaPortaria { display: none !important; } #telaMorador { display: block !important; }';
+      css.innerHTML = `
+        #sistemaPortaria { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; } 
+        #telaMorador { display: block !important; visibility: visible !important; opacity: 1 !important; }
+      `;
       document.head.appendChild(css);
     }
   })();
 </script>
+
 
 <!-- TELA DEDICADA DO MORADOR (QUANDO ABRE PELO LINK DO WHATSAPP COM TOKEN) -->
 <div id="telaMorador" style="display:none; max-width: 500px; margin: 20px auto; padding: 15px;">
