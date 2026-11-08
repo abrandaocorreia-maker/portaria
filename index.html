@@ -1432,14 +1432,20 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 /* TELA DO MORADOR */
+
 function carregarVisualizacaoMorador(token) {
-  document.getElementById('sistemaPortaria').style.display = 'none';
-  document.getElementById('telaMorador').style.display = 'block';
+  // Esconde estritamente o painel da portaria
+  const sistema = document.getElementById('sistemaPortaria');
+  if (sistema) sistema.style.display = 'none';
+
+  // Mostra a tela do morador
+  const tela = document.getElementById('telaMorador');
+  if (tela) tela.style.display = 'block';
 
   google.script.run
     .withSuccessHandler(function(res) {
       if (!res) {
-        document.getElementById('telaMorador').innerHTML = '<div style="text-align:center;padding:50px;font-size:18px;">Encomenda não encontrada ou já retirada.</div>';
+        if (tela) tela.innerHTML = '<div style="text-align:center;padding:50px;font-size:18px;">Encomenda não encontrada ou já retirada.</div>';
         return;
       }
       document.getElementById('moradorNome').textContent = obterNomeDestinatario(res.destinatario);
@@ -1454,14 +1460,16 @@ function carregarVisualizacaoMorador(token) {
         const imgEl = document.getElementById('moradorFoto');
         imgEl.src = res.fotoUrl;
         imgEl.style.display = 'block';
-        document.getElementById('cardMoradorFotoContainer').style.display = 'block';
+        const containerFoto = document.getElementById('cardMoradorFotoContainer');
+        if (containerFoto) containerFoto.style.display = 'block';
       }
     })
     .withFailureHandler(function() {
-      document.getElementById('telaMorador').innerHTML = '<div style="text-align:center;padding:50px;font-size:18px;">Erro ao carregar os dados da encomenda.</div>';
+      if (tela) tela.innerHTML = '<div style="text-align:center;padding:50px;font-size:18px;">Erro ao carregar os dados da encomenda.</div>';
     })
     .obterEncomendaPorToken(token);
 }
+
 
 function verificarTokenParaBaixaRapida(token) {
   google.script.run
