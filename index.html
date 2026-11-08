@@ -1293,6 +1293,17 @@ SALVAR
 <div id="toast" class="toast"></div>
 
 <script>
+  // VERIFICAÇÃO IMEDIATA DO TOKEN ANTES DE QUALQUER COISA
+  (function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('token')) {
+      // Esconde o app da portaria e mostra o morador instantaneamente ao carregar
+      document.write('<style>#sistemaPortaria { display: none !important; } #telaMorador { display: block !important; }</style>');
+    }
+  })();
+</script>
+
+
 /* PONTE COM APPS SCRIPT */
 (function(){
 if (window.google && window.google.script && window.google.script.run) return;
