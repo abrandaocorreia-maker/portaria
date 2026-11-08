@@ -1293,12 +1293,14 @@ SALVAR
 <div id="toast" class="toast"></div>
 
 <script>
-  // VERIFICAÇÃO IMEDIATA DO TOKEN ANTES DE QUALQUER COISA
+  // VERIFICAÇÃO IMEDIATA DO TOKEN
   (function() {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('token')) {
-      // Esconde o app da portaria e mostra o morador instantaneamente ao carregar
-      document.write('<style>#sistemaPortaria { display: none !important; } #telaMorador { display: block !important; }</style>');
+      // Esconde a portaria e exibe a tela do morador via estilo direto
+      const estilo = document.createElement('style');
+      estilo.innerHTML = '#sistemaPortaria { display: none !important; } #telaMorador { display: block !important; }';
+      document.head.appendChild(estilo);
     }
   })();
 
