@@ -1232,6 +1232,9 @@ SALVAR
 <div class="modal-overlay" id="modalBaixa">
 <div class="modal" style="width: min(100%, 480px);">
 <div class="modal-title">📦 Dar baixa na encomenda</div>
+  <div id="dadosEncomendaBaixa"
+     style="background:#f3f7fb;padding:12px;border-radius:9px;margin-bottom:14px;line-height:1.6;">
+</div>
 <div class="modal-field">
 <label>Retirado por (Nome)</label>
 <input type="text" id="retiradoPor" placeholder="Nome de quem retirou">
@@ -1525,7 +1528,7 @@ function verificarTokenParaBaixaRapida(token) {
         mostrarToast('Esta encomenda já foi retirada anteriormente.');
         return;
       }
-      abrirBaixa(res.linha);
+      abrirBaixa(res.linha, res);
     })
     .withFailureHandler(function() {
       mostrarToast('Erro ao buscar encomenda pelo QR Code.');
@@ -1963,11 +1966,27 @@ function enviarMensagemWhatsApp(token, nome, apto, remetente, qtd) {
     window.location.href = urlWhatsApp;
   }
 }
-function abrirBaixa(linha){
-  linhaBaixaAtual = linha;
+function abrirBaixa(linha, itemRecebido) {
+  linhaBaixaAtual = Number(linha);
   linhasBaixaAptoAtual = null;
-  const item = encomendas.find(i => Number(i.linha) === Number(linha));
-  document.getElementById('retiradoPor').value = item ? obterNomeDestinatario(item.destinatario) : '';
+
+  const item = itemRecebido ||
+    encomendas.find(i => Number(i.linha) === Number(linha));
+
+  const resumo = document.getElementById('dadosEncomendaBaixa');
+
+  if (item) {
+    resumo.innerHTML =
+      '<strong>Destinatário:</strong> ' + escapeHtml(item.destinatario || '—') + '<br>' +
+      '<strong>Apartamento:</strong> ' + escapeHtml(item.apartamento || '—') + '<br>' +
+      '<strong>Remetente:</strong> ' + escapeHtml(item.remetente || '—') + '<br>' +
+      '<strong>Volumes:</strong> ' + escapeHtml(item.quantidade || 1) + '<br>' +
+      '<strong>Recebida em:</strong> ' + escapeHtml(item.dataRecebimento || '—');
+  } else {
+    resumo.textContent = 'Não foi possível carregar os dados da encomenda.';
+  }
+
+  document.getElementById('retiradoPor').value = '';
   document.getElementById('modalBaixa').classList.add('show');
   setTimeout(inicializarCanvas, 50);
 }
