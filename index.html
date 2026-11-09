@@ -1028,6 +1028,11 @@ SALVAR
 <div class="section-icon orange">⏳</div>
 <span>Encomendas</span>
 </div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;width:100%;box-sizing:border-box;align-items:center;">
+  <button type="button" class="confirm-button" onclick="abrirLeitorQrRetirada()" style="flex:1 1 150px;min-height:44px;">📷 Ler QR Code</button>
+  <input id="tokenRetiradaManual" type="text" maxlength="250" placeholder="Token ou link do QR Code" onkeydown="if(event.key==='Enter') buscarTokenRetiradaManual()" style="flex:2 1 190px;min-width:150px;border:2px solid #cad9ea;border-radius:9px;padding:10px;font-size:15px;">
+  <button type="button" onclick="buscarTokenRetiradaManual()" style="flex:1 1 100px;min-height:44px;border:0;border-radius:9px;background:#0878ed;color:#fff;font-weight:800;cursor:pointer;">Buscar</button>
+</div>
 <div style="display: flex; gap: 8px; margin-bottom: 12px; width: 100%; box-sizing: border-box;">
   <div class="filter-box" style="padding: 0 10px; min-height: 48px; flex: 1 1 60%; min-width: 0; display: flex; align-items: center; gap: 6px;">
     <span style="flex-shrink: 0;">🔍</span>
@@ -1228,6 +1233,18 @@ SALVAR
 </div>
 </div>
 
+<!-- LEITOR AO VIVO DE QR CODE PARA RETIRADA -->
+<div class="modal-overlay" id="modalLeitorQrRetirada">
+  <div class="modal" style="width:min(100%,480px);">
+    <div class="modal-title">📷 Ler QR Code da retirada</div>
+    <p style="margin:0 0 12px;color:#58708f;">Aponte a câmera traseira para o QR Code exibido pelo morador.</p>
+    <div id="leitorQrRetirada" style="width:100%;min-height:260px;overflow:hidden;border-radius:12px;background:#101820;"></div>
+    <div id="statusLeitorQrRetirada" role="status" style="margin-top:10px;color:#58708f;font-size:14px;">Aguardando a câmera…</div>
+    <div class="modal-buttons">
+      <button class="cancel-button" type="button" onclick="fecharLeitorQrRetirada()">Cancelar</button>
+    </div>
+  </div>
+</div>
 <!-- MODAL DE BAIXA COM ASSINATURA VIRTUAL -->
 <div class="modal-overlay" id="modalBaixa">
 <div class="modal" style="width: min(100%, 480px);">
@@ -1389,6 +1406,9 @@ let desenhando = false;
 let tipoEdicaoAtual = "";
 let linhaEdicaoAtual = null;
 let dadosEncomendaTemporaria = null;
+const URL_WEBAPP_MORADOR_PUBLICO = "COLE_AQUI_A_URL_PUBLICA_DO_MORADOR";
+let leitorQrRetirada = null;
+let leituraQrEmProcessamento = false;
 
 document.addEventListener('DOMContentLoaded', function(){
   // Verifica se o morador abriu pelo link com token do WhatsApp
@@ -1517,21 +1537,112 @@ function carregarVisualizacaoMorador(token) {
 }
 
 
+function extrairTokenRetirada(valor) {
+  var texto = String(valor || "").trim();
+  if (!texto) return "";
+  try {
+    var url = new URL(texto);
+    var tokenUrl = url.searchParams.get("token");
+    if (tokenUrl) return tokenUrl.trim().toUpperCase();
+  } catch (e) {}
+  var achou = texto.match(/[?&]token=([A-Z0-9]{6})/i);
+  if (achou) return achou[1].toUpperCase();
+  if (/^[A-Z0-9]{6}$/i.test(texto)) return texto.toUpperCase();
+  return "";
+}
+
+function buscarTokenRetiradaManual() {
+  var campo = document.getElementById("tokenRetiradaManual");
+  var token = extrairTokenRetirada(campo.value);
+  if (!token) {
+    mostrarToast("Digite o token de 6 caracteres ou cole o link do QR Code.");
+    campo.focus();
+    return;
+  }
+  verificarTokenParaBaixaRapida(token);
+}
+
+function abrirLeitorQrRetirada() {
+  var modal = document.getElementById("modalLeitorQrRetirada");
+  var status = document.getElementById("statusLeitorQrRetirada");
+  var leitor = document.getElementById("leitorQrRetirada");
+  if (typeof Html5Qrcode === "undefined") {
+    mostrarToast("O leitor de QR Code não carregou. Use a entrada manual do token.");
+    return;
+  }
+  modal.classList.add("show");
+  status.textContent = "Solicitando acesso à câmera…";
+  leituraQrEmProcessamento = false;
+  leitor.innerHTML = "";
+  leitorQrRetirada = new Html5Qrcode("leitorQrRetirada", {
+    formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+  });
+  var config = {
+    fps: 12,
+    qrbox: { width: 240, height: 240 },
+    aspectRatio: 1,
+    rememberLastUsedCamera: true
+  };
+  leitorQrRetirada.start(
+    { facingMode: "environment" },
+    config,
+    function(textoLido) {
+      if (leituraQrEmProcessamento) return;
+      var token = extrairTokenRetirada(textoLido);
+      if (!token) {
+        status.textContent = "QR Code lido, mas não contém um token de retirada válido.";
+        return;
+      }
+      leituraQrEmProcessamento = true;
+      status.textContent = "QR Code reconhecido. Consultando encomenda…";
+      pararLeitorQrRetirada().then(function() {
+        modal.classList.remove("show");
+        verificarTokenParaBaixaRapida(token);
+      });
+    },
+    function() {}
+  ).then(function() {
+    status.textContent = "Câmera ativa. Centralize o QR Code na moldura.";
+  }).catch(function(erro) {
+    status.textContent = "Não foi possível abrir a câmera. Verifique a permissão ou digite o token manualmente.";
+    console.error("Falha ao iniciar leitor QR:", erro);
+    mostrarToast("Câmera indisponível. Você pode digitar o token.");
+  });
+}
+
+function pararLeitorQrRetirada() {
+  var leitor = leitorQrRetirada;
+  if (!leitor) return Promise.resolve();
+  leitorQrRetirada = null;
+  var parar = leitor.isScanning ? leitor.stop().catch(function() {}) : Promise.resolve();
+  return parar.then(function() {
+    try { leitor.clear(); } catch (e) {}
+  });
+}
+
+function fecharLeitorQrRetirada() {
+  pararLeitorQrRetirada().then(function() {
+    document.getElementById("modalLeitorQrRetirada").classList.remove("show");
+    leituraQrEmProcessamento = false;
+  });
+}
+
 function verificarTokenParaBaixaRapida(token) {
   google.script.run
     .withSuccessHandler(function(res) {
-      if (!res) {
-        mostrarToast('QR Code inválido ou encomenda já retirada.');
+      if (!res || !res.token) {
+        mostrarToast("QR Code ou token não encontrado.");
         return;
       }
-      if (String(res.status).trim() === 'Retirado') {
-        mostrarToast('Esta encomenda já foi retirada anteriormente.');
+      if (String(res.status || "").trim().toLowerCase() === "retirado") {
+        mostrarToast("Esta encomenda já foi retirada anteriormente.");
         return;
       }
       abrirBaixa(res.linha, res);
     })
-    .withFailureHandler(function() {
-      mostrarToast('Erro ao buscar encomenda pelo QR Code.');
+    .withFailureHandler(function(erro) {
+      console.error(erro);
+      mostrarToast("Erro ao consultar a encomenda. Tente novamente ou use o botão da lista.");
     })
     .obterEncomendaPorToken(token);
 }
@@ -1948,7 +2059,7 @@ function enviarMensagemWhatsApp(token, nome, apto, remetente, qtd) {
     return;
   }
 
-  const urlApp = 'https://script.google.com/macros/s/AKfycby9vBVxWnOEALnmP-K0BU0Fx6M1N5NXJgNbOvDqlr3_Ds3INFZ09ksrsMqj7F0dcO0w/exec';
+  const urlApp = URL_WEBAPP_MORADOR_PUBLICO;
   const linkMorador = urlApp + '?token=' + encodeURIComponent(token);
 
   const mensagem =
@@ -1999,25 +2110,29 @@ function fecharModal(){
 function confirmarBaixa(){
   const nome = document.getElementById('retiradoPor').value.trim();
   if(!nome){ mostrarToast('Informe quem retirou.'); return; }
+  if(!linhaBaixaAtual){ mostrarToast('Encomenda não selecionada.'); return; }
   const assinatura = !canvasEstaVazio() ? canvas.toDataURL('image/png') : '';
   const dataRet = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR');
-
   const btn = document.getElementById('btnConfirmarBaixa');
   btn.disabled = true;
   btn.textContent = 'Confirmando...';
-
   google.script.run
-    .withSuccessHandler(function(){
+    .withSuccessHandler(function(sucesso){
       btn.disabled = false;
       btn.textContent = 'Confirmar retirada';
+      if (sucesso !== true) {
+        mostrarToast('A baixa não foi gravada. Verifique a planilha e tente novamente.');
+        return;
+      }
       fecharModal();
       mostrarToast('Encomenda retirada com sucesso!');
       carregarEncomendas();
     })
-    .withFailureHandler(function(){
+    .withFailureHandler(function(erro){
       btn.disabled = false;
       btn.textContent = 'Confirmar retirada';
-      mostrarToast('Erro ao confirmar retirada.');
+      console.error(erro);
+      mostrarToast('Erro ao confirmar retirada. Tente novamente.');
     })
     .darBaixaEncomenda(linhaBaixaAtual, nome, assinatura, dataRet);
 }
