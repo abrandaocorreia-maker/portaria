@@ -991,6 +991,11 @@ autocomplete="off"
 >
 <datalist id="sugestoesDestinatarios"></datalist>
 </div>
+<!-- Apartamento -->
+<div class="field">
+<div class="field-label"><span class="field-icon">🚪</span>Apartamento</div>
+<input type="text" id="apartamento" placeholder="Ex.: 203">
+</div>
 <!-- Quantidade -->
 <div class="field">
 <div class="field-label"><span class="field-icon">📦</span>Quantidade</div>
@@ -1254,6 +1259,7 @@ SALVAR
 <div id="camposEdicaoEncomenda">
 <div class="modal-field"><label>Porteiro</label><input type="text" id="editarPorteiro" placeholder="Nome do porteiro"></div>
 <div class="modal-field"><label>Destinatário / Apartamento</label><input type="text" id="editarDestinatario" placeholder="Ex.: João Silva - Apto 203"></div>
+<div class="modal-field"><label>Apartamento</label><input type="text" id="editarApartamento" placeholder="Ex.: 203"></div>
 <div class="modal-field"><label>Remetente</label><select id="editarRemetente" style="width:100%;border:2px solid #cad9ea;border-radius:9px;padding: 12px;font-size: 17px; outline:0;background:#fff;"></select></div>
 <div class="field" style="border:0; padding:0; margin-bottom:12px;">
 <label style="display:block;color:#426181;font-size:15px;font-weight:800; margin-bottom:6px;">Quantidade</label>
@@ -1755,26 +1761,50 @@ function atualizarPagina(){
   mostrarToast('Página atualizada!');
 }
 
-function salvar(){
+function salvar() {
   const porteiro = document.getElementById('porteiro').value.trim();
   const destinatario = document.getElementById('destinatario').value.trim();
+  const apartamento = document.getElementById('apartamento').value.trim();
   const remetente = document.getElementById('remetente').value;
   const quantidade = Number(document.getElementById('quantidade').value) || 1;
   const dataRecebimento = document.getElementById('dataRecebimento').value;
   const codigosLidos = codigosBarrasDetectados.slice();
   const codigoVisual = document.getElementById('codigoBarrasVisual').value.trim();
-  if(!codigosLidos.length && codigoVisual) codigosLidos.push(codigoVisual);
+
+  if (!codigosLidos.length && codigoVisual) codigosLidos.push(codigoVisual);
   const codigoBarras = codigosLidos.join(' | ');
 
-  if(!porteiro){ mostrarToast('Informe o porteiro.'); document.getElementById('porteiro').focus(); return; }
-  if(!destinatario){ mostrarToast('Informe o destinatário.'); document.getElementById('destinatario').focus(); return; }
+  if (!porteiro) {
+    mostrarToast('Informe o porteiro.');
+    document.getElementById('porteiro').focus();
+    return;
+  }
+  if (!destinatario) {
+    mostrarToast('Informe o destinatário.');
+    document.getElementById('destinatario').focus();
+    return;
+  }
+  if (!apartamento) {
+    mostrarToast('Informe o apartamento.');
+    document.getElementById('apartamento').focus();
+    return;
+  }
 
   salvarPorteiroLocal();
-  dadosEncomendaTemporaria = { id: 'ENC-' + Date.now(), porteiro, destinatario, remetente, quantidade, dataRecebimento, codigoBarras };
-  
+
+  dadosEncomendaTemporaria = {
+    id: 'ENC-' + Date.now(),
+    porteiro,
+    destinatario,
+    apartamento,
+    remetente,
+    quantidade,
+    dataRecebimento,
+    codigoBarras
+  };
+
   document.getElementById('modalFotoPacote').classList.add('show');
 }
-
 function naoTirarFotoPacote(){
   document.getElementById('modalFotoPacote').classList.remove('show');
   fotoPacoteBase64 = "";
@@ -1826,6 +1856,7 @@ function limparFormulario(){
   document.getElementById('destinatario').value = "";
   document.getElementById('remetente').value = "";
   document.getElementById('quantidade').value = "1";
+  document.getElementById('apartamento').value = "";
   document.getElementById('codigoBarrasVisual').value = "";
   codigosBarrasDetectados = [];
   fotoPacoteBase64 = "";
@@ -1873,11 +1904,13 @@ function renderizarLista(lista){
     const nome = obterNomeDestinatario(item.destinatario);
     html += '<div class="pendente-card">';
     html += '<div class="pendente-data">' + escapeHtml(item.dataRecebimento || '') + '</div>';
-    html += '<div class="pendente-info-linha"><span>Apto ' + escapeHtml(item.apartamento || '—') + '</span><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol</span></div>';
+    html += '<div class="pendente-info-linha"><span>Apto ' + escapeHtml(item.apartamento || '—') +
+        '</span><span class="pendente-qtd">' + (item.quantidade || 1) + ' vol</span></div>';
     html += '<div class="pendente-nome" title="' + escapeHtml(nome) + '">' + escapeHtml(nome) + '</div>';
     html += '<div style="font-size:12px;color:#58708f;margin-bottom:6px;">' + escapeHtml(item.remetente || 'Outros') + '</div>';
     html += '<div class="pendente-acoes">';
-    html += '<button class="pendente-btn pendente-btn-msg" onclick="enviarMensagemWhatsApp(\'' + (item.token || '') + '\', \'' + escapeAttr(nome) + '\', \'' + escapeAttr(item.apartamento || '') + '\', \'' + escapeAttr(item.remetente || '') + '\', ' + (item.quantidade || 1) + ')" title="Enviar WhatsApp com QR Code">💬</button>';
+   html += '<button class="pendente-btn pendente-btn-msg" onclick="enviarMensagemWhatsAppPorLinha(' +
+        Number(item.linha) + ')" title="Enviar WhatsApp com QR Code">💬</button>';
     html += '<button class="pendente-btn pendente-btn-ret" onclick="abrirBaixa(' + Number(item.linha) + ')" title="Dar Baixa">📦</button>';
     html += '<button class="pendente-btn" onclick="abrirEdicaoEncomenda(' + Number(item.linha) + ')" title="Editar">✏️</button>';
     html += '</div></div>';
@@ -1887,19 +1920,49 @@ function renderizarLista(lista){
 }
 
 /** BOTÃO DE WHATSAPP ATUALIZADO COM LINK DO QR CODE E DETALHES */
-function enviarMensagemWhatsApp(token, nome, apto, remetente, qtd) {
-  const urlApp = 'https://script.google.com/macros/s/AKfycby9vBVxWnOEALnmP-K0BU0Fx6M1N5NXJgNbOvDqlr3_Ds3INFZ09ksrsMqj7F0dcO0w/exec';
-  const linkMorador = urlApp + '?token=' + token;
+function enviarMensagemWhatsAppPorLinha(linha) {
+  const item = encomendas.find(function(registro) {
+    return Number(registro.linha) === Number(linha);
+  });
 
-  const mensagem = '👋 Olá, *' + nome + '* (Apto ' + apto + ')!\n' +
-                   'Chegou uma encomenda para você.\n\n' +
-                   '📦 Quantidade: *' + qtd + '*\n' +
-                   '🏢 Remetente: *' + (remetente || 'Outros') + '*\n\n' +
-                   '📲 *Acesse o link abaixo para visualizar o QR Code de retirada, código e detalhes:* \n' + linkMorador;
+  if (!item) {
+    mostrarToast('Não foi possível localizar a encomenda.');
+    return;
+  }
 
-  window.open('https://wa.me/?text=' + encodeURIComponent(mensagem), '_blank');
+  enviarMensagemWhatsApp(
+    item.token,
+    obterNomeDestinatario(item.destinatario),
+    item.apartamento,
+    item.remetente,
+    item.quantidade
+  );
 }
 
+function enviarMensagemWhatsApp(token, nome, apto, remetente, qtd) {
+  if (!token) {
+    mostrarToast('Esta encomenda não tem token de retirada.');
+    return;
+  }
+
+  const urlApp = 'https://script.google.com/macros/s/AKfycby9vBVxWnOEALnmP-K0BU0Fx6M1N5NXJgNbOvDqlr3_Ds3INFZ09ksrsMqj7F0dcO0w/exec';
+  const linkMorador = urlApp + '?token=' + encodeURIComponent(token);
+
+  const mensagem =
+    '👋 Olá, *' + nome + '* (Apto ' + (apto || '—') + ')!\n' +
+    'Chegou uma encomenda para você.\n\n' +
+    '📦 Quantidade: *' + (qtd || 1) + '*\n' +
+    '🏢 Remetente: *' + (remetente || 'Outros') + '*\n\n' +
+    '📲 Acesse o link para ver os detalhes e o QR Code de retirada:\n' +
+    linkMorador;
+
+  const urlWhatsApp = 'https://wa.me/?text=' + encodeURIComponent(mensagem);
+  const janela = window.open(urlWhatsApp, '_blank');
+
+  if (!janela) {
+    window.location.href = urlWhatsApp;
+  }
+}
 function abrirBaixa(linha){
   linhaBaixaAtual = linha;
   linhasBaixaAptoAtual = null;
@@ -1988,6 +2051,7 @@ function abrirEdicaoEncomenda(linha){
   linhaEdicaoAtual = Number(linha);
   document.getElementById('editarPorteiro').value = item.porteiro || '';
   document.getElementById('editarDestinatario').value = item.destinatario || '';
+  document.getElementById('editarApartamento').value = item.apartamento || '';
   document.getElementById('editarQuantidadeEncomenda').value = item.quantidade || 1;
   document.getElementById('editarCodigoBarras').value = item.codigoBarras || '';
   document.getElementById('modalEdicao').classList.add('show');
@@ -1998,6 +2062,7 @@ function salvarEdicao(){
     porteiro: document.getElementById('editarPorteiro').value.trim(),
     destinatario: document.getElementById('editarDestinatario').value.trim(),
     quantidade: Number(document.getElementById('editarQuantidadeEncomenda').value) || 1,
+    apartamento: document.getElementById('editarApartamento').value.trim(),
     codigoBarras: document.getElementById('editarCodigoBarras').value.trim()
   };
   google.script.run
