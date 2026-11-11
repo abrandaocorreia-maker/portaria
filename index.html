@@ -1035,6 +1035,14 @@ SALVAR
 <span>Resumo</span>
 </div>
 </section>
+<section class="card" style="margin:0 0 12px;padding:14px 16px;">
+  <div style="font-size:15px;font-weight:900;color:#17345f;margin-bottom:9px;">📄 Relatório mensal em PDF</div>
+  <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;">
+    <input type="month" id="mesRelatorioEntregas" style="flex:1;min-width:145px;border:1px solid #cbd9e5;border-radius:9px;padding:11px;font-size:15px;color:#263b52;">
+    <button type="button" onclick="gerarRelatorioMensalPDF()" style="border:0;border-radius:9px;padding:12px 15px;background:#0b7750;color:#fff;font-size:14px;font-weight:900;cursor:pointer;">📥 Gerar PDF</button>
+  </div>
+  <div style="font-size:12px;color:#61758a;margin-top:8px;">O relatório considera as encomendas recebidas no mês selecionado.</div>
+</section>
 <section class="home-summary-grid summary-home-grid" aria-label="Resumo e estatísticas">
 <div class="home-summary-card day summary-home-grid" onclick="mudarAba('resumo', document.querySelectorAll('.tab-btn')[3])" style="cursor:pointer;">
 <div class="home-summary-icon">📈</div>
@@ -1210,7 +1218,10 @@ SALVAR
 <!-- MODAL DE DETALHES COMPLETOS DA ENCOMENDA NA PESQUISA -->
 <div class="modal-overlay" id="modalDetalhesEncomendaPesquisa" onclick="if(event.target===this) fecharDetalhesEncomendaPesquisa()">
   <div class="modal" style="width:min(100%,520px); max-height:90vh; overflow-y:auto;">
-    <div class="modal-title">📋 Detalhes da Encomenda</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;">
+      <div class="modal-title" style="margin:0;">📋 Detalhes da Encomenda</div>
+      <button type="button" aria-label="Fechar detalhes" onclick="fecharDetalhesEncomendaPesquisa()" style="flex:0 0 36px;width:36px;height:36px;border:0;border-radius:50%;background:#edf2f6;color:#24415e;font-size:24px;font-weight:700;line-height:1;cursor:pointer;">×</button>
+    </div>
     <div id="conteudoDetalhesEncomendaPesquisa" style="display:flex;flex-direction:column;gap:10px;">
       <div class="loading">Carregando detalhes...</div>
     </div>
@@ -1621,6 +1632,8 @@ function configurarDataResumo(){
   const campo = document.getElementById('filtroDataResumo');
   const dataLocal = hoje.getFullYear() + '-' + String(hoje.getMonth()+1).padStart(2,'0') + '-' + String(hoje.getDate()).padStart(2,'0');
   if(campo) campo.value = dataLocal;
+  const mes = document.getElementById('mesRelatorioEntregas');
+  if(mes) mes.value = hoje.getFullYear() + '-' + String(hoje.getMonth()+1).padStart(2,'0');
 }
 function carregarResumo(){
   const dataSelecionada = (document.getElementById('filtroDataResumo') || {}).value || '';
@@ -2158,6 +2171,50 @@ function atualizarSugestoesDestinatarios(){
     o.value = d;
     datalist.appendChild(o);
   });
+}
+
+function gerarRelatorioMensalPDF(){
+  const campo = document.getElementById('mesRelatorioEntregas');
+  const mes = campo ? campo.value : '';
+  if(!mes){ mostrarToast('Selecione o mês do relatório.'); return; }
+  mostrarToast('Gerando relatório PDF...');
+  google.script.run
+    .withSuccessHandler(function(res){
+      if(!res || !res.base64){ mostrarToast('Não foi possível gerar o PDF.'); return; }
+      try {
+        const bytes = atob(res.base64);
+        const partes = [];
+        for(let i=0;i<bytes.length;i+=1024){
+          const fatia = bytes.slice(i,i+1024);
+          const numeros = new Uint8Array(fatia.length);
+          for(let j=0;j<fatia.length;j++) numeros[j] = fatia.charCodeAt(j);
+          partes.push(numeros);
+        }
+        const blob = new Blob(partes,{type:'application/pdf'});
+        const nomeArquivo = res.nomeArquivo || ('Relatorio_Entregas_' + mes + '.pdf');
+        const arquivo = new File([blob],nomeArquivo,{type:'application/pdf'});
+        if(navigator.share && navigator.canShare && navigator.canShare({files:[arquivo]})) {
+          navigator.share({files:[arquivo],title:'Relatório mensal de entregas'})
+            .then(function(){ mostrarToast('Relatório pronto para compartilhar.'); })
+            .catch(function(err){ if(err && err.name !== 'AbortError') console.error(err); });
+        } else {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = nomeArquivo;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(function(){ URL.revokeObjectURL(url); },60000);
+          mostrarToast('PDF gerado! Total: ' + (res.total || 0) + ' encomenda(s).');
+        }
+      } catch(e){ console.error(e); mostrarToast('Erro ao preparar o arquivo PDF.'); }
+    })
+    .withFailureHandler(function(err){
+      console.error(err);
+      mostrarToast(err && err.message ? err.message : 'Erro ao gerar o relatório PDF.');
+    })
+    .gerarRelatorioMensalEntregasPDF(mes);
 }
 
 function enviarRelatorio(){
