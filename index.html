@@ -2208,7 +2208,7 @@ function renderizarLista(lista){
       html += '<div class="lista-morador">';
       html += '<div class="lista-morador-cabecalho"><div><div class="lista-morador-nome">' + escapeHtml(nome) + '</div>';
       html += '<div class="lista-morador-info">' + escapeHtml(remetentes.join(', ')) + ' • ' + totalVolumes + ' volume(s) • ' + grupo.itens.length + (grupo.itens.length === 1 ? ' encomenda' : ' encomendas') + '</div></div>';
-      html += '<div class="lista-acoes"><button type="button" class="pendente-btn lista-btn-msg" onclick="enviarMensagemWhatsAppGrupo(' + indice + ')">💬 Enviar mensagem</button>';
+      html += '<div class="lista-acoes"><button type="button" class="pendente-btn lista-btn-msg" onclick="enviarMensagemWhatsAppGrupo(' + indice + ')">💬 Enviar</button>';
       html += '<button type="button" class="pendente-btn lista-btn-retirar" onclick="abrirBaixaGrupo(' + indice + ')">↩ Retirar</button></div></div>';
       grupo.itens.forEach(item=>{
         html += '<div class="lista-item"><div class="lista-item-texto">' + escapeHtml(item.dataRecebimento || 'Data não informada') + ' • ' + escapeHtml(item.remetente || 'Remetente') + ' • ' + escapeHtml(item.quantidade || 1) + ' volume(s)</div>';
